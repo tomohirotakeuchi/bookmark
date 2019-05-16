@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/whereToGoText"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                android:text="・1日目どこに行く？" android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:visibility="visible" tools:visibility="visible"
+                android:layout_marginTop="24dp" app:layout_constraintTop_toTopOf="parent"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination1"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:hint="最初に行く場所" android:visibility="visible" tools:visibility="visible"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/whereToGoText"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination2"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:visibility="visible" android:hint="2番目に行く場所" tools:visibility="visible"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/sc1destination1"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination3"
+                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone" android:hint="3番目に行く場所" tools:visibility="visible"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/sc1destination2"
+                android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination4"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:visibility="gone" android:hint="4番目に行く場所"
+                tools:visibility="visible"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/sc1destination3"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination5"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:visibility="gone" android:hint="5番目に行く場所"
+                tools:visibility="visible" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/sc1destination4"/>
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/sc1destination6"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                android:visibility="gone" android:hint="6番目に行く場所"
+                tools:visibility="visible" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/sc1destination5"/>
+        <Button
+                android:text="追加"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addDestination"
+                android:textSize="18sp"
+                android:visibility="visible" tools:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/removeDestination"
+                android:layout_marginStart="8dp" android:layout_marginLeft="8dp"
+                app:layout_constraintTop_toTopOf="@+id/removeDestination"
+                app:layout_constraintBottom_toBottomOf="@+id/removeDestination"/>
+        <Button
+                android:text="削除"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/removeDestination"
+                android:textSize="18sp"
+                android:visibility="visible" tools:visibility="visible"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/sc1destination6"
+                app:layout_constraintStart_toStartOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

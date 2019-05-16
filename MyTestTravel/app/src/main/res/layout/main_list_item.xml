@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="@color/timeBackGround">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainTitle" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="36sp" android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="16dp" android:layout_marginStart="16dp" tools:text="・タイ旅行"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainDepartureText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/mainTitle" android:layout_marginTop="16dp"
+            android:text="出発日時："/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainArrivalTimeText"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintTop_toBottomOf="@+id/mainDepartureText"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp" android:text="到着日時："
+            android:layout_marginTop="8dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainDepartureDayTime"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@+id/mainDepartureText" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/mainDepartureText"
+            app:layout_constraintBottom_toBottomOf="@+id/mainDepartureText"
+            android:layout_marginBottom="8dp" tools:text="2019/05/10  09:30"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainArrivalDayTime"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="@+id/mainDepartureDayTime"
+            app:layout_constraintEnd_toEndOf="@+id/mainDepartureDayTime"
+            app:layout_constraintTop_toBottomOf="@+id/mainDepartureDayTime" tools:text="2019/05/10  09:30"
+            android:layout_marginTop="8dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_edit_black_40dp"
+            android:id="@+id/imageView8"
+            app:layout_constraintEnd_toStartOf="@+id/imageView9" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toTopOf="@+id/imageView9"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9" android:background="@android:color/darker_gray"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_close_black_40dp"
+            android:id="@+id/imageView9" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:background="@android:color/darker_gray"/>
+</android.support.constraint.ConstraintLayout>
