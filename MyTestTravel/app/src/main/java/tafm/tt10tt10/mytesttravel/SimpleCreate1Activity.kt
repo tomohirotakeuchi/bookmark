@@ -18,7 +18,6 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.*
 import tafm.tt10tt10.mytesttravel.model.Travel
-import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
 import java.lang.StringBuilder
 import java.text.ParseException
@@ -28,7 +27,7 @@ import java.util.*
 class SimpleCreate1Activity : AppCompatActivity(),
     DatePickerFragment.OnDateSelectedListener {
 
-    private var temporalTravelDay:Long = 0L
+    private var temporalTravelDay: Long = 0L
     private lateinit var temporalyTag: String
     private lateinit var realm: Realm
 
@@ -63,111 +62,86 @@ class SimpleCreate1Activity : AppCompatActivity(),
             temporalyTag = dialog.tag.toString()
         }
 
-        //1日目：「追加」ボタンタップ
-        findViewById<View>(R.id.includeSC1Day1).findViewById<Button>(R.id.addDestination).setOnClickListener {
-            addDestination(findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination2)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination3)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination4)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination5)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination6))
-        }
-        //1日目：「削除」ボタンタップ
-        findViewById<View>(R.id.includeSC1Day1).findViewById<Button>(R.id.removeDestination).setOnClickListener {
-            removeDestination(findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination2)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination3)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination4)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination5)
-                , findViewById<View>(R.id.includeSC1Day1).findViewById(R.id.sc1destination6))
-        }
-        //2日目：「追加」ボタンタップ
-        findViewById<View>(R.id.includeSC1Day2).findViewById<Button>(R.id.addDestination).setOnClickListener {
-            addDestination(findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination2)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination3)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination4)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination5)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination6))
-        }
-        //2日目：「削除」ボタンタップ
-        findViewById<View>(R.id.includeSC1Day2).findViewById<Button>(R.id.removeDestination).setOnClickListener {
-            removeDestination(findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination2)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination3)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination4)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination5)
-                , findViewById<View>(R.id.includeSC1Day2).findViewById(R.id.sc1destination6))
-        }
-        //3日目以降・・・
+        setAddDeleteClickListener(R.id.includeSC1Day1)
+        setAddDeleteClickListener(R.id.includeSC1Day2)
+        setAddDeleteClickListener(R.id.includeSC1Day3)
+        setAddDeleteClickListener(R.id.includeSC1Day4)
+        setAddDeleteClickListener(R.id.includeSC1Day5)
+        setAddDeleteClickListener(R.id.includeSC1Day6)
+        setAddDeleteClickListener(R.id.includeSC1Day7)
 
         //「戻る」をタップ
         sc1backToMain.setOnClickListener { finish() }
 
         //「決定」をタップ
         sc1nextToSC2.setOnClickListener {
-            if(checkInput()) checkSuccess()
+            if (checkInput()) checkSuccess()
         }
     }
 
     //Inputの内容をチェックする。
     private fun checkInput(): Boolean {
         var check = true
-        if(inputTitle.text.isEmpty()) {
+        if (inputTitle.text.isEmpty()) {
             check = false
-            alert ("タイトルを設定してください"){ yesButton {  } }.show()
+            alert("タイトルを設定してください") { yesButton { } }.show()
         }
-        if(check && (departureDay.text.isEmpty() || arrivalDay.text.isEmpty())) {
+        if (check && (departureDay.text.isEmpty() || arrivalDay.text.isEmpty())) {
             check = false
-            alert ("出発・到着日時を設定してください"){ yesButton {  } }.show()
+            alert("出発・到着日時を設定してください") { yesButton { } }.show()
         }
-        if(check) check = checkFirstDestination(temporalTravelDay)
+        if (check) check = checkFirstDestination(temporalTravelDay)
         return check
     }
 
     //目的地1が空欄だったらエラーメッセージ
     private fun checkFirstDestination(travelDay: Long): Boolean {
         if (findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-            alert ("1日目の目的地1を設定してください"){ yesButton {  } }.show()
+            alert("1日目の目的地1を設定してください") { yesButton { } }.show()
             return false
         }
-        if(travelDay > 0) {
+        if (travelDay > 0) {
             if (findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("2日目の目的地1を設定してください"){ yesButton {  } }.show()
+                alert("2日目の目的地1を設定してください") { yesButton { } }.show()
                 return false
             }
         }
-        /*if(dateDiff > 1) {
+        if (travelDay > 1) {
             if (findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("3日目の目的地1を設定してください"){ yesButton {  } }.show()
+                alert("3日目の目的地1を設定してください") { yesButton { } }.show()
                 return false
             }
-        if(dateDiff > 2) {
+        }
+        if(travelDay > 2) {
             if (findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
                 alert ("4日目の目的地1を設定してください"){ yesButton {  } }.show()
                 return false
             }
-        if(dateDiff > 3) {
+        }
+        if(travelDay > 3) {
             if (findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
                 alert ("5日目の目的地1を設定してください"){ yesButton {  } }.show()
                 return false
             }
-        if(dateDiff > 4) {
+        }
+        if(travelDay > 4) {
             if (findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
                 alert ("6日目の目的地1を設定してください"){ yesButton {  } }.show()
                 return false
             }
-        if(dateDiff > 5) {
+        }
+        if(travelDay > 5) {
             if (findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
                 alert ("7日目の目的地1を設定してください"){ yesButton {  } }.show()
                 return false
-            }*/
+            }
+        }
         return true
     }
 
     //入力チェックが完了後、データベースに保存
     private fun checkSuccess() {
         realm.executeTransaction {
-            //データベース内すべて削除
-//            realm.where<Travel>().findAll().deleteAllFromRealm()
-//            realm.where<TravelPart>().findAll().deleteAllFromRealm()
-//            realm.where<TravelDetail>().findAll().deleteAllFromRealm()
 
             val deleteFlag = 1
             realm.where<Travel>().equalTo("deleteFlag", deleteFlag).findAll().deleteAllFromRealm()
@@ -185,11 +159,11 @@ class SimpleCreate1Activity : AppCompatActivity(),
                 when(day){
                     1L -> setTravelPartModel(part, newManegeId, 1, R.id.includeSC1Day1)
                     2L -> setTravelPartModel(part, newManegeId, 2, R.id.includeSC1Day2)
-//                    3L -> setTravelPartModel(part, newManegeId, 3, R.id.includeSC1Day3)
-//                    4L -> setTravelPartModel(part, newManegeId, 4, R.id.includeSC1Day4)
-//                    5L -> setTravelPartModel(part, newManegeId, 5, R.id.includeSC1Day5)
-//                    6L -> setTravelPartModel(part, newManegeId, 6, R.id.includeSC1Day6)
-//                    7L -> setTravelPartModel(part, newManegeId, 7, R.id.includeSC1Day7)
+                    3L -> setTravelPartModel(part, newManegeId, 3, R.id.includeSC1Day3)
+                    4L -> setTravelPartModel(part, newManegeId, 4, R.id.includeSC1Day4)
+                    5L -> setTravelPartModel(part, newManegeId, 5, R.id.includeSC1Day5)
+                    6L -> setTravelPartModel(part, newManegeId, 6, R.id.includeSC1Day6)
+                    7L -> setTravelPartModel(part, newManegeId, 7, R.id.includeSC1Day7)
                 }
             }
 
@@ -284,11 +258,31 @@ class SimpleCreate1Activity : AppCompatActivity(),
         for (i in 0..6) dateDiffMap[i] = (i.toString() + "泊" + (i+1) + "日")
         travelDays.text = dateDiffMap[dateDiff]
 
-//        if(dateDiff > 5)    (R.id.includeSC1Day7)
-//        if(dateDiff > 4)    (R.id.includeSC1Day6)
-//        if(dateDiff > 3)    (R.id.includeSC1Day5)
-//        if(dateDiff > 2)    (R.id.includeSC1Day4)
-//        if(dateDiff > 1)    (R.id.includeSC1Day3)
+        if(dateDiff > 5)  {
+            changeInclude(R.id.includeSC1Day7, View.VISIBLE)
+        }else{
+            changeInclude(R.id.includeSC1Day7, View.GONE)
+        }
+        if(dateDiff > 4) {
+            changeInclude(R.id.includeSC1Day6, View.VISIBLE)
+        }else{
+            changeInclude(R.id.includeSC1Day6, View.GONE)
+        }
+        if(dateDiff > 3) {
+            changeInclude(R.id.includeSC1Day5, View.VISIBLE)
+        }else{
+            changeInclude(R.id.includeSC1Day5, View.GONE)
+        }
+        if(dateDiff > 2) {
+            changeInclude(R.id.includeSC1Day4, View.VISIBLE)
+        }else{
+            changeInclude(R.id.includeSC1Day4, View.GONE)
+        }
+        if(dateDiff > 1) {
+            changeInclude(R.id.includeSC1Day3, View.VISIBLE)
+        }else{
+            changeInclude(R.id.includeSC1Day3, View.GONE)
+        }
         if(dateDiff > 0) {
             changeInclude(R.id.includeSC1Day2, View.VISIBLE)
         }else{
@@ -357,10 +351,28 @@ class SimpleCreate1Activity : AppCompatActivity(),
     private fun setWhereToGoText() {
         findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.whereToGoText).text = "・1日目どこに行く？"
         findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.whereToGoText).text = "・2日目どこに行く？"
-        //findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.whereToGoText).text = "・3日目どこに行く？"
-        //findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.whereToGoText).text = "・4日目どこに行く？"
-        //findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.whereToGoText).text = "・5日目どこに行く？"
-        //findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.whereToGoText).text = "・6日目どこに行く？"
-        //findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.whereToGoText).text = "・7日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.whereToGoText).text = "・3日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.whereToGoText).text = "・4日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.whereToGoText).text = "・5日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.whereToGoText).text = "・6日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.whereToGoText).text = "・7日目どこに行く？"
+    }
+
+    //「追加」ボタンタップ「削除」ボタンタップ
+    private fun setAddDeleteClickListener(include: Int) {
+        findViewById<View>(include).findViewById<Button>(R.id.addDestination).setOnClickListener {
+            addDestination(findViewById<View>(include).findViewById(R.id.sc1destination2)
+                , findViewById<View>(include).findViewById(R.id.sc1destination3)
+                , findViewById<View>(include).findViewById(R.id.sc1destination4)
+                , findViewById<View>(include).findViewById(R.id.sc1destination5)
+                , findViewById<View>(include).findViewById(R.id.sc1destination6))
+        }
+        findViewById<View>(include).findViewById<Button>(R.id.removeDestination).setOnClickListener {
+            removeDestination(findViewById<View>(include).findViewById(R.id.sc1destination2)
+                , findViewById<View>(include).findViewById(R.id.sc1destination3)
+                , findViewById<View>(include).findViewById(R.id.sc1destination4)
+                , findViewById<View>(include).findViewById(R.id.sc1destination5)
+                , findViewById<View>(include).findViewById(R.id.sc1destination6))
+        }
     }
 }
