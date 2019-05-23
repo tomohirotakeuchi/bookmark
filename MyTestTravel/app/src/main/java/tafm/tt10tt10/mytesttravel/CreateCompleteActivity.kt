@@ -11,8 +11,6 @@ class CreateCompleteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_complete)
 
-        println(intent.getIntExtra("manageId", 0))
-
         cmpBookmarkBtn.setOnClickListener {
             startActivity<MainActivity>("fromId" to 1)
         }

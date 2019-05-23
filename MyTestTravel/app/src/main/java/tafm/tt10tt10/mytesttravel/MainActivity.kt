@@ -3,8 +3,6 @@ package tafm.tt10tt10.mytesttravel
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import io.realm.Realm
 import io.realm.Sort
@@ -14,7 +12,6 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
-import tafm.tt10tt10.mytesttravel.adapter.Bookmark1Adapter
 import tafm.tt10tt10.mytesttravel.adapter.MainAdapter
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
@@ -29,7 +26,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         realm = Realm.getDefaultInstance()
-        var travels = realm.where<Travel>().findAll()
+
+        deleteFirst()
+        val deleteFlag = 0
+        var travels = realm.where<Travel>().equalTo("deleteFlag", deleteFlag).findAll()
         travels = travels.sort("manageId", Sort.DESCENDING)
         val adapter = MainAdapter(travels)
         mainListView.adapter = adapter
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnEditDeleteClickListener(object: MainAdapter.OnEditDeleteClickListener{
             override fun onEditDeleteClick(view: View, manageId: Int?, editDeleteFlag: Int) {
                 if(editDeleteFlag == 1){
-                    startActivity<SimpleCreate1Activity>("EditFlag" to true)
+                    startActivity<Edit1TravelActivity>("manageId" to manageId)
                 }else{
                     alert ("削除しますか？"){
                         yesButton {
@@ -57,6 +57,16 @@ class MainActivity : AppCompatActivity() {
 
         mainCreate.setOnClickListener {
             startActivity<SimpleCreate1Activity>()
+        }
+    }
+
+    //deleteFlagが0なら削除する。
+    private fun deleteFirst() {
+        realm.executeTransaction {
+           val deleteFlag = 1
+           realm.where<Travel>().equalTo("deleteFlag", deleteFlag).findFirst()?.deleteFromRealm()
+           realm.where<TravelPart>().equalTo("deleteFlag", deleteFlag).findAll()?.deleteAllFromRealm()
+           realm.where<TravelDetail>().equalTo("deleteFlag", deleteFlag).findAll()?.deleteAllFromRealm()
         }
     }
 

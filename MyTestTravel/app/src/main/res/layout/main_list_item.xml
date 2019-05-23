@@ -13,7 +13,8 @@
             app:layout_constraintTop_toTopOf="parent" android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="36sp" android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:layout_marginLeft="16dp" android:layout_marginStart="16dp" tools:text="・タイ旅行"/>
+            android:layout_marginLeft="16dp" android:layout_marginStart="16dp" tools:text="-タイ旅行-"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

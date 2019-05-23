@@ -52,8 +52,8 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
 
         adapterData?.run{
             val travel = get(position)
-            val titleBuilder = StringBuilder("・")
-            viewHolder.mainTitle.text = titleBuilder.append(travel.title)
+            val titleBuilder = StringBuilder("-")
+            viewHolder.mainTitle.text = titleBuilder.append(travel.title).append("-")
             val departureBuilder = StringBuilder()
             viewHolder.mainDepartureDayTime.text = departureBuilder.append(travel.departureDay).append("  ").append(travel.departureTime)
             val arrivalBuilder = StringBuilder()

@@ -8,7 +8,7 @@
         tools:context=".MainActivity">
 
     <TextView
-            android:layout_height="wrap_content" android:id="@+id/bm1GuideText"
+            android:layout_height="wrap_content" android:id="@+id/mainGuideText"
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -22,14 +22,14 @@
             android:id="@+id/mainListView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bm1GuideText"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/mainGuideText"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/mainAd"
             tools:listitem="@layout/main_list_item">
     </ListView>
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+            android:id="@+id/mainAd" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="広告" android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="30sp"

@@ -49,14 +49,14 @@ class SimpleCreate1Activity : AppCompatActivity(),
         realm = Realm.getDefaultInstance()
 
         //departureDayをタップ
-        departureDay.setOnClickListener {
+        sc1departureDay.setOnClickListener {
             val dialog = DatePickerFragment()
             dialog.show(supportFragmentManager, departureDateTag)
             temporalyTag = dialog.tag.toString()
         }
 
         //arrivalDayをタップ
-        arrivalDay.setOnClickListener {
+        sc1ArrivalDay.setOnClickListener {
             val dialog = DatePickerFragment()
             dialog.show(supportFragmentManager, arrivalDateTag)
             temporalyTag = dialog.tag.toString()
@@ -82,13 +82,17 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //Inputの内容をチェックする。
     private fun checkInput(): Boolean {
         var check = true
-        if (inputTitle.text.isEmpty()) {
+        if (sc1Title.text.isEmpty()) {
             check = false
             alert("タイトルを設定してください") { yesButton { } }.show()
         }
-        if (check && (departureDay.text.isEmpty() || arrivalDay.text.isEmpty())) {
+        if (check && (sc1departureDay.text.isEmpty() || sc1ArrivalDay.text.isEmpty())) {
             check = false
             alert("出発・到着日時を設定してください") { yesButton { } }.show()
+        }
+        if (check && (sc1departurePlace.text.isEmpty() || sc1ArrivalPlace.text.isEmpty())) {
+            check = false
+            alert("出発・到着地を設定してください") { yesButton { } }.show()
         }
         if (check) check = checkFirstDestination(temporalTravelDay)
         return check
@@ -170,8 +174,8 @@ class SimpleCreate1Activity : AppCompatActivity(),
             startActivity<SimpleCreate2Activity>(
                 "MANAGE_ID" to newManegeId
                 , "TRAVEL_DAYS" to temporalTravelDay + 1
-                , "DEPARTURE_PLACE" to departurePlace.text.toString()
-                , "ARRIVAL_PLACE" to arrivalPlace.text.toString())
+                , "DEPARTURE_PLACE" to sc1departurePlace.text.toString()
+                , "ARRIVAL_PLACE" to sc1ArrivalPlace.text.toString())
         }
     }
 
@@ -189,27 +193,27 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
         when(temporalyTag){
             departureDateTag -> {
-                departureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
-                departureDay.background = doneColorChange()
-                departureText.text = builder.append("・").append(departureDay.text).append("出発地点と時刻は？")
+                sc1departureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
+                sc1departureDay.background = doneColorChange()
+                sc1departureText.text = builder.append("・").append(sc1departureDay.text).append("出発地点と時刻は？")
             }
             arrivalDateTag -> {
-                arrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
-                arrivalDay.background = doneColorChange()
-                arrivalText.text = builder.append("・").append(arrivalDay.text).append("到着地点と時刻は？")
+                sc1ArrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
+                sc1ArrivalDay.background = doneColorChange()
+                sc1arrivalText.text = builder.append("・").append(sc1ArrivalDay.text).append("到着地点と時刻は？")
             }
         }
 
-        if (departureDay.text != "" && arrivalDay.text != ""){
-            when (val dateDiff = dateDiff(departureDay.text.toString(), arrivalDay.text.toString())){
+        if (sc1departureDay.text != "" && sc1ArrivalDay.text != ""){
+            when (val dateDiff = dateDiff(sc1departureDay.text.toString(), sc1ArrivalDay.text.toString())){
                 in 0..6 -> setTravelDay(dateDiff)
                 else -> {
                     val dialog = DateDiffAlertDialogs()
                     dialog.show(supportFragmentManager, dateDiffTag)
-                    arrivalDay.text = null
-                    arrivalDay.background = falseColorChange()
-                    arrivalText.text ="・到着地点と時刻は？"
-                    travelDays.text = "日付を選択してください。"
+                    sc1ArrivalDay.text = null
+                    sc1ArrivalDay.background = falseColorChange()
+                    sc1arrivalText.text ="・到着地点と時刻は？"
+                    sc1travelDays.text = "日付を選択してください。"
                 }
             }
         }
@@ -256,7 +260,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     private fun setTravelDay(dateDiff: Int) {
         val dateDiffMap:MutableMap<Int, String> = mutableMapOf()
         for (i in 0..6) dateDiffMap[i] = (i.toString() + "泊" + (i+1) + "日")
-        travelDays.text = dateDiffMap[dateDiff]
+        sc1travelDays.text = dateDiffMap[dateDiff]
 
         if(dateDiff > 5)  {
             changeInclude(R.id.includeSC1Day7, View.VISIBLE)
@@ -328,12 +332,12 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
     //TravelModelに値を格納
     private fun setTravelModel(travel: Travel) {
-        travel.title = inputTitle.text.toString()
+        travel.title = sc1Title.text.toString()
         travel.travelDays = temporalTravelDay.toInt() + 1
-        travel.departureDay = departureDay.text.toString()
-        travel.departurePlace = departurePlace.text.toString()
-        travel.arrivalDay = arrivalDay.text.toString()
-        travel.arrivalPlace = arrivalPlace.text.toString()
+        travel.departureDay = sc1departureDay.text.toString()
+        travel.departurePlace = sc1departurePlace.text.toString()
+        travel.arrivalDay = sc1ArrivalDay.text.toString()
+        travel.arrivalPlace = sc1ArrivalPlace.text.toString()
     }
 
     //TravelPartModelに値を格納
@@ -349,25 +353,25 @@ class SimpleCreate1Activity : AppCompatActivity(),
     }
 
     private fun setWhereToGoText() {
-        findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.whereToGoText).text = "・1日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.whereToGoText).text = "・2日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.whereToGoText).text = "・3日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.whereToGoText).text = "・4日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.whereToGoText).text = "・5日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.whereToGoText).text = "・6日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.whereToGoText).text = "・7日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1whereToGoText).text = "・1日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1whereToGoText).text = "・2日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.sc1whereToGoText).text = "・3日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.sc1whereToGoText).text = "・4日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.sc1whereToGoText).text = "・5日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.sc1whereToGoText).text = "・6日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.sc1whereToGoText).text = "・7日目どこに行く？"
     }
 
     //「追加」ボタンタップ「削除」ボタンタップ
     private fun setAddDeleteClickListener(include: Int) {
-        findViewById<View>(include).findViewById<Button>(R.id.addDestination).setOnClickListener {
+        findViewById<View>(include).findViewById<Button>(R.id.sc1addDestination).setOnClickListener {
             addDestination(findViewById<View>(include).findViewById(R.id.sc1destination2)
                 , findViewById<View>(include).findViewById(R.id.sc1destination3)
                 , findViewById<View>(include).findViewById(R.id.sc1destination4)
                 , findViewById<View>(include).findViewById(R.id.sc1destination5)
                 , findViewById<View>(include).findViewById(R.id.sc1destination6))
         }
-        findViewById<View>(include).findViewById<Button>(R.id.removeDestination).setOnClickListener {
+        findViewById<View>(include).findViewById<Button>(R.id.sc1removeDestination).setOnClickListener {
             removeDestination(findViewById<View>(include).findViewById(R.id.sc1destination2)
                 , findViewById<View>(include).findViewById(R.id.sc1destination3)
                 , findViewById<View>(include).findViewById(R.id.sc1destination4)

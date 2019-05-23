@@ -21,14 +21,14 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:id="@+id/arrivalDay"
+                    android:id="@+id/sc1ArrivalDay"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:background="@color/colorAccent" android:hint="到着日選択"
                     android:gravity="center_horizontal|center_vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/departureDay"
-                    app:layout_constraintTop_toTopOf="@+id/departureDay" app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="@+id/sc1departureDay"
+                    app:layout_constraintTop_toTopOf="@+id/sc1departureDay" app:layout_constraintVertical_bias="0.0"
                     android:visibility="visible" tools:visibility="visible"
-                    app:layout_constraintStart_toEndOf="@+id/imageView" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/sc1Arrow" android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"/>
             <TextView
                     android:text="以下の項目を入力してください。"
@@ -44,7 +44,7 @@
                     android:text="・タイトル"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/titleText"
+                    android:id="@+id/sc1TitleText"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
@@ -55,82 +55,82 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
-                    android:id="@+id/inputTitle" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/titleText" android:layout_marginStart="16dp"
+                    android:id="@+id/sc1Title" android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/sc1TitleText" android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
                     android:hint="旅行のタイトルは？" android:visibility="visible" tools:visibility="visible"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
-                     app:layout_constraintTop_toBottomOf="@+id/departurePlace"
+                     app:layout_constraintTop_toBottomOf="@+id/sc1departurePlace"
                      app:layout_constraintEnd_toEndOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintStart_toStartOf="parent"
-                     android:id="@+id/includeSC1Day1"/>
+                     android:id="@+id/includeSC1Day1" tools:visibility="visible"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day2"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day1" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day3"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day2" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day4"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day3" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day5"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day4" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day6"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day5" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment"
                      android:id="@+id/includeSC1Day7"
                      app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintHorizontal_bias="0.0"
                      app:layout_constraintTop_toBottomOf="@+id/includeSC1Day6" android:visibility="gone"
-                     tools:visibility="visible"/>
+                     tools:visibility="gone"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/departureText"
+                    android:id="@+id/sc1departureText"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
                     android:text="・出発地点は？" android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:visibility="visible" tools:visibility="visible"
-                    app:layout_constraintTop_toBottomOf="@+id/departureDay" android:layout_marginTop="32dp"/>
+                    app:layout_constraintTop_toBottomOf="@+id/sc1departureDay" android:layout_marginTop="32dp"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
-                    android:id="@+id/departurePlace" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/departureText" android:layout_marginStart="8dp"
+                    android:id="@+id/sc1departurePlace" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/sc1departureText" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                     android:hint="出発地点"
                     android:text="現在地" android:visibility="visible" tools:visibility="visible"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/arrivalText"
+                    android:id="@+id/sc1arrivalText"
                     app:layout_constraintStart_toStartOf="parent"
                     android:text="・到着地点は？" android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:visibility="visible" tools:visibility="visible"
@@ -140,11 +140,11 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:ems="10"
-                    android:id="@+id/arrivalPlace"
+                    android:id="@+id/sc1ArrivalPlace"
                     android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                     android:hint="到着地点"
-                    android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/arrivalText"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/sc1arrivalText"
                     android:text="現在地" android:visibility="visible" tools:visibility="visible"/>
             <Button
                     android:text="戻る"
@@ -153,7 +153,7 @@
                     android:id="@+id/sc1backToMain"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/arrivalPlace"
+                    android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/sc1ArrivalPlace"
                     android:visibility="visible" tools:visibility="visible"
                     android:layout_marginBottom="32dp" app:layout_constraintBottom_toBottomOf="parent"
                     android:textSize="18sp"/>
@@ -172,41 +172,41 @@
                     android:text="・出発日と到着日は？"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/departureDayText"
+                    android:id="@+id/sc1departureDayText"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-                    android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/inputTitle"
+                    android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/sc1Title"
                     android:visibility="visible" tools:visibility="visible"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:id="@+id/departureDay"
+                    android:id="@+id/sc1departureDay"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:background="@color/colorAccent" android:hint="出発日選択"
                     android:gravity="center_horizontal|center_vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/travelDays" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/sc1travelDays" android:layout_marginTop="8dp"
                     android:visibility="visible" tools:visibility="visible" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/travelDays"
+                    android:id="@+id/sc1travelDays"
                     android:textColor="@android:color/black"
                     android:background="@android:color/background_light"
                     android:textSize="18sp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:gravity="center_horizontal|center_vertical" android:text="日付を選択してください。"
-                    app:layout_constraintTop_toBottomOf="@+id/departureDayText" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/sc1departureDayText" android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="16dp" android:visibility="visible" tools:visibility="visible"/>
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="0dp" app:srcCompat="@drawable/ic_arrow_forward_black_24dp"
-                    android:id="@+id/imageView"
-                    app:layout_constraintTop_toTopOf="@+id/departureDay"
-                    app:layout_constraintBottom_toBottomOf="@+id/departureDay"
-                    app:layout_constraintStart_toEndOf="@+id/departureDay" android:layout_marginLeft="8dp"
+                    android:id="@+id/sc1Arrow"
+                    app:layout_constraintTop_toTopOf="@+id/sc1departureDay"
+                    app:layout_constraintBottom_toBottomOf="@+id/sc1departureDay"
+                    app:layout_constraintStart_toEndOf="@+id/sc1departureDay" android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
             />
         </android.support.constraint.ConstraintLayout>
