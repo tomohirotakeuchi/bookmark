@@ -202,33 +202,28 @@ class SimpleCreate2Activity : AppCompatActivity()
     //目的地別に分類
     private fun devideDestination(day: Int, include: Int) {
         createDepartureTravelDetail(day, include)
-        var lastDestinationFlag = true
         val lastDayFlag = (day.toLong() == travelDays)
 
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination6).text.isNotEmpty()){
-            createTravelDetail(6, day, include, R.id.sc2destination6, R.id.sc2startTime6, R.id.sc2requireTime6 ,R.id.sc2moveTime6, lastDestinationFlag)
-            lastDestinationFlag = false
+            createTravelDetail(6, day, include, R.id.sc2destination6, R.id.sc2startTime6, R.id.sc2requireTime6 ,R.id.sc2moveTime6)
         }
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination5).text.isNotEmpty()){
-            createTravelDetail(5, day, include, R.id.sc2destination5, R.id.sc2startTime5, R.id.sc2requireTime5 ,R.id.sc2moveTime5, lastDestinationFlag)
-            lastDestinationFlag = false
+            createTravelDetail(5, day, include, R.id.sc2destination5, R.id.sc2startTime5, R.id.sc2requireTime5 ,R.id.sc2moveTime5)
         }
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination4).text.isNotEmpty()){
-            createTravelDetail(4, day, include, R.id.sc2destination4, R.id.sc2startTime4, R.id.sc2requireTime4 ,R.id.sc2moveTime4, lastDestinationFlag)
-            lastDestinationFlag = false
+            createTravelDetail(4, day, include, R.id.sc2destination4, R.id.sc2startTime4, R.id.sc2requireTime4 ,R.id.sc2moveTime4)
         }
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination3).text.isNotEmpty()){
-            createTravelDetail(3, day, include, R.id.sc2destination3, R.id.sc2startTime3, R.id.sc2requireTime3 ,R.id.sc2moveTime3, lastDestinationFlag)
-            lastDestinationFlag = false
+            createTravelDetail(3, day, include, R.id.sc2destination3, R.id.sc2startTime3, R.id.sc2requireTime3 ,R.id.sc2moveTime3)
         }
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination2).text.isNotEmpty()){
-            createTravelDetail(2, day, include, R.id.sc2destination2, R.id.sc2startTime2, R.id.sc2requireTime2 ,R.id.sc2moveTime2, lastDestinationFlag)
-            lastDestinationFlag = false
+            createTravelDetail(2, day, include, R.id.sc2destination2, R.id.sc2startTime2, R.id.sc2requireTime2 ,R.id.sc2moveTime2)
         }
         if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination1).text.isNotEmpty()){
-            createTravelDetail(1, day, include, R.id.sc2destination1, R.id.sc2startTime1, R.id.sc2requireTime1 ,R.id.sc2moveTime1, lastDestinationFlag)
+            createTravelDetail(1, day, include, R.id.sc2destination1, R.id.sc2startTime1, R.id.sc2requireTime1 ,R.id.sc2moveTime1)
         }
 
+        //最終日なら到着地を最終目的地（order=9)として新しくDetail作成。
         if(lastDayFlag){
             val maxDetailId = realm.where<TravelDetail>().max("id")
             val nextDetailId = (maxDetailId?.toInt() ?: 0) + 1
@@ -258,18 +253,15 @@ class SimpleCreate2Activity : AppCompatActivity()
 
     //TravelDetailデータベースに値を格納
     private fun createTravelDetail(order: Int, day:Int, include: Int, destinationId: Int
-                                   , startId: Int, requireId: Int, moveId: Int, lastDestinationFlag: Boolean){
+                                   , startId: Int, requireId: Int, moveId: Int){
         val maxDetailId = realm.where<TravelDetail>().max("id")
         val nextDetailId = (maxDetailId?.toInt() ?: 0) + 1
         val travelDetail = realm.createObject<TravelDetail>(nextDetailId)
         travelDetail.manageId = manageId
         travelDetail.day = day
         travelDetail.order = order
-        travelDetail.destination = if(!lastDestinationFlag){
-            findViewById<View>(include).findViewById<TextView>(destinationId).text.toString()
-        }else{
-            findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalPlace).text.toString()
-        }
+        //最終目的地でないならばそのViewの目的地、最終目的地なら到着地を格納。
+        travelDetail.destination = findViewById<View>(include).findViewById<TextView>(destinationId).text.toString()
         travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(startId).text.toString()
         travelDetail.requiredTime = findViewById<View>(include).findViewById<TextView>(requireId).text.toString()
         travelDetail.moveTime = findViewById<View>(include).findViewById<TextView>(moveId).text.toString()

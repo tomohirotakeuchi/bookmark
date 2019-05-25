@@ -27,7 +27,7 @@ import java.util.*
 class SimpleCreate1Activity : AppCompatActivity(),
     DatePickerFragment.OnDateSelectedListener {
 
-    private var temporalTravelDay: Long = 0L
+    private var temporalTravelDays: Long = 0L
     private lateinit var temporalyTag: String
     private lateinit var realm: Realm
 
@@ -94,7 +94,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
             check = false
             alert("出発・到着地を設定してください") { yesButton { } }.show()
         }
-        if (check) check = checkFirstDestination(temporalTravelDay)
+        if (check) check = checkFirstDestination(temporalTravelDays)
         return check
     }
 
@@ -156,7 +156,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
             val travel = realm.createObject<Travel>(newManegeId)
             setTravelModel(travel)
 
-            for (day in 1..(temporalTravelDay + 1)){
+            for (day in 1..(temporalTravelDays + 1)){
                 val maxPartId = realm.where<TravelPart>().max("id")
                 val nextPartId = (maxPartId?.toInt() ?: 0) + 1
                 val part = realm.createObject<TravelPart>(nextPartId)
@@ -173,7 +173,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
             startActivity<SimpleCreate2Activity>(
                 "MANAGE_ID" to newManegeId
-                , "TRAVEL_DAYS" to temporalTravelDay + 1
+                , "TRAVEL_DAYS" to temporalTravelDays + 1
                 , "DEPARTURE_PLACE" to sc1departurePlace.text.toString()
                 , "ARRIVAL_PLACE" to sc1ArrivalPlace.text.toString())
         }
@@ -240,7 +240,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
         } catch (e: IllegalArgumentException){
             null
         }
-        temporalTravelDay =  try{
+        temporalTravelDays =  try{
             val dateFrom:Date? = sdFormat?.parse(departureDay)
             val dateTo:Date? = sdFormat?.parse(arrivalDay)
             val dateTimeFrom = dateFrom?.time
@@ -253,7 +253,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
         }catch (e: ParseException){
             10
         }
-        return temporalTravelDay.toInt()
+        return temporalTravelDays.toInt()
     }
 
     //何泊何日の出力メソッド + 表示非表示
@@ -333,7 +333,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //TravelModelに値を格納
     private fun setTravelModel(travel: Travel) {
         travel.title = sc1Title.text.toString()
-        travel.travelDays = temporalTravelDay.toInt() + 1
+        travel.travelDays = temporalTravelDays.toInt() + 1
         travel.departureDay = sc1departureDay.text.toString()
         travel.departurePlace = sc1departurePlace.text.toString()
         travel.arrivalDay = sc1ArrivalDay.text.toString()
@@ -352,6 +352,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
         part.destination6 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination6).text.toString()
     }
 
+    //何日にどこに行くテキストをつくる。
     private fun setWhereToGoText() {
         findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1whereToGoText).text = "・1日目どこに行く？"
         findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1whereToGoText).text = "・2日目どこに行く？"

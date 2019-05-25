@@ -54,7 +54,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener{
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(context is TimePickerFragment.OnTimeSelectedListener) {
+        if(context is OnTimeSelectedListener) {
             listener = context
         }
     }
@@ -78,7 +78,7 @@ class AddAlertDialogs :DialogFragment(){
         val builder = AlertDialog.Builder(context).apply {
             setMessage("7ケ所以上にはできません。")
             setPositiveButton("OK"){
-                dialog, which -> context.toast("OKをクリックしました。")
+                _, _ -> context.toast("OKをクリックしました。")
             }
         }
         return builder.create()
@@ -92,7 +92,7 @@ class RemoveAlertDialogs :DialogFragment(){
         val builder = AlertDialog.Builder(context).apply {
             setMessage("0ケ所にはできません。")
             setPositiveButton("OK"){
-                    dialog, which -> context.toast("OKをクリックしました。")
+                    _, _ -> context.toast("OKをクリックしました。")
             }
         }
         return builder.create()
@@ -106,7 +106,7 @@ class DateDiffAlertDialogs :DialogFragment(){
         val builder = AlertDialog.Builder(context).apply {
             setMessage("1～7日間で設定してください。")
             setPositiveButton("OK"){
-                    dialog, which -> context.toast("OKをクリックしました。")
+                    _, _ -> context.toast("OKをクリックしました。")
             }
         }
         return builder.create()
