@@ -12,7 +12,7 @@ import tafm.tt10tt10.mytesttravel.model.Travel
 
 class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Travel>(data) {
 
-    private lateinit var listener: OnEditDeleteClickListener
+    private lateinit var mainListener: OnMainEditDeleteClickListener
 
     inner class ViewHolder(cell: View){
         val mainDepartureDayTime: TextView = cell.findViewById(R.id.mainDepartureDayTime)
@@ -39,15 +39,15 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
             }
         }
 
-        setOnEditDeleteClickListener(listener)
+        setOnMainEditDeleteClickListener(mainListener)
 
         viewHolder.mainEdit.setOnClickListener {
             val travel = data?.get(position)
-            listener.onEditDeleteClick(view, travel?.manageId, 1)
+            mainListener.onMainEditDeleteClick(view, travel?.manageId, 1)
         }
         viewHolder.mainDelete.setOnClickListener {
             val travel = data?.get(position)
-            listener.onEditDeleteClick(view, travel?.manageId, 2)
+            mainListener.onMainEditDeleteClick(view, travel?.manageId, 2)
         }
 
         adapterData?.run{
@@ -63,13 +63,13 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
     }
 
     //listenerをセットする。
-    fun setOnEditDeleteClickListener(listener: OnEditDeleteClickListener){
-        this.listener = listener
+    fun setOnMainEditDeleteClickListener(mainListener: OnMainEditDeleteClickListener){
+        this.mainListener = mainListener
     }
 
     //interface。Activityから呼びだす。
-    interface OnEditDeleteClickListener {
-        fun onEditDeleteClick(view: View, manageId: Int?, editDeleteFlag: Int)
+    interface OnMainEditDeleteClickListener {
+        fun onMainEditDeleteClick(view: View, manageId: Int?, mainEditDeleteFlag: Int)
     }
 }
 

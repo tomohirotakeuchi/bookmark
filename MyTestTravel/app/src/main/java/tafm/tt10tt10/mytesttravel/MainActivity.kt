@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity() {
             startActivity<Bookmark1Activity>("manageId" to tappedTravel.manageId)
         }
 
-        adapter.setOnEditDeleteClickListener(object: MainAdapter.OnEditDeleteClickListener{
-            override fun onEditDeleteClick(view: View, manageId: Int?, editDeleteFlag: Int) {
-                if(editDeleteFlag == 1){
+        adapter.setOnMainEditDeleteClickListener(object: MainAdapter.OnMainEditDeleteClickListener{
+            override fun onMainEditDeleteClick(view: View, manageId: Int?, mainEditDeleteFlag: Int) {
+                if(mainEditDeleteFlag == 1){
                     startActivity<Edit1TravelActivity>("manageId" to manageId)
                 }else{
                     alert ("削除しますか？"){
@@ -79,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         }
         Toast.makeText(applicationContext, "削除しました！", Toast.LENGTH_LONG).show()
     }
+
+    //アクティビティ消滅時にrealmを閉じる。
     override fun onDestroy() {
         super.onDestroy()
         realm.close()

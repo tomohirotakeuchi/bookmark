@@ -21,6 +21,7 @@ class Bookmark2Activity : AppCompatActivity(), MenuFragment.OnClickListener {
         transaction.commit()
     }
 
+    //フラグメントのクリックリスナー
     override fun onClick() {
         startActivity<MainActivity>()
     }

@@ -10,6 +10,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".Edit2TravelActivity">
+        </activity>
         <activity android:name=".Edit1TravelActivity">
         </activity>
         <activity android:name=".Bookmark3Activity">

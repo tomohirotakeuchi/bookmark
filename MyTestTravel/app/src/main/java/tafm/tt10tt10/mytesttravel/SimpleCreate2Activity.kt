@@ -264,7 +264,9 @@ class SimpleCreate2Activity : AppCompatActivity()
         travelDetail.destination = findViewById<View>(include).findViewById<TextView>(destinationId).text.toString()
         travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(startId).text.toString()
         travelDetail.requiredTime = findViewById<View>(include).findViewById<TextView>(requireId).text.toString()
+        if(travelDetail.requiredTime.isEmpty()) travelDetail.requiredTime = requireTimeText + "0 min "
         travelDetail.moveTime = findViewById<View>(include).findViewById<TextView>(moveId).text.toString()
+        if(travelDetail.moveTime.isEmpty()) travelDetail.moveTime = moveTimeText + "0 min "
     }
 
     //目的地が空でなければ値をViewにセットする。

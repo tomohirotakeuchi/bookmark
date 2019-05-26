@@ -13,7 +13,6 @@ import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_edit1_travel.*
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.DateDiffAlertDialogs
 import tafm.tt10tt10.mytesttravel.fragment.DatePickerFragment
@@ -96,7 +95,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
             setTravelModel(travel)
             setTravelPartAndDetailModel(manageId, travel.travelDays)
         }
-        startActivity<MainActivity>()
+        finish()
     }
 
     //TravelModelに値を格納
@@ -123,7 +122,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                     .findFirst()
 
                 if (existPartForAdd !is TravelPart) {
-                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel]: existPartForAddが存在しない day $day")
+                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel] existPartForAddが存在しない day:$day")
                     createNewTravelPart(manageId, day)
                     createNewTravelDetail(manageId, day)
                 }
@@ -138,7 +137,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                     .findFirst()
 
                 if(existPartForDelete is TravelPart){
-                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel]: existPartForDeleteが存在 day $day")
+                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel] existPartForDeleteが存在 day:$day")
                     existPartForDelete.deleteFromRealm()
                     realm.where<TravelDetail>()
                         .equalTo("manageId", manageId)
@@ -185,7 +184,9 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
             .equalTo("day", day - 1)
             .sort("order", Sort.DESCENDING)
             .findFirst()?.destination.toString()
-        updateTravelDetailForDeparture.startTime = realm.where<Travel>().equalTo("manageId", manageId).findFirst()?.arrivalTime.toString()
+        updateTravelDetailForDeparture.startTime = realm.where<Travel>()
+            .equalTo("manageId", manageId)
+            .findFirst()?.arrivalTime.toString()
         updateTravelDetailForDeparture.moveTime = moveTimeText + "0 min "
         updateTravelDetailForDeparture.deleteFlag = 0
 
@@ -197,7 +198,9 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
         updateTravelDetailForDestination.day = day
         updateTravelDetailForDestination.order = 1
         updateTravelDetailForDestination.destination = "Please Edit"
-        updateTravelDetailForDestination.startTime = realm.where<Travel>().equalTo("manageId", manageId).findFirst()?.arrivalTime.toString()
+        updateTravelDetailForDestination.startTime = realm.where<Travel>()
+            .equalTo("manageId", manageId)
+            .findFirst()?.arrivalTime.toString()
         updateTravelDetailForDestination.requiredTime = requireTimeText + "0 min "
         updateTravelDetailForDestination.moveTime = moveTimeText + "0 min "
         updateTravelDetailForDestination.deleteFlag = 0
@@ -212,7 +215,9 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
         updateTravelDetailForArrival.day = days
         updateTravelDetailForArrival.order = 9
         updateTravelDetailForArrival.destination = findViewById<TextView>(R.id.edit1ArrivalPlace).text.toString()
-        updateTravelDetailForArrival.startTime = realm.where<Travel>().equalTo("manageId", manageId).findFirst()?.arrivalTime.toString()
+        updateTravelDetailForArrival.startTime = realm.where<Travel>()
+            .equalTo("manageId", manageId)
+            .findFirst()?.arrivalTime.toString()
         updateTravelDetailForArrival.deleteFlag = 0
     }
 
@@ -305,5 +310,11 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
         edit1TravelDays.text = daysBuilder.toString()
         edit1DeparturePlace.setText(travel?.departurePlace)
         edit1ArrivalPlace.setText(travel?.arrivalPlace)
+    }
+
+    //アクティビティ消滅時にrealmを閉じる。
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 }
