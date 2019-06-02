@@ -1,34 +1,84 @@
 package tafm.tt10tt10.mytesttravel
 
-import android.location.Address
-import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import android.widget.ArrayAdapter
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_bookmark2.*
-import java.util.*
+import tafm.tt10tt10.mytesttravel.adapter.Bm2PagerAdapter
+import tafm.tt10tt10.mytesttravel.model.TravelDetail
+import tafm.tt10tt10.mytesttravel.model.TravelPart
+
 
 class Bookmark2Activity : AppCompatActivity() {
+
+    private lateinit var realm: Realm
+    private val destinationArray: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bookmark2)
 
+        realm = Realm.getDefaultInstance()
+        val manageId = intent.getIntExtra("manageId", 1)
+        val day = intent.getIntExtra("day", 1)
+
+        createSpinnerContents(manageId, day, getDestinationPlace(manageId, day))
+        setPagerAdapter()
+
+//        bm2Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+//
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//            }
+//        }
+
+        //戻るボタン押下。
+        bm2BackToBm1Btn.setOnClickListener {
+            finish()
+        }
+    }
+
+    //その日の出発地を返却。travelDetailのorder = 0をとってくる。
+    private fun getDestinationPlace(manageId: Int, day: Int): String {
+            val order = 0
+            val travelDetail = realm.where<TravelDetail>()
+                .equalTo("manageId", manageId)
+                .equalTo("day", day)
+                .equalTo("order", order)
+                .findFirst()
+        return travelDetail?.destination.toString()
+    }
+
+    //Spinnerの中身をセットする。
+    private fun createSpinnerContents(manageId: Int, day: Int, destinationPlace: String) {
+        val travelPart = realm.where<TravelPart>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", day)
+            .findFirst()
+        val dayText = "Day$day : "
+
+        destinationArray.add(dayText + destinationPlace)
+        if (travelPart?.destination1 is String && travelPart.destination1.isNotEmpty()) destinationArray.add(dayText + travelPart.destination1)
+        if (travelPart?.destination2 is String && travelPart.destination2.isNotEmpty()) destinationArray.add(dayText + travelPart.destination2)
+        if (travelPart?.destination3 is String && travelPart.destination3.isNotEmpty()) destinationArray.add(dayText + travelPart.destination3)
+        if (travelPart?.destination4 is String && travelPart.destination4.isNotEmpty()) destinationArray.add(dayText + travelPart.destination4)
+        if (travelPart?.destination5 is String && travelPart.destination5.isNotEmpty()) destinationArray.add(dayText + travelPart.destination5)
+        if (travelPart?.destination6 is String && travelPart.destination6.isNotEmpty()) destinationArray.add(dayText + travelPart.destination6)
+
+        val arrayAdapter = ArrayAdapter<String>(this, R.layout.bm2_spinner, destinationArray)
+        bm2Spinner.adapter = arrayAdapter
+    }
+
+    //PagerAdapterの処理。
+    private fun setPagerAdapter() {
         //ViewPagerに先ほど作成したAdapterのインスタンスを渡してあげる
         bm2ViewPager.adapter = Bm2PagerAdapter(supportFragmentManager)
-
         //TabLayoutにViewPagerのインスタンスを渡すと自動的に実装してくれる
         bm2TabLayout.setupWithViewPager(bm2ViewPager)
 
@@ -56,118 +106,5 @@ class Bookmark2Activity : AppCompatActivity() {
                 }
             }
         }
-    }
-}
-
-class Bm2PlaceFragment : Fragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.bm2_place_fragment, container, false)
-    }
-}
-
-class Bm2ScheduleFragment : Fragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.bm2_schedule_fragment, container, false)
-    }
-}
-
-class Bm2ImageFragment : Fragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.bm2_image_fragment, container, false)
-    }
-}
-
-class Bm2MapFragment : Fragment(), OnMapReadyCallback {
-
-    private lateinit var mMap: GoogleMap
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.bm2_maps_fragment, container, false)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.mapFragment) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        return view
-    }
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    //GoogleMapがロードされると呼ばれる。
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        //データベースアクセスでIDをキーに入力値をとってくる。
-        val searchKey = "ユニコート初台A棟106 "
-        //Geocoderのインスタンス作成。
-        val geoCoder = Geocoder(context, Locale.getDefault())
-        //取得結果を入れるリスト。
-        val lstAddr: List<Address>?
-
-        //いざGeocoderから取得。
-        lstAddr = geoCoder.getFromLocationName(searchKey,1 )
-
-        //無事取得できれば、1番目をGetして緯度経度を取得する。
-        if(lstAddr != null && lstAddr.isNotEmpty()){
-            val addr = lstAddr[0]
-            val latitude = addr.latitude
-            val longitude = addr.longitude
-            // 緯度、経度設定
-            val tokyo = LatLng(latitude, longitude)
-            //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
-            mMap.isIndoorEnabled = false
-            //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
-            mMap.addMarker(MarkerOptions().position(tokyo).title(searchKey))
-            //地図上に表示する位置とズーム指定。
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tokyo,15f))
-        }else {
-            val tokyo = LatLng(-34.0, 151.0)
-            //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
-            mMap.isIndoorEnabled = false
-            //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
-            mMap.addMarker(MarkerOptions().position(tokyo).title("[$searchKey]の検索に失敗しました。"))
-            //地図上に表示する位置とズーム指定。
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tokyo,1f))
-        }
-    }
-}
-
-//FragmentPagerAdapterを継承したクラスを作成する
-class Bm2PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
-    //どのタブにどのFragmentを実装するか記述する
-    //今回はテストなのですべて同じFragmentを実装している。
-    override fun getItem(position: Int): Fragment {
-        when (position) {
-            0 -> {
-                return Bm2PlaceFragment()
-            }
-            1 -> {
-                return Bm2ScheduleFragment()
-            }
-            2 -> {
-                return Bm2ImageFragment()
-            }
-            3 -> {
-                return Bm2MapFragment()
-            }
-            else -> {
-                return Bm2PlaceFragment()
-            }
-        }
-    }
-
-    //今回はテストなので4つのタブ固定にしている
-    //実際のアプリではタブの数などを管理することもあるだろう
-    override fun getCount(): Int {
-        return 4
     }
 }
