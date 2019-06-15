@@ -2,6 +2,9 @@ package tafm.tt10tt10.mytesttravel
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.TabLayout
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -14,6 +17,14 @@ import tafm.tt10tt10.mytesttravel.model.TravelPart
 class Bookmark2Activity : AppCompatActivity() {
 
     private lateinit var realm: Realm
+    private lateinit var bundle: Bundle
+    private lateinit var pagerAdapter: Bm2PagerAdapter
+    private var manageId: Int = 1
+    private var day: Int = 1
+    private var order: Int = 0
+    private var travelDays: Int = 1
+    private var arrivalPlaceNum: Int = 1
+
     private val destinationArray: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,22 +32,31 @@ class Bookmark2Activity : AppCompatActivity() {
         setContentView(R.layout.activity_bookmark2)
 
         realm = Realm.getDefaultInstance()
-        val manageId = intent.getIntExtra("manageId", 1)
-        val day = intent.getIntExtra("day", 1)
+        manageId = intent.getIntExtra("manageId", 1)
+        day = intent.getIntExtra("day", 1)
+        travelDays = intent.getIntExtra("travelDays", 1)
+
+        bundle =  Bundle()
+        bundle.putInt("manageId", manageId)
+        bundle.putInt("day", day)
+        bundle.putInt("order", order)
+        bundle.putInt("travelDays", travelDays)
 
         createSpinnerContents(manageId, day, getDestinationPlace(manageId, day))
-        setPagerAdapter()
+        setPagerAdapter(bundle)
 
-//        bm2Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-//
-//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//            }
-//        }
+        bm2Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                order = position
+                when(order){
+                    arrivalPlaceNum -> bundle.putInt("order", 9)
+                    else -> bundle.putInt("order", order)
+                }
+                pagerAdapter.notifyDataSetChanged()
+                setTabAndIcon()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
+        }
 
         //戻るボタン押下。
         bm2BackToBm1Btn.setOnClickListener {
@@ -46,12 +66,12 @@ class Bookmark2Activity : AppCompatActivity() {
 
     //その日の出発地を返却。travelDetailのorder = 0をとってくる。
     private fun getDestinationPlace(manageId: Int, day: Int): String {
-            val order = 0
-            val travelDetail = realm.where<TravelDetail>()
-                .equalTo("manageId", manageId)
-                .equalTo("day", day)
-                .equalTo("order", order)
-                .findFirst()
+        val order = 0
+        val travelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", day)
+            .equalTo("order", order)
+            .findFirst()
         return travelDetail?.destination.toString()
     }
 
@@ -70,41 +90,48 @@ class Bookmark2Activity : AppCompatActivity() {
         if (travelPart?.destination4 is String && travelPart.destination4.isNotEmpty()) destinationArray.add(dayText + travelPart.destination4)
         if (travelPart?.destination5 is String && travelPart.destination5.isNotEmpty()) destinationArray.add(dayText + travelPart.destination5)
         if (travelPart?.destination6 is String && travelPart.destination6.isNotEmpty()) destinationArray.add(dayText + travelPart.destination6)
-
+        arrivalPlaceNum = destinationArray.size
+        println(arrivalPlaceNum)
+        if (travelDays == day) destinationArray.add(dayText + getArrivalPlace(manageId, day, 9))
         val arrayAdapter = ArrayAdapter<String>(this, R.layout.bm2_spinner, destinationArray)
         bm2Spinner.adapter = arrayAdapter
     }
 
+    private fun getArrivalPlace(manageId: Int, day: Int, order: Int): String {
+        val travelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", day)
+            .equalTo("order", order)
+            .findFirst()
+        return travelDetail?.destination ?: " "
+    }
+
     //PagerAdapterの処理。
-    private fun setPagerAdapter() {
+    private fun setPagerAdapter(bundle: Bundle) {
         //ViewPagerに先ほど作成したAdapterのインスタンスを渡してあげる
-        bm2ViewPager.adapter = Bm2PagerAdapter(supportFragmentManager)
+        pagerAdapter = Bm2PagerAdapter(supportFragmentManager, bundle)
+        bm2ViewPager.adapter = pagerAdapter
         //TabLayoutにViewPagerのインスタンスを渡すと自動的に実装してくれる
         bm2TabLayout.setupWithViewPager(bm2ViewPager)
+    }
 
-        //Tabへの処理はsetupWithViewPagerをした後だったら可能
-        //ここではタブ名とアイコンを設定している
+    //タブ名とアイコンを設定する。
+    private fun setTabAndIcon() {
         for (i: Int in 0..bm2TabLayout.tabCount) {
             bm2TabLayout.getTabAt(i)?.also {
-                when(i){
-                    0 -> {
-                        it.text = "place"
-                        it.setIcon(R.drawable.ic_flag_black_24dp)
-                    }
-                    1 -> {
-                        it.setIcon(R.drawable.ic_schedule_black_24dp)
-                        it.text = "time"
-                    }
-                    2 -> {
-                        it.setIcon(R.drawable.ic_image_black_24dp)
-                        it.text = "image"
-                    }
-                    3 -> {
-                        it.setIcon(R.drawable.ic_map_black_24dp)
-                        it.text = "map"
-                    }
+                when (i) {
+                    0 -> setTabAndIconValues(it, "place", R.drawable.ic_flag_black_24dp)
+                    1 -> setTabAndIconValues(it, "time", R.drawable.ic_schedule_black_24dp)
+                    2 -> setTabAndIconValues(it, "image", R.drawable.ic_image_black_24dp)
+                    3 -> setTabAndIconValues(it, "map", R.drawable.ic_map_black_24dp)
                 }
             }
         }
+    }
+
+    //タブ名とアイコンの値を設定する。
+    private fun setTabAndIconValues(it: TabLayout.Tab, tabName: String, tabImage: Int) {
+        it.text = tabName
+        it.setIcon(tabImage)
     }
 }

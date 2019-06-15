@@ -34,9 +34,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/bm1ad" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" tools:text="広告"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:gravity="center_horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/bm1MenuFragment" android:background="@color/colorAccent"/>
+            app:layout_constraintBottom_toTopOf="@+id/bm1MenuFragment" android:background="@color/colorAccent"
+            android:text="広告"/>
     <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:name="tafm.tt10tt10.mytesttravel.fragment.MenuFragment"

@@ -234,6 +234,8 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
         arriveTravelDetail?.deleteFromRealm()
     }
 
+
+
     //Viewが破壊されたときにRealmを閉じる。
     override fun onDestroy() {
         super.onDestroy()

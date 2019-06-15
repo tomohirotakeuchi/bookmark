@@ -4,6 +4,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +14,27 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import io.realm.Realm
 import tafm.tt10tt10.mytesttravel.R
 import java.util.*
 
 class Bm2MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+//    private lateinit var realm: Realm
+    private var manageId = 1
+    private var day = 1
+    private var order = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_map_fragment, container, false)
+        val argument = arguments
+        if (argument != null){
+            manageId = argument["manageId"] as Int
+            day = argument["day"] as Int
+            order = argument["order"] as Int
+            Log.i("【Bm2MapFragment】", "[onCreateView] !!arguments!! manageId=$manageId day=$day order=$order")
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.mapFragment) as SupportMapFragment
@@ -46,10 +59,14 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
         //Geocoderのインスタンス作成。
         val geoCoder = Geocoder(context, Locale.getDefault())
         //取得結果を入れるリスト。
-        val lstAddr: List<Address>?
-
-        //いざGeocoderから取得。
-        lstAddr = geoCoder.getFromLocationName(searchKey,1 )
+        val lstAddr: List<Address>? = try {
+            //いざGeocoderから取得。
+            geoCoder.getFromLocationName(searchKey,1 )
+        }catch (e: Exception){
+            //失敗したらlstAddrをnullで返却。
+            Log.i("【Bm2MapFragment】","[onMapReady] Geocode失敗")
+            null
+        }
 
         //無事取得できれば、1番目をGetして緯度経度を取得する。
         if(lstAddr != null && lstAddr.isNotEmpty()){
@@ -74,4 +91,10 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tokyo,1f))
         }
     }
+
+//    //フラグメント削除時にRealmを閉じる。
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        realm.close()
+//    }
 }

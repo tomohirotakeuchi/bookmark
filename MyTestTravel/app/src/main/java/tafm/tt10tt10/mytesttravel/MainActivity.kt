@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.Sort
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        //モデル変更したら以下の2行で初期化する必要あり。
+//        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
+//        Realm.setDefaultConfiguration(config)
+//        ///////////////////////////////////////////////////////////////////////////////////
 
         realm = Realm.getDefaultInstance()
 

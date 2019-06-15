@@ -34,17 +34,17 @@
             android:layout_marginRight="8dp"
             android:text="広告" android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="30sp"
             android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"/>
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout4" android:background="@color/colorAccent"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/linearLayout4">
+            android:id="@+id/linearLayout4" android:weightSum="2">
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/mainCreate" tools:text="new Creat"
-                android:text="new Creat"/>
+                android:text="new Creat" android:layout_weight="2"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

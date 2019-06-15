@@ -42,10 +42,6 @@ class SimpleCreate1Activity : AppCompatActivity(),
         setContentView(R.layout.activity_simple_create1)
 
         setWhereToGoText()
-        //モデル変更したら以下の2行で初期化する必要あり。
-//        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
-//        Realm.setDefaultConfiguration(config)
-        ///////////////////////////////////////////////////////////////////////////////////
         realm = Realm.getDefaultInstance()
 
         //departureDayをタップ
