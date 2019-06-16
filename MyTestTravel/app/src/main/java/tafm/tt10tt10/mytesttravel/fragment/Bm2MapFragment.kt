@@ -15,17 +15,20 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.realm.Realm
+import io.realm.kotlin.where
 import tafm.tt10tt10.mytesttravel.R
+import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import java.util.*
 
 class Bm2MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-//    private lateinit var realm: Realm
+    private lateinit var realm: Realm
     private var manageId = 1
     private var day = 1
     private var order = 0
 
+    //フラグメントの最初の処理
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_map_fragment, container, false)
         val argument = arguments
@@ -42,59 +45,74 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
         return view
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     //GoogleMapがロードされると呼ばれる。
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        //データベースアクセスでIDをキーに入力値をとってくる。
-        val searchKey = "ユニコート初台A棟106 "
-        //Geocoderのインスタンス作成。
-        val geoCoder = Geocoder(context, Locale.getDefault())
-        //取得結果を入れるリスト。
-        val lstAddr: List<Address>? = try {
-            //いざGeocoderから取得。
-            geoCoder.getFromLocationName(searchKey,1 )
-        }catch (e: Exception){
-            //失敗したらlstAddrをnullで返却。
-            Log.i("【Bm2MapFragment】","[onMapReady] Geocode失敗")
-            null
-        }
+        realm = Realm.getDefaultInstance()
 
-        //無事取得できれば、1番目をGetして緯度経度を取得する。
-        if(lstAddr != null && lstAddr.isNotEmpty()){
-            val addr = lstAddr[0]
-            val latitude = addr.latitude
-            val longitude = addr.longitude
-            // 緯度、経度設定
-            val tokyo = LatLng(latitude, longitude)
-            //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
-            mMap.isIndoorEnabled = false
-            //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
-            mMap.addMarker(MarkerOptions().position(tokyo).title(searchKey))
-            //地図上に表示する位置とズーム指定。
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tokyo,15f))
-        }else {
-            val tokyo = LatLng(-34.0, 151.0)
-            //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
-            mMap.isIndoorEnabled = false
-            //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
-            mMap.addMarker(MarkerOptions().position(tokyo).title("[$searchKey]の検索に失敗しました。"))
-            //地図上に表示する位置とズーム指定。
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tokyo,1f))
+        val travelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", day)
+            .equalTo("order", order)
+            .findFirst()
+
+        //経度緯度がデータベースに存在する場合
+        if (travelDetail?.latitude != 0.0 && travelDetail?.longitude != 0.0){
+            if (travelDetail?.destination == "現在地" || travelDetail?.destination == "Current Place"){
+                when(travelDetail.order){
+                    0 -> createMap("出発地", travelDetail.latitude, travelDetail.longitude, 15f)
+                    else -> createMap("最終目的地", travelDetail.latitude, travelDetail.longitude, 15f)
+                }
+            }else {
+                if (travelDetail is TravelDetail){
+                    createMap(travelDetail.destination, travelDetail.latitude, travelDetail.longitude, 15f)
+                }
+            }
+        }else{
+            //経度緯度がデータベースに存在しない場合、GeoCordingを行う。
+            val locationListAddress: List<Address>? = getLocationList(travelDetail.destination)
+            if (locationListAddress != null && locationListAddress.isNotEmpty()){
+                val address = locationListAddress[0]
+                createMap(travelDetail.destination, address.latitude, address.longitude, 15f)
+                //GooCordingが成功したらデータベースに登録。
+                realm.executeTransaction {
+                    travelDetail.latitude = address.latitude
+                    travelDetail.longitude = address.longitude
+                }
+                Log.i("【Bm2MapFragment】","[onMapReady] GeoCoding成功!!$address")
+            }else {
+                createMap("${travelDetail.destination} の検索に失敗しました。"
+                    , -34.0, 151.0, 1f)
+                Log.i("【Bm2MapFragment】","[onMapReady] GeoCoding失敗")
+            }
         }
     }
 
-//    //フラグメント削除時にRealmを閉じる。
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        realm.close()
-//    }
+    //GeoCodingを行う。
+    private fun getLocationList(searchKey: String): List<Address>? {
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        return try {
+            geoCoder.getFromLocationName(searchKey,1 )
+        }catch (e: Exception){
+            null
+        }
+    }
+
+    //マップを生成する。
+    private fun createMap(searchKey: String, latitude: Double, longitude: Double, zoomDegree: Float) {
+        // 緯度、経度設定
+        val latLng = LatLng(latitude, longitude)
+        //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
+        mMap.isIndoorEnabled = false
+        //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
+        mMap.addMarker(MarkerOptions().position(latLng).title(searchKey))
+        //地図上に表示する位置とズーム指定。
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomDegree))
+    }
+
+    //フラグメント削除時にRealmを閉じる。
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
 }

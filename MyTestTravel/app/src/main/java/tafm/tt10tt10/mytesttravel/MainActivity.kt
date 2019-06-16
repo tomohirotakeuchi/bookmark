@@ -1,11 +1,11 @@
 package tafm.tt10tt10.mytesttravel
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.Sort
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,11 +25,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-//        //モデル変更したら以下の2行で初期化する必要あり。
-//        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
-//        Realm.setDefaultConfiguration(config)
-//        ///////////////////////////////////////////////////////////////////////////////////
 
         realm = Realm.getDefaultInstance()
 
@@ -84,6 +79,15 @@ class MainActivity : AppCompatActivity() {
             realm.where<TravelDetail>().equalTo("manageId", manageId).findAll()?.deleteAllFromRealm()
         }
         Toast.makeText(applicationContext, "削除しました！", Toast.LENGTH_LONG).show()
+    }
+
+    //スイッチフラグメントに値を引き渡す。
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 1){
+            val switchFragment = supportFragmentManager.findFragmentById(R.id.mainLocationSwitch)
+            switchFragment?.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     //アクティビティ消滅時にrealmを閉じる。

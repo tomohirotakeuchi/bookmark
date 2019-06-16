@@ -12,6 +12,8 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.bm2_place_fragment.*
 import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
+import java.text.NumberFormat
+import java.util.*
 
 class Bm2PlaceFragment : Fragment() {
 
@@ -43,36 +45,35 @@ class Bm2PlaceFragment : Fragment() {
             .equalTo("order", order)
             .findFirst()
 
-        setTextViewValues(travelDetail, order == 0, order == 9)
+        if(travelDetail is TravelDetail) setTextViewValues(travelDetail, order == 0, order == 9)
     }
 
     //TextViewに値をセットする。
-    private fun setTextViewValues(travelDetail: TravelDetail?, isOrder0: Boolean, isOrder9: Boolean) {
-        bm2_place_destination.text = travelDetail?.destination
-        bm2_place_startTime.text = travelDetail?.startTime
+    private fun setTextViewValues(travelDetail: TravelDetail, isOrder0: Boolean, isOrder9: Boolean) {
+        bm2_place_destination.text = travelDetail.destination
+        bm2_place_startTime.text = travelDetail.startTime
         bm2_place_requireTime.text = if(isOrder0 || isOrder9){
             "---------"
         }else{
-            travelDetail?.requiredTime?.split(": ")?.get(1) ?: "0 min"
+            travelDetail.requiredTime.split(": ").get(1) ?: "0 min"
         }
         bm2_place_moveTime.text = if (isOrder9){
             "---------"
         }else{
-            travelDetail?.moveTime?.split(": ")?.get(1) ?: "0 min"
+            travelDetail.moveTime.split(": ").get(1) ?: "0 min"
         }
-        setStringText(travelDetail?.memo1, bm2_place_memo1)
-        setStringText(travelDetail?.memo2, bm2_place_memo2)
-        setStringText(travelDetail?.memo3, bm2_place_memo3)
-        setStringText(travelDetail?.urlLink1, bm2_place_url1)
-        setStringText(travelDetail?.urlLink2, bm2_place_url2)
-        setStringText(travelDetail?.urlLink3, bm2_place_url3)
-        bm2_place_totalCost.text = travelDetail?.totalCost.toString()
-        bm2_place_costUnit.text = travelDetail?.costUnit
-        bm2_place_tableCost1.text = travelDetail?.costItem1.toString()
-        bm2_place_tableCost2.text = travelDetail?.costItem2.toString()
-        bm2_place_tableCost3.text = travelDetail?.costItem3.toString()
-        bm2_place_tableCost4.text = travelDetail?.costItem4.toString()
-        bm2_place_tableCost5.text = travelDetail?.costItem5.toString()
+        setStringText(travelDetail.memo1, bm2_place_memo1)
+        setStringText(travelDetail.memo2, bm2_place_memo2)
+        setStringText(travelDetail.memo3, bm2_place_memo3)
+        setStringText(travelDetail.urlLink1, bm2_place_url1)
+        setStringText(travelDetail.urlLink2, bm2_place_url2)
+        setStringText(travelDetail.urlLink3, bm2_place_url3)
+        bm2_place_totalCost.text = getCostText(travelDetail.totalCost)
+        bm2_place_tableCost1.text = getCostText(travelDetail.costItem1)
+        bm2_place_tableCost2.text = getCostText(travelDetail.costItem2)
+        bm2_place_tableCost3.text = getCostText(travelDetail.costItem3)
+        bm2_place_tableCost4.text = getCostText(travelDetail.costItem4)
+        bm2_place_tableCost5.text = getCostText(travelDetail.costItem5)
     }
 
     //OnePointMemoとURLLinkに値をセットする。
@@ -83,6 +84,13 @@ class Bm2PlaceFragment : Fragment() {
         }else {
             textView?.visibility = View.GONE
         }
+    }
+
+    private fun getCostText(cost: Int): String {
+        val nf = NumberFormat.getCurrencyInstance()
+        val currency = Currency.getInstance(Locale.getDefault())
+        val value = cost / Math.pow(10.0, currency.defaultFractionDigits.toDouble() )
+        return nf.format(value)
     }
 
     //フラグメント削除時にRealmを閉じる。

@@ -1,15 +1,21 @@
 package tafm.tt10tt10.mytesttravel
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_simple_create1.*
 import android.text.format.DateFormat
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.gms.location.*
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
@@ -17,6 +23,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.*
+import tafm.tt10tt10.mytesttravel.model.GpsAuthority
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelPart
 import java.lang.StringBuilder
@@ -27,9 +34,11 @@ import java.util.*
 class SimpleCreate1Activity : AppCompatActivity(),
     DatePickerFragment.OnDateSelectedListener {
 
+    private lateinit var realm: Realm
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var temporalTravelDays: Long = 0L
     private lateinit var temporalyTag: String
-    private lateinit var realm: Realm
 
     private val noAnyMoreAddTag = "noAnyMoreAddTag"
     private val noAnyMoreRemoveTag = "noAnyMoreRemoveTag"
@@ -43,6 +52,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
         setWhereToGoText()
         realm = Realm.getDefaultInstance()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         //departureDayをタップ
         sc1departureDay.setOnClickListener {
@@ -173,12 +183,6 @@ class SimpleCreate1Activity : AppCompatActivity(),
                 , "DEPARTURE_PLACE" to sc1departurePlace.text.toString()
                 , "ARRIVAL_PLACE" to sc1ArrivalPlace.text.toString())
         }
-    }
-
-    //アクティビティが削除されたときにRealmを閉じる
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
     }
 
     //日付ダイアログで選択された後に呼ばれるメソッド
@@ -332,8 +336,68 @@ class SimpleCreate1Activity : AppCompatActivity(),
         travel.travelDays = temporalTravelDays.toInt() + 1
         travel.departureDay = sc1departureDay.text.toString()
         travel.departurePlace = sc1departurePlace.text.toString()
+        setLocation(travel, sc1departurePlace.text.toString(), 0)
         travel.arrivalDay = sc1ArrivalDay.text.toString()
         travel.arrivalPlace = sc1ArrivalPlace.text.toString()
+        setLocation(travel, sc1ArrivalPlace.text.toString(), 1)
+    }
+
+    //位置情報取得可かつ「現在地（Current Place）」なら位置情報取得
+    private fun setLocation(travel: Travel, searchKey: String, identify: Int) {
+        if (searchKey == "現在地" || searchKey == "Current Place"){
+            val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+            if (gpsAuthority?.flag == true
+                && (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED)){
+                fusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val location = task.result
+                        realm.executeTransaction {
+                            if (identify == 0 && location is Location){
+                                travel.departureLatitude = location.latitude
+                                travel.departureLongitude = location.longitude
+                                Log.i("【SimpleCreate1Activity】", "[setLocation] !!Success!!departure$location")
+                            }else if (identify == 1 && location is Location){
+                                travel.arrivalLatitude = location.latitude
+                                travel.arrivalLongitude = location.longitude
+                                Log.i("【SimpleCreate1Activity】", "[setLocation] !!Success!!arrival$location")
+                            }
+                        }
+                    }else{
+                        getUpdateLocation()
+                    }
+                }
+            }
+        }
+    }
+
+    private val locationCallback: LocationCallback by lazy {
+        (object: LocationCallback() {
+            override fun onLocationResult(result: LocationResult?) {
+                super.onLocationResult(result)
+                // 位置情報の更新が取得できた場合
+                // result?.lastLocationのlatitudeとlongitudeで位置情報を取得
+                Log.i("【SimpleCreate1Activity】", "[locationCallback] !!Success!!")
+            }
+        })
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getUpdateLocation() {
+        // とりあえず1回だけ取得
+        val request = LocationRequest.create().apply {
+            interval = 10000 // ms
+            numUpdates = 1
+        }
+        fusedLocationClient.let { client ->
+            client.requestLocationUpdates(request, locationCallback, null)
+                .addOnCompleteListener { task ->
+                    if (task.result == null) {
+                        // 1回目で失敗した場合は必ずここを通ります。
+                        // その後、コールバックがうまくいけばlocationCallbackのonLocationResultに入ります。
+                    }
+                }
+        }
     }
 
     //TravelPartModelに値を格納
@@ -375,5 +439,17 @@ class SimpleCreate1Activity : AppCompatActivity(),
                 , findViewById<View>(include).findViewById(R.id.sc1destination5)
                 , findViewById<View>(include).findViewById(R.id.sc1destination6))
         }
+    }
+
+    //アクティビティを離れるとき、fusedLocationClientを閉じる。
+    override fun onStop() {
+        super.onStop()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    //アクティビティが削除されたときにRealmを閉じる
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 }

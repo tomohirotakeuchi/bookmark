@@ -234,6 +234,14 @@ class SimpleCreate2Activity : AppCompatActivity()
             travelDetail.order = 9
             travelDetail.destination = findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalPlace).text.toString()
             travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+
+            val travel = realm.where<Travel>()
+                .equalTo("manageId", manageId)
+                .findFirst()
+            if (travel is Travel){
+                travelDetail.latitude = travel.arrivalLatitude
+                travelDetail.longitude = travel.arrivalLongitude
+            }
         }
     }
 
@@ -249,6 +257,15 @@ class SimpleCreate2Activity : AppCompatActivity()
         travelDetail.destination = findViewById<View>(include).findViewById<TextView>(R.id.sc2departurePlace).text.toString()
         travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureTime).text.toString()
         travelDetail.moveTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureMoveTime).text.toString()
+        if (day == 1){
+            val travel = realm.where<Travel>()
+                .equalTo("manageId", manageId)
+                .findFirst()
+            if (travel is Travel){
+                travelDetail.latitude = travel.departureLatitude
+                travelDetail.longitude = travel.departureLongitude
+            }
+        }
     }
 
     //TravelDetailデータベースに値を格納

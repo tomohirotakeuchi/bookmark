@@ -1,12 +1,17 @@
 package tafm.tt10tt10.mytesttravel
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.text.format.DateFormat
 import android.util.Log
 import android.widget.TextView
+import com.google.android.gms.location.*
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.createObject
@@ -16,6 +21,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.DateDiffAlertDialogs
 import tafm.tt10tt10.mytesttravel.fragment.DatePickerFragment
+import tafm.tt10tt10.mytesttravel.model.GpsAuthority
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
@@ -28,6 +34,8 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
 
     private lateinit var temporalyTag: String
     private lateinit var realm: Realm
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var temporalTravelDays: Long = 0L
     private val departureDateTag = "departureDateTag"
     private val arrivalDateTag = "arrivalDateTag"
@@ -41,6 +49,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
 
         val manageId = intent.getIntExtra("manageId", 1)
         realm = Realm.getDefaultInstance()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         //データベースからデータをとってきてビューに表示する。
         setData(manageId)
@@ -92,27 +101,128 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
             val travel = realm.where<Travel>()
                 .equalTo("manageId", manageId)
                 .findFirstAsync()
-            setTravelModel(travel)
-            setTravelPartAndDetailModel(manageId, travel.travelDays)
+
+            //既存の最終目的地データの削除。
+            deleteArrivalTravelDetail(manageId)
+            //新しい最終目的地データの作成。
+            createNewArrivalTravelDetail(manageId, temporalTravelDays.toInt() + 1)
+            //1日目のロケーションをリセットする。
+            travelDetailDepartureLocationReset(travel.manageId)
+            setTravelModelAndLocation(travel)
+            setTravelPartAndDetailModel(manageId, temporalTravelDays.toInt() + 1)
         }
         finish()
     }
 
     //TravelModelに値を格納
-    private fun setTravelModel(travel: Travel) {
+    private fun setTravelModelAndLocation(travel: Travel) {
         travel.title = edit1TravelTitle.text.toString()
         travel.travelDays = temporalTravelDays.toInt() + 1
         travel.departureDay = edit1DepartureDay.text.toString()
         travel.departurePlace = edit1DeparturePlace.text.toString()
+        travel.departureLatitude = 0.0
+        travel.departureLongitude = 0.0
+        setLocation(travel, edit1DeparturePlace.text.toString(), 0)
         travel.arrivalDay = edit1ArrivalDay.text.toString()
         travel.arrivalPlace = edit1ArrivalPlace.text.toString()
+        travel.arrivalLatitude = 0.0
+        travel.arrivalLongitude = 0.0
+        setLocation(travel, edit1ArrivalPlace.text.toString(), 1)
+    }
+
+    //1日目のロケーションをリセットする。
+    private fun travelDetailDepartureLocationReset(manageId: Int) {
+        val day = 1
+        val order = 0
+        val departureTravelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", day)
+            .equalTo("order", order)
+            .findFirst()
+        departureTravelDetail?.latitude = 0.0
+        departureTravelDetail?.longitude = 0.0
+    }
+
+    //位置情報取得可かつ「現在地（Current Place）」なら位置情報取得
+    private fun setLocation(travel: Travel, searchKey: String, identify: Int) {
+        if (searchKey == "現在地" || searchKey == "Current Place") {
+            val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+            if (gpsAuthority?.flag == true
+                && (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED)
+            ) {
+                fusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val location = task.result
+                        realm.executeTransaction {
+                            if (identify == 0 && location is Location) {
+                                travel.departureLatitude = location.latitude
+                                travel.departureLongitude = location.longitude
+
+                                val day = 1
+                                val order = 0
+                                val departureTravelDetail = realm.where<TravelDetail>()
+                                    .equalTo("manageId", travel.manageId)
+                                    .equalTo("day", day)
+                                    .equalTo("order", order)
+                                    .findFirst()
+                                departureTravelDetail?.latitude = location.latitude
+                                departureTravelDetail?.longitude = location.longitude
+                                Log.i("【Edit1Travel1Activity】", "[setLocation] !!Success!!departure$location")
+
+                            } else if (identify == 1 && location is Location) {
+                                travel.arrivalLatitude = location.latitude
+                                travel.arrivalLongitude = location.longitude
+
+                                val order = 9
+                                val arrivalTravelDetail = realm.where<TravelDetail>()
+                                    .equalTo("manageId", travel.manageId)
+                                    .equalTo("order", order)
+                                    .findFirst()
+                                arrivalTravelDetail?.latitude = location.latitude
+                                arrivalTravelDetail?.longitude = location.longitude
+                                Log.i("【Edit1Travel1Activity】", "[setLocation] !!Success!!arrival$location")
+                            }
+                        }
+                    } else {
+                        getUpdateLocation()
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getUpdateLocation() {
+        // とりあえず1回だけ取得
+        val request = LocationRequest.create().apply {
+            interval = 10000 // ms
+            numUpdates = 1
+        }
+        fusedLocationClient.let { client ->
+            client.requestLocationUpdates(request, locationCallback, null)
+                .addOnCompleteListener { task ->
+                    if (task.result == null) {
+                        // 1回目で失敗した場合は必ずここを通ります。
+                        // その後、コールバックがうまくいけばlocationCallbackのonLocationResultに入ります。
+                    }
+                }
+        }
+    }
+
+    private val locationCallback: LocationCallback by lazy {
+        (object: LocationCallback() {
+            override fun onLocationResult(result: LocationResult?) {
+                super.onLocationResult(result)
+                // 位置情報の更新が取得できた場合
+                // result?.lastLocationのlatitudeとlongitudeで位置情報を取得
+                Log.i("【Edit1Travel1Activity】", "[locationCallback] !!Success!!")
+            }
+        })
     }
 
     //travelDays変更によるTravelPartとTravelDetailの追加削除
     private fun setTravelPartAndDetailModel(manageId: Int, days: Int) {
-        //最終目的地のデータの削除。
-        deleteArrivalTravelDetail(manageId)
-
         //日付が増えた場合
         if(days > 1){
             for (day in 2..days){
@@ -146,8 +256,6 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                 }
             }
         }
-        //最終目的地データの作成。
-        createNewArrivalTravelDetail(manageId, days)
     }
 
     //TravelDetailの最終目的地(order=9)のデータをいったん削除する。
@@ -175,35 +283,35 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
         //出発地用TravelDetail作成　requireTimeは出発地なのでなし。
         val maxDetailIdForDeparture = realm.where<TravelDetail>().max("id")
         val nextDetailIdForDeparture = (maxDetailIdForDeparture?.toInt() ?: 0) + 1
-        val updateTravelDetailForDeparture = realm.createObject<TravelDetail>(nextDetailIdForDeparture)
-        updateTravelDetailForDeparture.manageId = manageId
-        updateTravelDetailForDeparture.day = day
-        updateTravelDetailForDeparture.order = 0
-        updateTravelDetailForDeparture.destination = realm.where<TravelDetail>()
+        val newTravelDetailForDeparture = realm.createObject<TravelDetail>(nextDetailIdForDeparture)
+        newTravelDetailForDeparture.manageId = manageId
+        newTravelDetailForDeparture.day = day
+        newTravelDetailForDeparture.order = 0
+        newTravelDetailForDeparture.destination = realm.where<TravelDetail>()
             .equalTo("manageId", manageId)
             .equalTo("day", day - 1)
             .sort("order", Sort.DESCENDING)
             .findFirst()?.destination.toString()
-        updateTravelDetailForDeparture.startTime = realm.where<Travel>()
+        newTravelDetailForDeparture.startTime = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()?.arrivalTime.toString()
-        updateTravelDetailForDeparture.moveTime = moveTimeText + "0 min "
-        updateTravelDetailForDeparture.deleteFlag = 0
+        newTravelDetailForDeparture.moveTime = moveTimeText + "0 min "
+        newTravelDetailForDeparture.deleteFlag = 0
 
         //destination1用TravelDetail作成
         val maxDetailIdForDestination = realm.where<TravelDetail>().max("id")
         val nextDetailIdForDestination = (maxDetailIdForDestination?.toInt() ?: 0) + 1
-        val updateTravelDetailForDestination = realm.createObject<TravelDetail>(nextDetailIdForDestination)
-        updateTravelDetailForDestination.manageId = manageId
-        updateTravelDetailForDestination.day = day
-        updateTravelDetailForDestination.order = 1
-        updateTravelDetailForDestination.destination = "Please Edit"
-        updateTravelDetailForDestination.startTime = realm.where<Travel>()
+        val newTravelDetailForDestination = realm.createObject<TravelDetail>(nextDetailIdForDestination)
+        newTravelDetailForDestination.manageId = manageId
+        newTravelDetailForDestination.day = day
+        newTravelDetailForDestination.order = 1
+        newTravelDetailForDestination.destination = "Please Edit"
+        newTravelDetailForDestination.startTime = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()?.arrivalTime.toString()
-        updateTravelDetailForDestination.requiredTime = requireTimeText + "0 min "
-        updateTravelDetailForDestination.moveTime = moveTimeText + "0 min "
-        updateTravelDetailForDestination.deleteFlag = 0
+        newTravelDetailForDestination.requiredTime = requireTimeText + "0 min "
+        newTravelDetailForDestination.moveTime = moveTimeText + "0 min "
+        newTravelDetailForDestination.deleteFlag = 0
     }
 
     //TravelDetailの最終目的地(order=9)のデータをあたらしく作成する。 moveTime, requireTimeは到着地なのでなし。
@@ -231,12 +339,12 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
             departureDateTag -> {
                 edit1DepartureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 edit1DepartureDay.background = doneColorChange()
-                edit1DepartureText.text = builder.append("・").append(edit1DepartureDay.text).append("出発地点と時刻は？")
+                edit1DepartureText.text = builder.append("・").append(edit1DepartureDay.text).append("出発地点は？")
             }
             arrivalDateTag -> {
                 edit1ArrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 edit1ArrivalDay.background = doneColorChange()
-                edit1ArrivalText.text = builder.append("・").append(edit1ArrivalDay.text).append("到着地点と時刻は？")
+                edit1ArrivalText.text = builder.append("・").append(edit1ArrivalDay.text).append("到着地点は？")
             }
         }
 
@@ -248,7 +356,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                     dialog.show(supportFragmentManager, dateDiffTag)
                     edit1ArrivalDay.text = null
                     edit1ArrivalDay.background = falseColorChange()
-                    edit1ArrivalText.text ="・到着地点と時刻は？"
+                    edit1ArrivalText.text ="・到着地点は？"
                     edit1TravelDays.text = "日付を選択してください。"
                 }
             }
@@ -301,20 +409,29 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
 
     //データベースからデータをとってきてビューに表示する。
     private fun setData(manageId: Int) {
-        val travel = realm.where<Travel>().equalTo("manageId", manageId).findFirst()
-        edit1TravelTitle.setText(travel?.title)
-        edit1DepartureDay.text = travel?.departureDay
-        edit1ArrivalDay.text = travel?.arrivalDay
-        val daysBuilder = StringBuilder()
-            .append(travel?.travelDays?.minus(1)).append("泊").append(travel?.travelDays).append("日")
-        edit1TravelDays.text = daysBuilder.toString()
-        edit1DeparturePlace.setText(travel?.departurePlace)
-        edit1ArrivalPlace.setText(travel?.arrivalPlace)
+        val travel = realm.where<Travel>()
+            .equalTo("manageId", manageId).findFirst()
+        if (travel is Travel){
+            edit1TravelTitle.setText(travel.title)
+            edit1DepartureDay.text = travel.departureDay
+            edit1ArrivalDay.text = travel.arrivalDay
+            val daysBuilder = StringBuilder()
+                .append(travel.travelDays.minus(1)).append("泊").append(travel.travelDays).append("日")
+            edit1TravelDays.text = daysBuilder.toString()
+            edit1DeparturePlace.setText(travel.departurePlace)
+            edit1ArrivalPlace.setText(travel.arrivalPlace)
+            temporalTravelDays = travel.travelDays.minus(1).toLong()
+        }
     }
 
     //アクティビティ消滅時にrealmを閉じる。
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }

@@ -9,6 +9,8 @@ import io.realm.RealmBaseAdapter
 import io.realm.RealmResults
 import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.Travel
+import java.text.NumberFormat
+import java.util.*
 
 class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Travel>(data) {
 
@@ -20,6 +22,7 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
         val mainTitle: TextView = cell.findViewById(R.id.mainTitle)
         val mainEdit: ImageView = cell.findViewById(R.id.mainEdit)
         val mainDelete: ImageView = cell.findViewById(R.id.mainDelete)
+        val mainTotalCost: TextView = cell.findViewById(R.id.mainTotalCost)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -52,14 +55,22 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
 
         adapterData?.run{
             val travel = get(position)
-            val titleBuilder = StringBuilder("-")
-            viewHolder.mainTitle.text = titleBuilder.append(travel.title).append("-")
+            val titleBuilder = StringBuilder("- ")
+            viewHolder.mainTitle.text = titleBuilder.append(travel.title).append(" -")
             val departureBuilder = StringBuilder()
             viewHolder.mainDepartureDayTime.text = departureBuilder.append(travel.departureDay).append("  ").append(travel.departureTime)
             val arrivalBuilder = StringBuilder()
             viewHolder.mainArrivalDayTime.text = arrivalBuilder.append(travel.arrivalDay).append("  ").append(travel.arrivalTime)
+            viewHolder.mainTotalCost.text = getCostText(travel.totalCost)
         }
         return view
+    }
+
+    private fun getCostText(totalCost: Int): String {
+        val nf = NumberFormat.getCurrencyInstance()
+        val currency = Currency.getInstance(Locale.getDefault())
+        val value = totalCost / Math.pow(10.0, currency.defaultFractionDigits.toDouble() )
+        return nf.format(value)
     }
 
     //listenerをセットする。

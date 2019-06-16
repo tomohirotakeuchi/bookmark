@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey
 open class Travel: RealmObject() {
 
     @PrimaryKey
-    var manageId: Int = 0                  //管理ID
+    var manageId: Int = 0                   //管理ID
     var title: String = ""                  //タイトル
     var travelDays: Int = 0				    //旅行日数
     var departureDay: String = ""           //出発日
@@ -17,9 +17,13 @@ open class Travel: RealmObject() {
     var arrivalDay: String = ""             //到着日
     var arrivalPlace: String = ""		    //到着地
     var arrivalTime: String = ""            //到着時刻
-    var arrivaleLatitude: Double = 0.0      //到着緯度
+    var arrivalLatitude: Double = 0.0       //到着緯度
     var arrivalLongitude: Double = 0.0      //到着経度
     var totalCost: Int = 0				    //合計費用
-    var titlePictureUrl: String = ""	    //タイトル画像URL
+    var costUnit: String = "円"             //お金の単位
+    var reserve1: String = ""               //予備String1
+    var reserve2: String = ""               //予備String2
+    var reserve3: Int = 0                   //予備Int1
+    var resorve4: Int = 0                   //予備Int2
     var deleteFlag: Int = 1                 //デリートフラグ1なら削除
 }
