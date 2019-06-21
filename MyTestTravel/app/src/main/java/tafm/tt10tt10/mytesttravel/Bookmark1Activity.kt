@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.Toast
 import io.realm.Realm
 import io.realm.Sort
-import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_bookmark1.*
 import org.jetbrains.anko.alert
@@ -27,8 +26,9 @@ import java.util.*
 class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
 
     private lateinit var realm: Realm
-    private var preArrivalDestination = "defaultDestination"
-    private var preArrivalStartTime = "defaultStartTime"
+    private lateinit var adapter: Bookmark1Adapter
+    private var travelDays: Int = 1
+    private var diffCostForTravel = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +40,12 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
             .equalTo("manageId", manageId)
             .sort("day", Sort.ASCENDING)
             .findAll()
-        val travelDays = realm.where<Travel>().equalTo("manageId", manageId).findFirst()?.travelDays
+        val travel = realm.where<Travel>()
+            .equalTo("manageId", manageId)
+            .findFirst()
+        if (travel is Travel) travelDays = travel.travelDays
 
-        val adapter = Bookmark1Adapter(this, travelParts, true)
+        adapter = Bookmark1Adapter(this, travelParts, true)
         bm1RecyclerView.adapter = adapter
         bm1RecyclerView.layoutManager = GridLayoutManager(this, 2)
 
@@ -62,7 +65,7 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
         adapter.setOnBm1EditClickListener(object: Bookmark1Adapter.OnBm1EditDeleteClickListener{
             override fun onBm1EditClick(view: View, manageId: Int?, day: Int?, bm1EditDeleteFlag: Int) {
                 if(bm1EditDeleteFlag == 1){
-                    startActivity<Edit2TravelActivity>("manageId" to manageId, "day" to day, "travelDays" to travelDays)
+                    startActivity<EditBookmark1Activity>("manageId" to manageId, "day" to day, "travelDays" to travelDays)
                 }else{
                     val currentTravelDays = realm.where<Travel>()
                         .equalTo("manageId", manageId)
@@ -70,7 +73,7 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
                     if(currentTravelDays is Int && currentTravelDays > 1){
                         alert ("削除しますか？"){
                             yesButton {
-                                if (manageId is Int && day is Int && travelDays is Int){
+                                if (manageId is Int && day is Int){
                                     delete(manageId, day, travelDays)
                                 }
                             }
@@ -90,27 +93,33 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
     //削除タップ時の処理。
     private fun delete(manageId: Int, day: Int, travelDays: Int){
         realm.executeTransaction {
-            deleteArrivalTravelDetail(manageId)
             deleteTravelPart(manageId, day)
             deleteTravelDetail(manageId, day)
             arrangeTravelPart(manageId, day)
             arrangeTravelDetail(manageId, day)
             arrangeArrivalTravelDetail(manageId, day, travelDays)
-            arrangeTravel(manageId)
+            arrangeTravel(manageId, travelDays)
         }
         Toast.makeText(applicationContext, "削除しました！", Toast.LENGTH_LONG).show()
     }
 
-    //Travel更新。travelDaysと到着日付を変更する。
-    private fun arrangeTravel(manageId: Int) {
+    //Travel更新。travelDays、到着日付、到着日時、コストを変更する。
+    private fun arrangeTravel(manageId: Int, travelDays: Int) {
         val updateTravel = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()
-        val minusTravelDays = updateTravel?.travelDays?.minus(1)
-        if(minusTravelDays is Int){
-            Log.i("【Bookmark1Activity】", "[arrangeTravel] minusTravelDays $minusTravelDays")
-            updateTravel.travelDays = minusTravelDays
+        val endTravelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("day", travelDays - 1)
+            .sort("order", Sort.DESCENDING)
+            .findFirst()
+        if(updateTravel is Travel && endTravelDetail is TravelDetail){
+            this.travelDays = updateTravel.travelDays.minus(1)
+            Log.i("【Bookmark1Activity】", "[arrangeTravel] minusTravelDays ${this.travelDays}")
+            updateTravel.travelDays = this.travelDays
             updateTravel.arrivalDay = minusArrivalDay(updateTravel.arrivalDay)
+            updateTravel.arrivalTime = endTravelDetail.startTime
+            updateTravel.totalCost -= diffCostForTravel
         }
     }
 
@@ -135,31 +144,27 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
 
     //到着地のTravelDetail更新。最終日かどうかで分類
     private fun arrangeArrivalTravelDetail(manageId: Int, day: Int, travelDays: Int) {
-        if(day == travelDays){
-            createNewTravelDetail(manageId, travelDays, preArrivalStartTime, true)
-        }else {
-            createNewTravelDetail(manageId, travelDays, preArrivalStartTime, false)
+        when(day == travelDays){
+            true -> updateArrivalTravelDetail(manageId, travelDays, true)
+            false -> updateArrivalTravelDetail(manageId, travelDays, false)
         }
     }
 
-    //到着地のTravelDetail作成。最終日trueなら前日の最後のdestination、startTimeをもってくる。falseならそのまま。
-    private fun createNewTravelDetail(manageId: Int, travelDays: Int, preArrivalStartTime: String, isLastDay: Boolean) {
-        val maxDetailId = realm.where<TravelDetail>().max("id")
-        val nextDetailId = (maxDetailId?.toInt() ?: 0) + 1
-        val newTravelDetail = realm.createObject<TravelDetail>(nextDetailId)
-        newTravelDetail.manageId = manageId
-        newTravelDetail.startTime = when(isLastDay){
-            true -> realm.where<TravelDetail>()
+    //到着地のTravelDetail更新。最終日trueなら到着（Travel）のstartTimeをもってくる。falseならそのまま。
+    private fun updateArrivalTravelDetail(manageId: Int, travelDays: Int, isLastDay: Boolean) {
+        val lastOrder = 9
+        val newTravelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("order", lastOrder)
+            .findFirst() as TravelDetail
+        if (isLastDay){
+            newTravelDetail.startTime =realm.where<TravelDetail>()
                 .equalTo("manageId", manageId)
                 .equalTo("day", travelDays - 1)
                 .sort("order",Sort.DESCENDING)
                 .findFirst()?.startTime.toString()
-            false -> preArrivalStartTime
         }
         newTravelDetail.day = travelDays - 1
-        newTravelDetail.destination =  preArrivalDestination
-        newTravelDetail.order = 9
-        newTravelDetail.deleteFlag = 0
     }
 
     //削除したTravelPartの分ほかのデータをつめて整形
@@ -213,28 +218,18 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
             ?.deleteFromRealm()
     }
 
-    //TravelDetailを削除する。
+    //totalCostを一次退避し、到着以外のTravelDetailを削除する。
     private fun deleteTravelDetail(manageId: Int, day: Int) {
-        realm.where<TravelDetail>()
+        val targetTravelDetails = realm.where<TravelDetail>()
             .equalTo("manageId", manageId)
-            .equalTo("day", day).findAll()
-            ?.deleteAllFromRealm()
+            .equalTo("day", day)
+            .between("order", 0, 6)
+            .findAll()
+        for (travelDetail in targetTravelDetails){
+            diffCostForTravel += travelDetail.totalCost
+        }
+        targetTravelDetails?.deleteAllFromRealm()
     }
-
-    //TravelDetailの最終目的地(order=9)のデータをいったん削除する。到着地と到着時間は一度退避する。
-    private fun deleteArrivalTravelDetail(manageId: Int) {
-        val lastOrder = 9
-        val arriveTravelDetail = realm.where<TravelDetail>()
-            .equalTo("manageId", manageId)
-            .equalTo("order", lastOrder)
-            .findFirst()
-        preArrivalDestination = arriveTravelDetail?.destination.toString()
-        preArrivalStartTime = arriveTravelDetail?.startTime.toString()
-        Log.i("【Bookmark1Activity】", "[deleteArrivalTravelDetail] $preArrivalDestination $preArrivalStartTime")
-        arriveTravelDetail?.deleteFromRealm()
-    }
-
-
 
     //Viewが破壊されたときにRealmを閉じる。
     override fun onDestroy() {

@@ -20,10 +20,5 @@ open class Travel: RealmObject() {
     var arrivalLatitude: Double = 0.0       //到着緯度
     var arrivalLongitude: Double = 0.0      //到着経度
     var totalCost: Int = 0				    //合計費用
-    var costUnit: String = "円"             //お金の単位
-    var reserve1: String = ""               //予備String1
-    var reserve2: String = ""               //予備String2
-    var reserve3: Int = 0                   //予備Int1
-    var resorve4: Int = 0                   //予備Int2
     var deleteFlag: Int = 1                 //デリートフラグ1なら削除
 }

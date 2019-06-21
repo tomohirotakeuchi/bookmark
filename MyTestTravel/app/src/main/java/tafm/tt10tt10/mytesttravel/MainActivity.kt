@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnMainEditDeleteClickListener(object: MainAdapter.OnMainEditDeleteClickListener{
             override fun onMainEditDeleteClick(view: View, manageId: Int?, mainEditDeleteFlag: Int) {
                 if(mainEditDeleteFlag == 1){
-                    startActivity<Edit1TravelActivity>("manageId" to manageId)
+                    startActivity<EditMainActivity>("manageId" to manageId)
                 }else{
                     alert ("削除しますか？"){
                         yesButton {

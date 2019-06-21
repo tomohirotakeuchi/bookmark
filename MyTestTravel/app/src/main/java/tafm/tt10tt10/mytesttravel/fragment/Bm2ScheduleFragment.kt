@@ -1,5 +1,6 @@
 package tafm.tt10tt10.mytesttravel.fragment
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,22 +8,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.bm2_schedule_fragment.*
 import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
-import java.lang.StringBuilder
 
 class Bm2ScheduleFragment : Fragment() {
 
     private lateinit var realm: Realm
+    private var listener: Bm2ScheduleEditOnClickListener? = null
     private var lastOrder = 1
     private var manageId = 1
     private var day = 1
     private var order = 0
     private var travelDays = 1
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is Bm2ScheduleEditOnClickListener){
+            throw RuntimeException("リスナーを実装せよ")
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_schedule_fragment, container, false)
@@ -39,7 +48,8 @@ class Bm2ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("【Bm2ScheduleFragment】", "[onViewCreated]")
+
+        goneGuideText()
         realm = Realm.getDefaultInstance()
         val travelDetails = realm.where<TravelDetail>()
             .equalTo("manageId", manageId)
@@ -47,10 +57,14 @@ class Bm2ScheduleFragment : Fragment() {
             .sort("order")
             .findAll()
 
-        setGuideText()
         for(travelDetail in travelDetails) setTextViews(travelDetail)
         goneLastDestinationVisibility(day, travelDays, lastOrder)
         targetLayoutHighLight()
+        //クリックリスナー実装
+        view.findViewById<ImageView>(R.id.bm2_schedule_edit).setOnClickListener {
+            listener = context as? Bm2ScheduleEditOnClickListener
+            listener?.onScheduleEditClick()
+        }
     }
 
     //現在表示している部分をハイライトする。
@@ -71,10 +85,9 @@ class Bm2ScheduleFragment : Fragment() {
         }
     }
 
-    //何日目かのTextを表示にする。
-    private fun setGuideText() {
-        val dayBuilder = StringBuilder("Day")
-        bm2_schedule_include.findViewById<TextView>(R.id.sc2DayText).text = dayBuilder.append("$day").toString()
+    //何日目かのTextを非表示にする。
+    private fun goneGuideText() {
+        bm2_schedule_include.findViewById<TextView>(R.id.sc2DayText).visibility = View.GONE
     }
 
     //それぞれのLayoutの表示非表示。
@@ -155,6 +168,11 @@ class Bm2ScheduleFragment : Fragment() {
     //最終日以外の場合、最終目的地のレイアウトを非表示にする。
     private fun lastDestinationLayoutDone(layoutId: Int) {
         bm2_schedule_include.findViewById<View>(layoutId).visibility = View.GONE
+    }
+
+    //Bm2ScheduleEditのinterface。
+    interface Bm2ScheduleEditOnClickListener {
+        fun onScheduleEditClick()
     }
 
     //フラグメント削除時にRealmを閉じる。

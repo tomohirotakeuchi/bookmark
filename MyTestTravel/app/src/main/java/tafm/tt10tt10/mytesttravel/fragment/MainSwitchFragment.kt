@@ -23,7 +23,7 @@ import io.realm.RealmConfiguration
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import tafm.tt10tt10.mytesttravel.R
-import tafm.tt10tt10.mytesttravel.model.GpsAuthority
+import tafm.tt10tt10.mytesttravel.model.Authority
 import java.util.concurrent.TimeUnit
 
 class MainSwitchFragment: Fragment() {
@@ -42,7 +42,7 @@ class MainSwitchFragment: Fragment() {
         realm = Realm.getDefaultInstance()
 
         //保存されている位置情報のフラグに応じて、スイッチのON/OFF初期表示を変える。
-        var gpsAuthority = realm.where<GpsAuthority>().findFirst()
+        var gpsAuthority = realm.where<Authority>().findFirst()
         if (gpsAuthority == null){
             realm.executeTransaction {
                 val maxId = 1L
@@ -108,7 +108,7 @@ class MainSwitchFragment: Fragment() {
             == PackageManager.PERMISSION_GRANTED){
             //パーミッションが有効ならフラグをtrueにする。
             realm.executeTransaction{
-                val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+                val gpsAuthority = realm.where<Authority>().findFirst()
                 gpsAuthority?.flag = true
                 Log.i("【SwitchFragment】", "[checkLocationPermission] !!パーミッション有効!!")
             }
@@ -160,7 +160,7 @@ class MainSwitchFragment: Fragment() {
     //スイッチをオフにしたらフラグをオフにする。
     private fun stopLocationRequest(){
         realm.executeTransaction{
-            val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+            val gpsAuthority = realm.where<Authority>().findFirst()
             gpsAuthority?.flag = false
             Log.i("【SwitchFragment】", "[stopLocationRequest] flagをfalseに")
         }

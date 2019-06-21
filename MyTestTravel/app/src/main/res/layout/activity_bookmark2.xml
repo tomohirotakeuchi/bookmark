@@ -13,26 +13,31 @@
         <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday"/>
+                android:text="place" android:icon="@drawable/ic_flag_black_24dp"/>
 
         <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tuesday"/>
+                android:text="Times" android:icon="@drawable/ic_schedule_black_24dp"/>
 
         <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wednesday"/>
+                android:text="Image" android:icon="@drawable/ic_image_black_24dp"/>
+        <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Map"
+                android:icon="@drawable/ic_map_black_24dp"/>
     </android.support.design.widget.TabLayout>
     <Spinner
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:id="@+id/bm2Spinner" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/bm2BackToBm1Btn"
             app:layout_constraintEnd_toStartOf="@+id/bm2BackToBm1Btn"
-    />
+            android:splitMotionEvents="true" tools:listitem="@layout/bm2_spinner" android:dropDownWidth="wrap_content"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
     <Button
             android:text="Back"
             android:layout_width="wrap_content"

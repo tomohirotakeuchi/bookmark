@@ -6,4 +6,5 @@
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:ellipsize="marquee" android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                 tools:text="この字の大きさ"/>
+                 tools:text="この字の大きさ" android:textSize="30sp"
+/>

@@ -21,7 +21,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.DateDiffAlertDialogs
 import tafm.tt10tt10.mytesttravel.fragment.DatePickerFragment
-import tafm.tt10tt10.mytesttravel.model.GpsAuthority
+import tafm.tt10tt10.mytesttravel.model.Authority
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
@@ -30,7 +30,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedListener {
+class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedListener {
 
     private lateinit var temporalyTag: String
     private lateinit var realm: Realm
@@ -102,10 +102,8 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                 .equalTo("manageId", manageId)
                 .findFirstAsync()
 
-            //既存の最終目的地データの削除。
-            deleteArrivalTravelDetail(manageId)
-            //新しい最終目的地データの作成。
-            createNewArrivalTravelDetail(manageId, temporalTravelDays.toInt() + 1)
+            //最終目的地データの更新。
+            updateArrivalTravelDetail(manageId, temporalTravelDays.toInt() + 1)
             //1日目のロケーションをリセットする。
             travelDetailDepartureLocationReset(travel.manageId)
             setTravelModelAndLocation(travel)
@@ -146,7 +144,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
     //位置情報取得可かつ「現在地（Current Place）」なら位置情報取得
     private fun setLocation(travel: Travel, searchKey: String, identify: Int) {
         if (searchKey == "現在地" || searchKey == "Current Place") {
-            val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+            val gpsAuthority = realm.where<Authority>().findFirst()
             if (gpsAuthority?.flag == true
                 && (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED)
@@ -232,7 +230,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                     .findFirst()
 
                 if (existPartForAdd !is TravelPart) {
-                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel] existPartForAddが存在しない day:$day")
+                    Log.i("【EditMainActivity】", "[setTravelPartAndDetailModel] existPartForAddが存在しない day:$day")
                     createNewTravelPart(manageId, day)
                     createNewTravelDetail(manageId, day)
                 }
@@ -247,7 +245,7 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                     .findFirst()
 
                 if(existPartForDelete is TravelPart){
-                    Log.i("【Edit1TravelActivity】", "[setTravelPartAndDetailModel] existPartForDeleteが存在 day:$day")
+                    Log.i("【EditMainActivity】", "[setTravelPartAndDetailModel] existPartForDeleteが存在 day:$day")
                     existPartForDelete.deleteFromRealm()
                     realm.where<TravelDetail>()
                         .equalTo("manageId", manageId)
@@ -256,15 +254,6 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
                 }
             }
         }
-    }
-
-    //TravelDetailの最終目的地(order=9)のデータをいったん削除する。
-    private fun deleteArrivalTravelDetail(manageId: Int) {
-        val lastOrder = 9
-        realm.where<TravelDetail>()
-            .equalTo("manageId", manageId)
-            .equalTo("order", lastOrder)
-            .findFirst()?.deleteFromRealm()
     }
 
     //日付が増えた時に新しくTravelPartを作成する。
@@ -314,19 +303,18 @@ class Edit1TravelActivity : AppCompatActivity(), DatePickerFragment.OnDateSelect
         newTravelDetailForDestination.deleteFlag = 0
     }
 
-    //TravelDetailの最終目的地(order=9)のデータをあたらしく作成する。 moveTime, requireTimeは到着地なのでなし。
-    private fun createNewArrivalTravelDetail(manageId: Int, days: Int){
-        val maxDetailIdForArrival = realm.where<TravelDetail>().max("id")
-        val nextDetailIdForArrival = (maxDetailIdForArrival?.toInt() ?: 0) + 1
-        val updateTravelDetailForArrival = realm.createObject<TravelDetail>(nextDetailIdForArrival)
-        updateTravelDetailForArrival.manageId = manageId
-        updateTravelDetailForArrival.day = days
-        updateTravelDetailForArrival.order = 9
-        updateTravelDetailForArrival.destination = findViewById<TextView>(R.id.edit1ArrivalPlace).text.toString()
-        updateTravelDetailForArrival.startTime = realm.where<Travel>()
+    //TravelDetailの最終目的地(order=9)のデータを更新する。
+    private fun updateArrivalTravelDetail(manageId: Int, days: Int){
+        val lastOrder = 9
+        val updateArrivalTravelDetail = realm.where<TravelDetail>()
+            .equalTo("manageId", manageId)
+            .equalTo("order", lastOrder)
+            .findFirst() as TravelDetail
+        updateArrivalTravelDetail.day = days
+        updateArrivalTravelDetail.destination = findViewById<TextView>(R.id.edit1ArrivalPlace).text.toString()
+        updateArrivalTravelDetail.startTime = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()?.arrivalTime.toString()
-        updateTravelDetailForArrival.deleteFlag = 0
     }
 
     //日付を選択した後に呼ばれるメソッド。

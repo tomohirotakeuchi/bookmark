@@ -1,11 +1,13 @@
 package tafm.tt10tt10.mytesttravel.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -18,9 +20,18 @@ import java.util.*
 class Bm2PlaceFragment : Fragment() {
 
     private lateinit var realm: Realm
+    private var listener: Bm2PlaceEditOnClickListener? = null
+
     private var manageId = 1
     private var day = 1
     private var order = 0
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is Bm2PlaceEditOnClickListener){
+            throw RuntimeException("リスナーを実装せよ")
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_place_fragment, container, false)
@@ -44,8 +55,12 @@ class Bm2PlaceFragment : Fragment() {
             .equalTo("day", day)
             .equalTo("order", order)
             .findFirst()
-
         if(travelDetail is TravelDetail) setTextViewValues(travelDetail, order == 0, order == 9)
+        //クリックリスナー実装
+        view.findViewById<ImageView>(R.id.bm2_place_edit).setOnClickListener {
+            listener = context as? Bm2PlaceEditOnClickListener
+            listener?.onPlaceEditClick()
+        }
     }
 
     //TextViewに値をセットする。
@@ -55,12 +70,12 @@ class Bm2PlaceFragment : Fragment() {
         bm2_place_requireTime.text = if(isOrder0 || isOrder9){
             "---------"
         }else{
-            travelDetail.requiredTime.split(": ").get(1) ?: "0 min"
+            travelDetail.requiredTime.split(": ")[1]
         }
         bm2_place_moveTime.text = if (isOrder9){
             "---------"
         }else{
-            travelDetail.moveTime.split(": ").get(1) ?: "0 min"
+            travelDetail.moveTime.split(": ")[1]
         }
         setStringText(travelDetail.memo1, bm2_place_memo1)
         setStringText(travelDetail.memo2, bm2_place_memo2)
@@ -86,11 +101,17 @@ class Bm2PlaceFragment : Fragment() {
         }
     }
 
+    //ロケールからお金の単位をつける。
     private fun getCostText(cost: Int): String {
         val nf = NumberFormat.getCurrencyInstance()
         val currency = Currency.getInstance(Locale.getDefault())
         val value = cost / Math.pow(10.0, currency.defaultFractionDigits.toDouble() )
         return nf.format(value)
+    }
+
+    //Bm2PlaceEditのinterface。
+    interface Bm2PlaceEditOnClickListener {
+        fun onPlaceEditClick()
     }
 
     //フラグメント削除時にRealmを閉じる。

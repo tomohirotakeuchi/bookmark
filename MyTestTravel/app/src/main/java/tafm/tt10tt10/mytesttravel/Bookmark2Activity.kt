@@ -3,18 +3,26 @@ package tafm.tt10tt10.mytesttravel
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_bookmark2.*
+import org.jetbrains.anko.startActivity
 import tafm.tt10tt10.mytesttravel.adapter.Bm2PagerAdapter
+import tafm.tt10tt10.mytesttravel.fragment.Bm2ImageFragment
+import tafm.tt10tt10.mytesttravel.fragment.Bm2PlaceFragment
+import tafm.tt10tt10.mytesttravel.fragment.Bm2ScheduleFragment
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
 
 
-class Bookmark2Activity : AppCompatActivity() {
+class Bookmark2Activity : AppCompatActivity()
+    , Bm2PlaceFragment.Bm2PlaceEditOnClickListener
+    , Bm2ScheduleFragment.Bm2ScheduleEditOnClickListener
+    , Bm2ImageFragment.Bm2ImageEditOnClickListener{
 
     private lateinit var realm: Realm
     private lateinit var bundle: Bundle
@@ -23,9 +31,16 @@ class Bookmark2Activity : AppCompatActivity() {
     private var day: Int = 1
     private var order: Int = 0
     private var travelDays: Int = 1
-    private var arrivalPlaceNum: Int = 1
+    private var arrivalPlaceNum: Int = -1
 
     private val destinationArray: MutableList<String> = mutableListOf()
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i("【Bookmark2Activity】", "[onRestart()]")
+        pagerAdapter.notifyDataSetChanged()
+        setTabAndIcon()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +51,7 @@ class Bookmark2Activity : AppCompatActivity() {
         day = intent.getIntExtra("day", 1)
         travelDays = intent.getIntExtra("travelDays", 1)
 
-        bundle =  Bundle()
+        bundle = Bundle()
         bundle.putInt("manageId", manageId)
         bundle.putInt("day", day)
         bundle.putInt("order", order)
@@ -44,12 +59,17 @@ class Bookmark2Activity : AppCompatActivity() {
 
         createSpinnerContents(manageId, day, getDestinationPlace(manageId, day))
         setPagerAdapter(bundle)
+        setTabAndIcon()
 
         bm2Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 order = position
+                Log.i("【Bookmark2Activity】", "[bm2Spinner] position$position arrivalPlaceNum$arrivalPlaceNum")
                 when(order){
-                    arrivalPlaceNum -> bundle.putInt("order", 9)
+                    arrivalPlaceNum -> {
+                        bundle.putInt("order", 9)
+                        order = 9
+                    }
                     else -> bundle.putInt("order", order)
                 }
                 pagerAdapter.notifyDataSetChanged()
@@ -90,10 +110,13 @@ class Bookmark2Activity : AppCompatActivity() {
         if (travelPart?.destination4 is String && travelPart.destination4.isNotEmpty()) destinationArray.add(dayText + travelPart.destination4)
         if (travelPart?.destination5 is String && travelPart.destination5.isNotEmpty()) destinationArray.add(dayText + travelPart.destination5)
         if (travelPart?.destination6 is String && travelPart.destination6.isNotEmpty()) destinationArray.add(dayText + travelPart.destination6)
-        arrivalPlaceNum = destinationArray.size
-        println(arrivalPlaceNum)
-        if (travelDays == day) destinationArray.add(dayText + getArrivalPlace(manageId, day, 9))
-        val arrayAdapter = ArrayAdapter<String>(this, R.layout.bm2_spinner, destinationArray)
+        if (travelDays == day) {
+            destinationArray.add(dayText + getArrivalPlace(manageId, day, 9))
+            arrivalPlaceNum = destinationArray.size -1
+        }
+
+        Log.i("【Bookmark2Activity】", "[createSpinnerContents] arrivalPlaceNum$arrivalPlaceNum")
+        val arrayAdapter = ArrayAdapter(this, R.layout.bm2_spinner, destinationArray)
         bm2Spinner.adapter = arrayAdapter
     }
 
@@ -133,5 +156,22 @@ class Bookmark2Activity : AppCompatActivity() {
     private fun setTabAndIconValues(it: TabLayout.Tab, tabName: String, tabImage: Int) {
         it.text = tabName
         it.setIcon(tabImage)
+    }
+
+    //PlaceFragmentでEditをクリック。
+    override fun onPlaceEditClick() {
+        startActivity<EditPlaceActivity>("manageId" to manageId, "day" to day
+            , "order" to order)
+    }
+
+    //ScheduleFragmentでEditをクリック。
+    override fun onScheduleEditClick() {
+        startActivity<EditScheduleActivity>("manageId" to manageId, "day" to day
+            , "travelDays" to travelDays)
+    }
+
+    //ImageFragmentでEditをクリック。
+    override fun onImageEditClick() {
+        startActivity<EditImageActivity>("manageId" to manageId, "day" to day, "order" to order)
     }
 }

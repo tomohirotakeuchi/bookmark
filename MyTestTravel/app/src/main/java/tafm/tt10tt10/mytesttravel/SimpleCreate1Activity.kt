@@ -23,7 +23,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.fragment.*
-import tafm.tt10tt10.mytesttravel.model.GpsAuthority
+import tafm.tt10tt10.mytesttravel.model.Authority
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelPart
 import java.lang.StringBuilder
@@ -100,51 +100,55 @@ class SimpleCreate1Activity : AppCompatActivity(),
             check = false
             alert("出発・到着地を設定してください") { yesButton { } }.show()
         }
-        if (check) check = checkFirstDestination(temporalTravelDays)
+        if (check) check = checkDestination(temporalTravelDays)
         return check
     }
 
-    //目的地1が空欄だったらエラーメッセージ
-    private fun checkFirstDestination(travelDay: Long): Boolean {
-        if (findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-            alert("1日目の目的地1を設定してください") { yesButton { } }.show()
+    //目的地が空欄だったらエラーメッセージ
+    private fun checkDestination(travelDays: Long): Boolean {
+        var isSuccess = true
+        for (day in 1..(travelDays + 1L)){
+            when(day){
+                1L -> isSuccess = checkDestinationExist(1, R.id.includeSC1Day1)
+                2L -> isSuccess = checkDestinationExist(2, R.id.includeSC1Day2)
+                3L -> isSuccess = checkDestinationExist(3, R.id.includeSC1Day3)
+                4L -> isSuccess = checkDestinationExist(4, R.id.includeSC1Day4)
+                5L -> isSuccess = checkDestinationExist(5, R.id.includeSC1Day5)
+                6L -> isSuccess = checkDestinationExist(6, R.id.includeSC1Day6)
+                7L -> isSuccess = checkDestinationExist(7, R.id.includeSC1Day7)
+            }
+            if (!isSuccess) return false
+        }
+        return true
+    }
+
+    //目的地入力チェック
+    private fun checkDestinationExist(day: Int, include: Int): Boolean {
+        val isExist1 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination1).text.isNotEmpty()
+        val isExist2 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination2).text.isNotEmpty()
+        val isExist3 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination3).text.isNotEmpty()
+        val isExist4 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination4).text.isNotEmpty()
+        val isExist5 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination5).text.isNotEmpty()
+        val isExist6 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination6).text.isNotEmpty()
+        if (!isExist1) {
+            alert("Day $day :目的地1を設定してください") { yesButton { } }.show()
             return false
         }
-        if (travelDay > 0) {
-            if (findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert("2日目の目的地1を設定してください") { yesButton { } }.show()
-                return false
-            }
+        if (!isExist2 && isExist3) {
+            alert("Day $day :目的地2を設定してください") { yesButton { } }.show()
+            return false
         }
-        if (travelDay > 1) {
-            if (findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert("3日目の目的地1を設定してください") { yesButton { } }.show()
-                return false
-            }
+        if (!isExist3 && isExist4) {
+            alert("Day $day :目的地3を設定してください") { yesButton { } }.show()
+            return false
         }
-        if(travelDay > 2) {
-            if (findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("4日目の目的地1を設定してください"){ yesButton {  } }.show()
-                return false
-            }
+        if (!isExist4 && isExist5) {
+            alert("Day $day :目的地4を設定してください") { yesButton { } }.show()
+            return false
         }
-        if(travelDay > 3) {
-            if (findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("5日目の目的地1を設定してください"){ yesButton {  } }.show()
-                return false
-            }
-        }
-        if(travelDay > 4) {
-            if (findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("6日目の目的地1を設定してください"){ yesButton {  } }.show()
-                return false
-            }
-        }
-        if(travelDay > 5) {
-            if (findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.sc1destination1).text.isEmpty()) {
-                alert ("7日目の目的地1を設定してください"){ yesButton {  } }.show()
-                return false
-            }
+        if (!isExist5 && isExist6) {
+            alert("Day $day :目的地5を設定してください") { yesButton { } }.show()
+            return false
         }
         return true
     }
@@ -195,12 +199,12 @@ class SimpleCreate1Activity : AppCompatActivity(),
             departureDateTag -> {
                 sc1departureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 sc1departureDay.background = doneColorChange()
-                sc1departureText.text = builder.append("・").append(sc1departureDay.text).append("出発地点と時刻は？")
+                sc1departureText.text = builder.append("・").append(sc1departureDay.text).append("出発地点は？")
             }
             arrivalDateTag -> {
                 sc1ArrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 sc1ArrivalDay.background = doneColorChange()
-                sc1arrivalText.text = builder.append("・").append(sc1ArrivalDay.text).append("到着地点と時刻は？")
+                sc1arrivalText.text = builder.append("・").append(sc1ArrivalDay.text).append("到着地点は？")
             }
         }
 
@@ -212,7 +216,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
                     dialog.show(supportFragmentManager, dateDiffTag)
                     sc1ArrivalDay.text = null
                     sc1ArrivalDay.background = falseColorChange()
-                    sc1arrivalText.text ="・到着地点と時刻は？"
+                    sc1arrivalText.text ="・到着地点は？"
                     sc1travelDays.text = "日付を選択してください。"
                 }
             }
@@ -345,7 +349,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //位置情報取得可かつ「現在地（Current Place）」なら位置情報取得
     private fun setLocation(travel: Travel, searchKey: String, identify: Int) {
         if (searchKey == "現在地" || searchKey == "Current Place"){
-            val gpsAuthority = realm.where<GpsAuthority>().findFirst()
+            val gpsAuthority = realm.where<Authority>().findFirst()
             if (gpsAuthority?.flag == true
                 && (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED)){

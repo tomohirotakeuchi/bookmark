@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="tafm.tt10tt10.mytesttravel">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -17,7 +16,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-
+        <activity android:name=".EditImageActivity">
+        </activity>
+        <activity android:name=".EditScheduleActivity">
+        </activity>
+        <activity android:name=".EditPlaceActivity">
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -34,9 +38,9 @@
                 android:name=".Bookmark2Activity"
                 android:label="@string/title_activity_bookmark2">
         </activity>
-        <activity android:name=".Edit2TravelActivity">
+        <activity android:name=".EditBookmark1Activity">
         </activity>
-        <activity android:name=".Edit1TravelActivity">
+        <activity android:name=".EditMainActivity">
         </activity>
         <activity android:name=".Bookmark3Activity">
         </activity>
