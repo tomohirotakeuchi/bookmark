@@ -34,12 +34,15 @@ class Bookmark1Adapter(context: Context
         viewHolder.day.text = dayBuilder.append("Day ").append(travelPart?.day.toString()).toString()
         viewHolder.destination.text = travelPart?.destination1.toString()
         viewHolder.layout.setOnClickListener {
+            viewHolder.layout.notPressTwice()
             bm1ItemListener.onBm1ItemClick(it, travelPart?.manageId, travelPart?.day)
         }
         viewHolder.editBtn.setOnClickListener {
+            viewHolder.editBtn.notPressTwice()
             bm1EditListener.onBm1EditClick(it, travelPart?.manageId, travelPart?.day, 1)
         }
         viewHolder.deleteBtn.setOnClickListener {
+            viewHolder.deleteBtn.notPressTwice()
             bm1EditListener.onBm1EditClick(it, travelPart?.manageId, travelPart?.day, 2)
         }
     }
@@ -47,7 +50,7 @@ class Bookmark1Adapter(context: Context
     //リサイクラービューで表示するアイテムを新規に生成するときに呼ばれる。ViewとviewHolderを生成し、viewHolderを返す。
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderForBm1 {
         setOnBm1ItemClickListener(bm1ItemListener)
-        val view = inflater.inflate(R.layout.bookmark1_recycler_list_item, parent, false)
+        val view = inflater.inflate(R.layout.bm1_recycler_list_item, parent, false)
         return ViewHolderForBm1(view)
     }
 
@@ -78,5 +81,16 @@ class Bookmark1Adapter(context: Context
         val destination: TextView = view.findViewById(R.id.bm1Destination1)
         val editBtn: ImageView = view.findViewById(R.id.bm1Edit)
         val deleteBtn: ImageView = view.findViewById(R.id.bm1Delete)
+    }
+
+
+    /**
+     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 }

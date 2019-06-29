@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import com.google.android.gms.location.*
 import io.realm.Realm
@@ -69,10 +70,12 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
         }
         //更新ボタンタップ
         edit1ApplyButton.setOnClickListener {
+            it.notPressTwice()
             if (checkInput()) checkSuccess(manageId)
         }
         //戻るボタンタップ
         edit1BackToMain.setOnClickListener {
+            it.notPressTwice()
             finish()
         }
     }
@@ -410,6 +413,16 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
             edit1ArrivalPlace.setText(travel.arrivalPlace)
             temporalTravelDays = travel.travelDays.minus(1).toLong()
         }
+    }
+
+    /**
+     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //アクティビティ消滅時にrealmを閉じる。

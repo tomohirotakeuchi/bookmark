@@ -11,6 +11,7 @@ import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.Travel
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.pow
 
 class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Travel>(data) {
 
@@ -45,10 +46,12 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
         setOnMainEditDeleteClickListener(mainListener)
 
         viewHolder.mainEdit.setOnClickListener {
+            it.notPressTwice()
             val travel = data?.get(position)
             mainListener.onMainEditDeleteClick(view, travel?.manageId, 1)
         }
         viewHolder.mainDelete.setOnClickListener {
+            it.notPressTwice()
             val travel = data?.get(position)
             mainListener.onMainEditDeleteClick(view, travel?.manageId, 2)
         }
@@ -69,7 +72,7 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
     private fun getCostText(totalCost: Int): String {
         val nf = NumberFormat.getCurrencyInstance()
         val currency = Currency.getInstance(Locale.getDefault())
-        val value = totalCost / Math.pow(10.0, currency.defaultFractionDigits.toDouble() )
+        val value = totalCost / 10.0.pow(currency.defaultFractionDigits.toDouble())
         return nf.format(value)
     }
 
@@ -81,6 +84,16 @@ class MainAdapter(private val data: RealmResults<Travel>?) : RealmBaseAdapter<Tr
     //interface。Activityから呼びだす。
     interface OnMainEditDeleteClickListener {
         fun onMainEditDeleteClick(view: View, manageId: Int?, mainEditDeleteFlag: Int)
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 }
 

@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -45,10 +46,12 @@ class EditPlaceActivity : AppCompatActivity() {
         editCostClicked()
 
         placeEditBack.setOnClickListener {
+            it.notPressTwice()
             finish()
         }
 
         placeEditUpdate.setOnClickListener {
+            it.notPressTwice()
             if (travelDetail is TravelDetail) {
                 realm.executeTransaction {
                     updateTravelDetail(travelDetail)
@@ -61,7 +64,7 @@ class EditPlaceActivity : AppCompatActivity() {
 
     //ガイドテキストを表示
     private fun setGuideText(travelDetail: TravelDetail) {
-        val text = "Day$day : " + travelDetail.destination
+        val text = "- Day$day : " + travelDetail.destination + " -"
         placeEditGuide.text = text
     }
 
@@ -160,6 +163,16 @@ class EditPlaceActivity : AppCompatActivity() {
     interface CustomTextWatcher: TextWatcher{
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    }
+
+    /**
+     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //アクティビティ削除時にRealmを閉じる。

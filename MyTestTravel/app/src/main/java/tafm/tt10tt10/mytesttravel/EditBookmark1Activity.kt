@@ -38,19 +38,30 @@ class EditBookmark1Activity : AppCompatActivity() {
             .equalTo("day", day)
             .findFirst()
 
+        setGuideText(travelPart)
         setVisibility()
         setData(travelPart)
 
         //戻るボタン押下
         edit2BackToBm1Btn.setOnClickListener {
+            it.notPressTwice()
             finish()
         }
 
         //更新ボタン押下
         edit2UpdateBtn.setOnClickListener {
+            it.notPressTwice()
             if (checkDestinationExist()){
                 checkSuccess(manageId, day, travelDays, travelPart)
             }
+        }
+    }
+
+    //何日目に行くかのテキスト
+    private fun setGuideText(travelPart: TravelPart?) {
+        if(travelPart is TravelPart){
+            val guideBuilder = StringBuilder("Where to Go on Day ")
+            view.findViewById<TextView>(R.id.sc1whereToGoText).text = guideBuilder.append(travelPart.day).toString()
         }
     }
 
@@ -307,6 +318,16 @@ class EditBookmark1Activity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.sc1destination6).visibility = View.VISIBLE
         view.findViewById<TextView>(R.id.sc1addDestination).visibility = View.GONE
         view.findViewById<TextView>(R.id.sc1removeDestination).visibility = View.GONE
+    }
+
+    /**
+     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //アクティビティ消滅時にrealmを閉じる。

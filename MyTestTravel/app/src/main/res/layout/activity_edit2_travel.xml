@@ -15,24 +15,37 @@
             <include android:layout_width="0dp" android:layout_height="wrap_content"
                      layout="@layout/sc1_fragment" app:layout_constraintEnd_toEndOf="parent"
                      app:layout_constraintStart_toStartOf="parent"
-                     app:layout_constraintTop_toTopOf="parent"
-                     app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/includeEdit2"
-                     app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="1.0"/>
+                     android:id="@+id/includeEdit2"
+                     app:layout_constraintHorizontal_bias="1.0"
+                     app:layout_constraintTop_toBottomOf="@+id/edit2GuideText"/>
             <Button
-                    android:text="戻る"
+                    android:text="Back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/edit2BackToBm1Btn"
-                    app:layout_constraintTop_toBottomOf="@+id/includeEdit2"
-                    android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginLeft="32dp" android:layout_marginStart="32dp"/>
+                    app:layout_constraintTop_toTopOf="@+id/edit2GuideText" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit2GuideText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
             <Button
-                    android:text="更新"
-                    android:layout_width="wrap_content"
+                    android:text="Update"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edit2UpdateBtn" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
-                    app:layout_constraintTop_toTopOf="@+id/edit2BackToBm1Btn" android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit2BackToBm1Btn"/>
+                    android:id="@+id/edit2UpdateBtn" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/includeEdit2"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
+            <TextView
+                    android:text="Edit Destinations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edit2GuideText"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/edit2BackToBm1Btn" android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp" android:textSize="30sp" android:gravity="center"
+                    android:layout_marginTop="8dp" android:background="@color/edit_color"/>
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

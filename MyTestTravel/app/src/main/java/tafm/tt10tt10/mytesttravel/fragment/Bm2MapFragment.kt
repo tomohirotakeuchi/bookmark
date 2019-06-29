@@ -38,6 +38,7 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
             order = argument["order"] as Int
             Log.i("【Bm2MapFragment】", "[onCreateView] !!arguments!! manageId=$manageId day=$day order=$order")
         }
+        realm = Realm.getDefaultInstance()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.mapFragment) as SupportMapFragment
@@ -48,7 +49,6 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
     //GoogleMapがロードされると呼ばれる。
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        realm = Realm.getDefaultInstance()
 
         val travelDetail = realm.where<TravelDetail>()
             .equalTo("manageId", manageId)

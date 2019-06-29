@@ -7,6 +7,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
             android:name=".application.TravelApplication"
@@ -16,11 +17,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".EditImageActivity">
+        <activity android:name=".EditImageActivity"
+                  android:screenOrientation="portrait">
+
         </activity>
-        <activity android:name=".EditScheduleActivity">
+        <activity android:name=".EditScheduleActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".EditPlaceActivity">
+        <activity android:name=".EditPlaceActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -36,23 +41,29 @@
 
         <activity
                 android:name=".Bookmark2Activity"
-                android:label="@string/title_activity_bookmark2">
+                android:label="@string/title_activity_bookmark2"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".EditBookmark1Activity">
+        <activity android:name=".EditBookmark1Activity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".EditMainActivity">
+        <activity android:name=".EditMainActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Bookmark3Activity">
+        <activity android:name=".Bookmark1Activity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Bookmark1Activity">
+        <activity android:name=".CreateCompleteActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".CreateCompleteActivity">
+        <activity android:name=".SimpleCreate2Activity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".SimpleCreate2Activity">
+        <activity android:name=".SimpleCreate1Activity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".SimpleCreate1Activity">
-        </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

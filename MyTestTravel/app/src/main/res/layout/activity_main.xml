@@ -12,10 +12,10 @@
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_marginTop="8dp" android:gravity="center_horizontal|center_vertical"
-            android:text="旅のしおり" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginTop="8dp" android:gravity="center_horizontal"
+            android:text="Smart Travel" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintEnd_toStartOf="@+id/mainLocationFragment"/>
     <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:name="tafm.tt10tt10.mytesttravel.fragment.MainSwitchFragment"
@@ -23,8 +23,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/mainListView" android:layout_marginBottom="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-    />
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
     <ListView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -32,8 +31,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainGuideText"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/mainAd"
-            tools:listitem="@layout/main_list_item" android:layout_marginTop="8dp">
+            app:layout_constraintBottom_toTopOf="@+id/mainAd"
+            tools:listitem="@layout/main_list_item" android:layout_marginTop="8dp"
+            android:background="@drawable/border">
     </ListView>
     <TextView
             android:layout_width="0dp"

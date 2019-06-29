@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         //ListViewをタップ
         mainListView.setOnItemClickListener { parent, _, position, _ ->
+            mainListView.notPressTwice()
             val tappedTravel = parent.getItemAtPosition(position) as Travel
             startActivity<Bookmark1Activity>("manageId" to tappedTravel.manageId)
         }
@@ -88,6 +89,16 @@ class MainActivity : AppCompatActivity() {
             val switchFragment = supportFragmentManager.findFragmentById(R.id.mainLocationSwitch)
             switchFragment?.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //アクティビティ消滅時にrealmを閉じる。

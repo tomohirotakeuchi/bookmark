@@ -15,25 +15,39 @@
                 android:layout_height="wrap_content">
 
             <TextView
-                    android:text="Day 1 Schedule"
-                    android:layout_width="wrap_content"
+                    android:text="- Day 1 -"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content" android:id="@+id/scheduleEditGuide"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/scheduleEditBack" android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="24sp"
+                    android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/scheduleEditText" android:layout_marginTop="8dp"
+                    android:gravity="center" app:layout_constraintEnd_toEndOf="parent"/>
             <include android:layout_width="0dp" android:layout_height="wrap_content" layout="@layout/sc2_fragment"
                      app:layout_constraintEnd_toEndOf="parent"
                      app:layout_constraintStart_toStartOf="parent"
                      android:id="@+id/scheduleEditInclude" app:layout_constraintTop_toBottomOf="@+id/scheduleEditGuide"
-            />
+                     android:layout_marginTop="8dp"/>
+            <TextView
+                    android:text="Edit Schedule"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:id="@+id/scheduleEditText"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:background="@color/edit_color" android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent" android:textSize="30sp"
+                    app:layout_constraintEnd_toStartOf="@+id/scheduleEditBack"/>
             <Button
                     android:text="Back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scheduleEditBack" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/scheduleEditText"/>
             <Button
                     android:text="Update"
                     android:layout_width="0dp"

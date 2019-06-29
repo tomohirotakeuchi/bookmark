@@ -5,4 +5,5 @@
     <color name="colorAccent">#84FF0000</color>
     <color name="timeBackGround">#6402FC29</color>
     <color name="light_blue">#CAEFF5</color>
+    <color name="edit_color">#57FC7B02</color>
 </resources>

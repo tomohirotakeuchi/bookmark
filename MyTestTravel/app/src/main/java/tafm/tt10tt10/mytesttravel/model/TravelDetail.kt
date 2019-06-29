@@ -29,6 +29,7 @@ open class TravelDetail: RealmObject(){
     var imageUrl1: String = ""		//画像添付URL1
     var imageUrl2: String = ""		//画像添付URL2
     var imageUrl3: String = ""		//画像添付URL3
+    var imageUrl4: String = ""      //画像添付URL4
     var latitude: Double = 0.0		//緯度
     var longitude: Double = 0.0		//経度
     var deleteFlag: Int = 0         //デリートフラグ1なら削除

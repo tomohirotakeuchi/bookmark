@@ -15,7 +15,6 @@ import org.jetbrains.anko.noButton
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.adapter.Bookmark1Adapter
-import tafm.tt10tt10.mytesttravel.fragment.MenuFragment
 import tafm.tt10tt10.mytesttravel.model.Travel
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
@@ -23,7 +22,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
+class Bookmark1Activity : AppCompatActivity() {
 
     private lateinit var realm: Realm
     private lateinit var adapter: Bookmark1Adapter
@@ -48,11 +47,6 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
         adapter = Bookmark1Adapter(this, travelParts, true)
         bm1RecyclerView.adapter = adapter
         bm1RecyclerView.layoutManager = GridLayoutManager(this, 2)
-
-        val menuFragment = MenuFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.bm1MenuFragment, menuFragment)
-        transaction.commit()
 
         //RecyclerViewをタップ
         adapter.setOnBm1ItemClickListener(object: Bookmark1Adapter.OnBm1ItemClickListener{
@@ -235,10 +229,5 @@ class Bookmark1Activity : AppCompatActivity(), MenuFragment.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
-    }
-
-    //フラグメントのクリックリスナー。
-    override fun onClick() {
-        startActivity<MainActivity>()
     }
 }

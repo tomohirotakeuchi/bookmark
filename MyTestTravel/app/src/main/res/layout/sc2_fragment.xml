@@ -41,7 +41,7 @@
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                     android:hint="出発時刻" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
                     android:background="@color/colorAccent"
-                    app:layout_constraintBottom_toBottomOf="@+id/sc2departurePlace"/>
+                    app:layout_constraintBottom_toBottomOf="@+id/sc2departurePlace" android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2departureMoveTime"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/sc2departureTime" android:layout_marginStart="8dp"
@@ -104,7 +104,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter1" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime1" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime1" android:layout_marginLeft="8dp"
@@ -154,7 +155,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime1"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime1"
@@ -183,7 +184,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter2" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -211,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime2"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime2" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime2" android:layout_marginLeft="8dp"
@@ -233,7 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime2"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime2"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime2"
@@ -262,7 +264,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter3" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -291,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime3"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime3" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime3" android:layout_marginLeft="8dp"
@@ -312,7 +315,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime3"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime3"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime3"
@@ -341,7 +344,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter4" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -369,7 +373,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime4"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime4" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime4" android:layout_marginLeft="8dp"
@@ -390,7 +394,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime4"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime4"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime4"
@@ -419,7 +423,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter5" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -447,7 +452,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime5"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime5" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime5" android:layout_marginLeft="8dp"
@@ -468,7 +473,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime5"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime5"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime5"
@@ -497,7 +502,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/sc2layoutCenter6" android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="8dp" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"/>
+                    app:layout_constraintTop_toTopOf="parent" android:background="@drawable/border"
+                    android:textSize="24sp"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -525,7 +531,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2requireTime6"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="所要時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2startTime6" android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="@+id/sc2startTime6" android:layout_marginLeft="8dp"
@@ -546,7 +552,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/sc2moveTime6"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="20sp"
                     android:hint="移動時間"
                     app:layout_constraintTop_toBottomOf="@+id/sc2requireTime6"
                     app:layout_constraintEnd_toEndOf="@+id/sc2requireTime6"
@@ -585,7 +591,7 @@
                     android:layout_marginRight="8dp"
                     app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-                    android:background="@drawable/border"/>
+                    android:background="@drawable/border" android:textSize="24sp"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

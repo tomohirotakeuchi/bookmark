@@ -43,7 +43,7 @@ class EditScheduleActivity : AppCompatActivity()
         setContentView(R.layout.activity_edit_schedule)
 
         realm = Realm.getDefaultInstance()
-        view = findViewById<View>(R.id.scheduleEditInclude)
+        view = findViewById(R.id.scheduleEditInclude)
         manageId = intent.getIntExtra("manageId", 1)
         day = intent.getIntExtra("day", 1)
         travelDays = intent.getIntExtra("travelDays", 1)
@@ -60,10 +60,12 @@ class EditScheduleActivity : AppCompatActivity()
         setViewLink()
 
         scheduleEditBack.setOnClickListener {
+            it.notPressTwice()
             finish()
         }
 
         scheduleEditUpdate.setOnClickListener {
+            it.notPressTwice()
             realm.executeTransaction {
                 devideTravelDetail()
             }
@@ -386,7 +388,7 @@ class EditScheduleActivity : AppCompatActivity()
 
     //ガイドテキストを表示。何日目かを非表示
     private fun setGuideText(day: Int) {
-        val text = "Day$day : Schedule"
+        val text = "- Day $day -"
         scheduleEditGuide.text = text
         view.findViewById<TextView>(R.id.sc2DayText).visibility = View.GONE
     }
@@ -396,5 +398,21 @@ class EditScheduleActivity : AppCompatActivity()
     private fun doneColorChange(): Drawable? {
         return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) getDrawable(R.color.timeBackGround)
         else resources.getDrawable(R.color.timeBackGround)
+    }
+
+    /**
+     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
+    }
+
+    //フラグメント削除時にRealmを閉じる。
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 }
