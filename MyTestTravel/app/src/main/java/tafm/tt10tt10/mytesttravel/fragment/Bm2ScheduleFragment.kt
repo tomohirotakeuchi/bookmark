@@ -36,12 +36,12 @@ class Bm2ScheduleFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_schedule_fragment, container, false)
         val argument = arguments
-        if (argument != null){
+        argument?.apply{
             Log.i("【Bm2ScheduleFragment】", "[onCreateView] $argument")
-            manageId = argument["manageId"] as Int
-            day = argument["day"] as Int
-            order = argument["order"] as Int
-            travelDays = argument["travelDays"] as Int
+            manageId = this["manageId"] as Int
+            day = this["day"] as Int
+            order = this["order"] as Int
+            travelDays = this["travelDays"] as Int
         }
         return view
     }
@@ -62,6 +62,7 @@ class Bm2ScheduleFragment : Fragment() {
         targetLayoutHighLight()
         //クリックリスナー実装
         view.findViewById<ImageView>(R.id.bm2_schedule_edit).setOnClickListener {
+            it.notPressTwice()
             listener = context as? Bm2ScheduleEditOnClickListener
             listener?.onScheduleEditClick()
         }
@@ -70,17 +71,17 @@ class Bm2ScheduleFragment : Fragment() {
     //現在表示している部分をハイライトする。
     private fun targetLayoutHighLight() {
         if(day != travelDays && order == lastOrder){
-            bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(150, 202, 239, 245))
+            bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
         }else {
             when (order) {
-                0 -> bm2_schedule_include.findViewById<View>(R.id.sc2departureLayout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                1 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination1Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                2 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination2Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                3 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination3Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                4 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination4Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                5 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination5Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                6 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination6Layout).setBackgroundColor(Color.argb(150, 202, 239, 245))
-                9 -> bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(150, 202, 239, 245))
+                0 -> bm2_schedule_include.findViewById<View>(R.id.sc2departureLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                1 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination1Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                2 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination2Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                3 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination3Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                4 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination4Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                5 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination5Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                6 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination6Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                9 -> bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
             }
         }
     }
@@ -173,6 +174,16 @@ class Bm2ScheduleFragment : Fragment() {
     //Bm2ScheduleEditのinterface。
     interface Bm2ScheduleEditOnClickListener {
         fun onScheduleEditClick()
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //フラグメント削除時にRealmを閉じる。

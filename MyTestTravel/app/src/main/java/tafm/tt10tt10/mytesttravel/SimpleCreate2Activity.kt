@@ -20,13 +20,19 @@ import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import tafm.tt10tt10.mytesttravel.model.TravelPart
 import java.lang.StringBuilder
 
-
 class SimpleCreate2Activity : AppCompatActivity()
     , TimePickerFragment.OnTimeSelectedListener
     , RequireTimePickerFragment.OnTimeSelectedListener {
 
     private lateinit var realm: Realm
     private var manageId: Int = 0
+    private lateinit var includeDay1: View
+    private lateinit var includeDay2: View
+    private lateinit var includeDay3: View
+    private lateinit var includeDay4: View
+    private lateinit var includeDay5: View
+    private lateinit var includeDay6: View
+    private lateinit var includeDay7: View
     private lateinit var temporalyTag: String
     private var temporalyDayFlag = 0
     private var travelDays = 1L
@@ -94,10 +100,17 @@ class SimpleCreate2Activity : AppCompatActivity()
         setContentView(R.layout.activity_simple_create2)
 
         realm = Realm.getDefaultInstance()
+        includeDay1 = findViewById(R.id.includeSC2Day1)
+        includeDay2 = findViewById(R.id.includeSC2Day2)
+        includeDay3 = findViewById(R.id.includeSC2Day3)
+        includeDay4 = findViewById(R.id.includeSC2Day4)
+        includeDay5 = findViewById(R.id.includeSC2Day5)
+        includeDay6 = findViewById(R.id.includeSC2Day6)
+        includeDay7 = findViewById(R.id.includeSC2Day7)
         manageId = intent.getIntExtra("MANAGE_ID", 0)
         travelDays = intent.getLongExtra("TRAVEL_DAYS", 1)
         //一日目の出発地設定
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2departurePlace).text =
+        includeDay1.findViewById<TextView>(R.id.sc2departurePlace).text =
             intent.getStringExtra("DEPARTURE_PLACE")
 
         visibleInclude(travelDays)
@@ -107,13 +120,13 @@ class SimpleCreate2Activity : AppCompatActivity()
         for(travelPart in travelParts){
             //何日目かチェック。includeするレイアウトを決める。
             when(travelPart?.day){
-                1 -> checkDestination(R.id.includeSC2Day1, R.id.includeSC2Day1, travelPart)
-                2 -> checkDestination(R.id.includeSC2Day2, R.id.includeSC2Day1, travelPart)
-                3 -> checkDestination(R.id.includeSC2Day3, R.id.includeSC2Day2, travelPart)
-                4 -> checkDestination(R.id.includeSC2Day4, R.id.includeSC2Day3, travelPart)
-                5 -> checkDestination(R.id.includeSC2Day5, R.id.includeSC2Day4, travelPart)
-                6 -> checkDestination(R.id.includeSC2Day6, R.id.includeSC2Day5, travelPart)
-                7 -> checkDestination(R.id.includeSC2Day7, R.id.includeSC2Day6, travelPart)
+                1 -> checkDestination(includeDay1, includeDay1, travelPart)
+                2 -> checkDestination(includeDay2, includeDay1, travelPart)
+                3 -> checkDestination(includeDay3, includeDay2, travelPart)
+                4 -> checkDestination(includeDay4, includeDay3, travelPart)
+                5 -> checkDestination(includeDay5, includeDay4, travelPart)
+                6 -> checkDestination(includeDay6, includeDay5, travelPart)
+                7 -> checkDestination(includeDay7, includeDay6, travelPart)
             }
         }
         setViewLink(travelDays)
@@ -133,13 +146,13 @@ class SimpleCreate2Activity : AppCompatActivity()
                 realm.executeTransaction {
                     for (day in 1..travelDays) {
                         when (day) {
-                            1L -> devideDestination(1, R.id.includeSC2Day1)
-                            2L -> devideDestination(2, R.id.includeSC2Day2)
-                            3L -> devideDestination(3, R.id.includeSC2Day3)
-                            4L -> devideDestination(4, R.id.includeSC2Day4)
-                            5L -> devideDestination(5, R.id.includeSC2Day5)
-                            6L -> devideDestination(6, R.id.includeSC2Day6)
-                            7L -> devideDestination(7, R.id.includeSC2Day7)
+                            1L -> devideDestination(1, includeDay1)
+                            2L -> devideDestination(2, includeDay2)
+                            3L -> devideDestination(3, includeDay3)
+                            4L -> devideDestination(4, includeDay4)
+                            5L -> devideDestination(5, includeDay5)
+                            6L -> devideDestination(6, includeDay6)
+                            7L -> devideDestination(7, includeDay7)
                         }
                     }
                     deleteFlagFalse()
@@ -154,72 +167,72 @@ class SimpleCreate2Activity : AppCompatActivity()
     //入力チェック。日にちチェック
     private fun checkEnterDay(day: Long): Boolean {
         when(day){
-            1L -> return checkEnter(R.id.includeSC2Day1)
-            2L -> return checkEnter(R.id.includeSC2Day2)
-            3L -> return checkEnter(R.id.includeSC2Day3)
-            4L -> return checkEnter(R.id.includeSC2Day4)
-            5L -> return checkEnter(R.id.includeSC2Day5)
-            6L -> return checkEnter(R.id.includeSC2Day6)
-            7L -> return checkEnter(R.id.includeSC2Day7)
+            1L -> return checkEnter(includeDay1)
+            2L -> return checkEnter(includeDay2)
+            3L -> return checkEnter(includeDay3)
+            4L -> return checkEnter(includeDay4)
+            5L -> return checkEnter(includeDay5)
+            6L -> return checkEnter(includeDay6)
+            7L -> return checkEnter(includeDay7)
         }
         return false
     }
 
     //入力チェック。visibilityを使ってテキストが空かどうか判定する。
-    private fun checkEnter(include: Int): Boolean {
+    private fun checkEnter(include: View): Boolean {
         var flag = true
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2departureLayout).visibility == View.VISIBLE){
-            flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureTime).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureMoveTime).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2departureLayout).visibility == View.VISIBLE){
+            flag = include.findViewById<TextView>(R.id.sc2departureTime).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2departureMoveTime).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination1Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime1).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime1).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination1Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime1).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime1).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination2Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime2).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime2).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination2Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime2).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime2).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination3Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime3).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime3).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination3Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime3).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime3).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination4Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime4).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime4).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination4Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime4).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime4).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination5Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime5).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime5).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination5Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime5).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime5).text.isNotEmpty()
         }
-        if(findViewById<View>(include).findViewById<View>(R.id.sc2destination6Layout).visibility == View.VISIBLE){
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2requireTime6).text.isNotEmpty()
-            if (flag) flag = findViewById<View>(include).findViewById<TextView>(R.id.sc2moveTime6).text.isNotEmpty()
+        if(include.findViewById<View>(R.id.sc2destination6Layout).visibility == View.VISIBLE){
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2requireTime6).text.isNotEmpty()
+            if (flag) flag = include.findViewById<TextView>(R.id.sc2moveTime6).text.isNotEmpty()
         }
         return flag
     }
 
     //目的地別に分類
-    private fun devideDestination(day: Int, include: Int) {
+    private fun devideDestination(day: Int, include: View) {
         createDepartureTravelDetail(day, include)
         val lastDayFlag = (day.toLong() == travelDays)
 
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination6).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination6).text.isNotEmpty()){
             createTravelDetail(6, day, include, R.id.sc2destination6, R.id.sc2startTime6, R.id.sc2requireTime6 ,R.id.sc2moveTime6)
         }
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination5).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination5).text.isNotEmpty()){
             createTravelDetail(5, day, include, R.id.sc2destination5, R.id.sc2startTime5, R.id.sc2requireTime5 ,R.id.sc2moveTime5)
         }
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination4).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination4).text.isNotEmpty()){
             createTravelDetail(4, day, include, R.id.sc2destination4, R.id.sc2startTime4, R.id.sc2requireTime4 ,R.id.sc2moveTime4)
         }
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination3).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination3).text.isNotEmpty()){
             createTravelDetail(3, day, include, R.id.sc2destination3, R.id.sc2startTime3, R.id.sc2requireTime3 ,R.id.sc2moveTime3)
         }
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination2).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination2).text.isNotEmpty()){
             createTravelDetail(2, day, include, R.id.sc2destination2, R.id.sc2startTime2, R.id.sc2requireTime2 ,R.id.sc2moveTime2)
         }
-        if(findViewById<View>(include).findViewById<TextView>(R.id.sc2destination1).text.isNotEmpty()){
+        if(include.findViewById<TextView>(R.id.sc2destination1).text.isNotEmpty()){
             createTravelDetail(1, day, include, R.id.sc2destination1, R.id.sc2startTime1, R.id.sc2requireTime1 ,R.id.sc2moveTime1)
         }
 
@@ -232,8 +245,8 @@ class SimpleCreate2Activity : AppCompatActivity()
             travelDetail.manageId = manageId
             travelDetail.day = day
             travelDetail.order = 9
-            travelDetail.destination = findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalPlace).text.toString()
-            travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            travelDetail.destination = include.findViewById<TextView>(R.id.sc2ArrivalPlace).text.toString()
+            travelDetail.startTime = include.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
 
             val travel = realm.where<Travel>()
                 .equalTo("manageId", manageId)
@@ -246,7 +259,7 @@ class SimpleCreate2Activity : AppCompatActivity()
     }
 
     //出発のTravelDetail作成
-    private fun createDepartureTravelDetail(day: Int, include: Int) {
+    private fun createDepartureTravelDetail(day: Int, include: View) {
         val maxDetailId = realm.where<TravelDetail>().max("id")
         val nextDetailId = (maxDetailId?.toInt() ?: 0) + 1
         val travelDetail = realm.createObject<TravelDetail>(nextDetailId)
@@ -254,9 +267,9 @@ class SimpleCreate2Activity : AppCompatActivity()
         travelDetail.manageId = manageId
         travelDetail.day = day
         travelDetail.order = 0
-        travelDetail.destination = findViewById<View>(include).findViewById<TextView>(R.id.sc2departurePlace).text.toString()
-        travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureTime).text.toString()
-        travelDetail.moveTime = findViewById<View>(include).findViewById<TextView>(R.id.sc2departureMoveTime).text.toString()
+        travelDetail.destination = include.findViewById<TextView>(R.id.sc2departurePlace).text.toString()
+        travelDetail.startTime = include.findViewById<TextView>(R.id.sc2departureTime).text.toString()
+        travelDetail.moveTime = include.findViewById<TextView>(R.id.sc2departureMoveTime).text.toString()
         if (day == 1){
             val travel = realm.where<Travel>()
                 .equalTo("manageId", manageId)
@@ -269,7 +282,7 @@ class SimpleCreate2Activity : AppCompatActivity()
     }
 
     //TravelDetailデータベースに値を格納
-    private fun createTravelDetail(order: Int, day:Int, include: Int, destinationId: Int
+    private fun createTravelDetail(order: Int, day:Int, include: View, destinationId: Int
                                    , startId: Int, requireId: Int, moveId: Int){
         val maxDetailId = realm.where<TravelDetail>().max("id")
         val nextDetailId = (maxDetailId?.toInt() ?: 0) + 1
@@ -278,17 +291,17 @@ class SimpleCreate2Activity : AppCompatActivity()
         travelDetail.day = day
         travelDetail.order = order
         //最終目的地でないならばそのViewの目的地、最終目的地なら到着地を格納。
-        travelDetail.destination = findViewById<View>(include).findViewById<TextView>(destinationId).text.toString()
-        travelDetail.startTime = findViewById<View>(include).findViewById<TextView>(startId).text.toString()
-        travelDetail.requiredTime = findViewById<View>(include).findViewById<TextView>(requireId).text.toString()
+        travelDetail.destination = include.findViewById<TextView>(destinationId).text.toString()
+        travelDetail.startTime = include.findViewById<TextView>(startId).text.toString()
+        travelDetail.requiredTime = include.findViewById<TextView>(requireId).text.toString()
         if(travelDetail.requiredTime.isEmpty()) travelDetail.requiredTime = requireTimeText + "0 min "
-        travelDetail.moveTime = findViewById<View>(include).findViewById<TextView>(moveId).text.toString()
+        travelDetail.moveTime = include.findViewById<TextView>(moveId).text.toString()
         if(travelDetail.moveTime.isEmpty()) travelDetail.moveTime = moveTimeText + "0 min "
     }
 
     //目的地が空でなければ値をViewにセットする。
     //何日目かを元に出発地と到着地の設定も行う。
-    private fun checkDestination(include: Int, preInclude: Int, travelPart: TravelPart) {
+    private fun checkDestination(include: View, preInclude: View, travelPart: TravelPart) {
         val lastDayFlag = (travelPart.day.toLong() == travelDays)
         var lastDestinationFlag = true
         //目的地が空でなければ、レイアウト・TextView・目的地名を渡す。
@@ -316,35 +329,35 @@ class SimpleCreate2Activity : AppCompatActivity()
             setProperty(travelPart.destination1, R.id.sc2destination1Layout ,R.id.sc2destination1, include, lastDestinationFlag, lastDayFlag)
         }
         if(lastDayFlag){
-            findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalPlace).text =
+            include.findViewById<TextView>(R.id.sc2ArrivalPlace).text =
                 intent.getStringExtra("ARRIVAL_PLACE")
         }
         if(travelPart.day > 1) {
-            findViewById<View>(include).findViewById<TextView>(R.id.sc2departurePlace).text =
-                findViewById<View>(preInclude).findViewById<TextView>(R.id.sc2ArrivalPlace).text
+            include.findViewById<TextView>(R.id.sc2departurePlace).text =
+                preInclude.findViewById<TextView>(R.id.sc2ArrivalPlace).text
         }
     }
 
     //レイアウトのvisibilityをVisibleに、目的地をテキストに表示
-    private fun setProperty(destinationName: String, layoutId: Int, dViewId: Int, include: Int, lastDestinationFlag: Boolean, lastDayFlag: Boolean) {
-        findViewById<View>(include).findViewById<TextView>(dViewId).text = destinationName
+    private fun setProperty(destinationName: String, layoutId: Int, dViewId: Int, include: View, lastDestinationFlag: Boolean, lastDayFlag: Boolean) {
+        include.findViewById<TextView>(dViewId).text = destinationName
         if(lastDestinationFlag && !lastDayFlag){
             //最終目的地かつ最終日ではないとき、その日の到着地を最終目的地に入れる。
-            findViewById<View>(include).findViewById<TextView>(R.id.sc2ArrivalPlace).text = destinationName
+            include.findViewById<TextView>(R.id.sc2ArrivalPlace).text = destinationName
         }else{
             //上記以外の場合、Visibleにする。
-            findViewById<View>(include).findViewById<View>(layoutId).visibility = View.VISIBLE
+            include.findViewById<View>(layoutId).visibility = View.VISIBLE
         }
     }
 
     //includeの表示非表示
     private fun visibleInclude(travelDays: Long) {
-        if(travelDays > 1L) findViewById<View>(R.id.includeSC2Day2).visibility = View.VISIBLE
-        if(travelDays > 2L) findViewById<View>(R.id.includeSC2Day3).visibility = View.VISIBLE
-        if(travelDays > 3L) findViewById<View>(R.id.includeSC2Day4).visibility = View.VISIBLE
-        if(travelDays > 4L) findViewById<View>(R.id.includeSC2Day5).visibility = View.VISIBLE
-        if(travelDays > 5L) findViewById<View>(R.id.includeSC2Day6).visibility = View.VISIBLE
-        if(travelDays > 6L) findViewById<View>(R.id.includeSC2Day7).visibility = View.VISIBLE
+        if(travelDays > 1L) includeDay2.visibility = View.VISIBLE
+        if(travelDays > 2L) includeDay3.visibility = View.VISIBLE
+        if(travelDays > 3L) includeDay4.visibility = View.VISIBLE
+        if(travelDays > 4L) includeDay5.visibility = View.VISIBLE
+        if(travelDays > 5L) includeDay6.visibility = View.VISIBLE
+        if(travelDays > 6L) includeDay7.visibility = View.VISIBLE
     }
 
     //出発時間をタップ時の処理メソッド（TimePickerフラグメントを呼びだす）
@@ -379,28 +392,28 @@ class SimpleCreate2Activity : AppCompatActivity()
     }
 
     //時間自動入力メソッド
-    private fun refresh(include: Int) {
-        val total00 = timeFirstRefresh(findViewById<View>(include).findViewById(R.id.sc2departureTime))
-        val total11 = timeRefresh(total00, null, findViewById<View>(include).findViewById(R.id.sc2departureMoveTime)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime1))
-        val total12 = timeRefresh(total11, findViewById<View>(include).findViewById(R.id.sc2requireTime1)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime1)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime2))
-        val total13 = timeRefresh(total12, findViewById<View>(include).findViewById(R.id.sc2requireTime2)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime2)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime3))
-        val total14 = timeRefresh(total13, findViewById<View>(include).findViewById(R.id.sc2requireTime3)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime3)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime4))
-        val total15 = timeRefresh(total14, findViewById<View>(include).findViewById(R.id.sc2requireTime4)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime4)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime5))
-        val total16 = timeRefresh(total15, findViewById<View>(include).findViewById(R.id.sc2requireTime5)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime5)
-            , findViewById<View>(include).findViewById(R.id.sc2startTime6))
-        timeRefresh(total16, findViewById<View>(include).findViewById(R.id.sc2requireTime6)
-            , findViewById<View>(include).findViewById(R.id.sc2moveTime6)
-            , findViewById<View>(include).findViewById(R.id.sc2ArrivalTime))
+    private fun refresh(include: View) {
+        val total00 = timeFirstRefresh(include.findViewById(R.id.sc2departureTime))
+        val total11 = timeRefresh(total00, null, include.findViewById(R.id.sc2departureMoveTime)
+            , include.findViewById(R.id.sc2startTime1))
+        val total12 = timeRefresh(total11, include.findViewById(R.id.sc2requireTime1)
+            , include.findViewById(R.id.sc2moveTime1)
+            , include.findViewById(R.id.sc2startTime2))
+        val total13 = timeRefresh(total12, include.findViewById(R.id.sc2requireTime2)
+            , include.findViewById(R.id.sc2moveTime2)
+            , include.findViewById(R.id.sc2startTime3))
+        val total14 = timeRefresh(total13, include.findViewById(R.id.sc2requireTime3)
+            , include.findViewById(R.id.sc2moveTime3)
+            , include.findViewById(R.id.sc2startTime4))
+        val total15 = timeRefresh(total14, include.findViewById(R.id.sc2requireTime4)
+            , include.findViewById(R.id.sc2moveTime4)
+            , include.findViewById(R.id.sc2startTime5))
+        val total16 = timeRefresh(total15, include.findViewById(R.id.sc2requireTime5)
+            , include.findViewById(R.id.sc2moveTime5)
+            , include.findViewById(R.id.sc2startTime6))
+        timeRefresh(total16, include.findViewById(R.id.sc2requireTime6)
+            , include.findViewById(R.id.sc2moveTime6)
+            , include.findViewById(R.id.sc2ArrivalTime))
     }
 
     //refreshDay()から呼ばれる。時間を自動入力。出発時間設定
@@ -443,16 +456,16 @@ class SimpleCreate2Activity : AppCompatActivity()
     private fun deleteFlagFalse() {
         val updateTravel = realm.where<Travel>().equalTo("manageId", manageId).findFirst()
         updateTravel?.deleteFlag = 0
-        updateTravel?.departureTime =  findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2departureTime).text.toString()
+        updateTravel?.departureTime =  includeDay1.findViewById<TextView>(R.id.sc2departureTime).text.toString()
         updateTravel?.arrivalTime = when(travelDays){
-            1L -> findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            2L -> findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            3L -> findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            4L -> findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            5L -> findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            6L -> findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            7L -> findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-            else -> findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            1L -> includeDay1.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            2L -> includeDay2.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            3L -> includeDay3.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            4L -> includeDay4.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            5L -> includeDay5.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            6L -> includeDay6.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            7L -> includeDay7.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            else -> includeDay1.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
         }
 
         val updateTravelPart = realm.where<TravelPart>().equalTo("manageId", manageId).findAllAsync()
@@ -469,447 +482,447 @@ class SimpleCreate2Activity : AppCompatActivity()
 
     //最初に呼ぶ。何日目かを表示させる。
     private fun setDayText() {
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2DayText).text = "・1日目"
-        findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2DayText).text = "・2日目"
-        findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2DayText).text = "・3日目"
-        findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2DayText).text = "・4日目"
-        findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2DayText).text = "・5日目"
-        findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2DayText).text = "・6日目"
-        findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2DayText).text = "・7日目"
+        includeDay1.findViewById<TextView>(R.id.sc2DayText).text = "・1日目"
+        includeDay2.findViewById<TextView>(R.id.sc2DayText).text = "・2日目"
+        includeDay3.findViewById<TextView>(R.id.sc2DayText).text = "・3日目"
+        includeDay4.findViewById<TextView>(R.id.sc2DayText).text = "・4日目"
+        includeDay5.findViewById<TextView>(R.id.sc2DayText).text = "・5日目"
+        includeDay6.findViewById<TextView>(R.id.sc2DayText).text = "・6日目"
+        includeDay7.findViewById<TextView>(R.id.sc2DayText).text = "・7日目"
     }
 
     //時刻ダイアログ選択後に呼ばれるメソッド
     override fun onSelected(hourOfDay: Int, minute: Int) {
         when(temporalyTag) {
             //1日目
-            departureTime10Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2departureTime)
+            departureTime10Tag -> setDepartureTime(includeDay1.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 1)
             departureMoveTime10Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2departureMoveTime), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2departureMoveTime), moveTimeText, 1)
             requireTime11Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime1), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime1), requireTimeText, 1)
             moveTime11Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime1), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime1), moveTimeText, 1)
             requireTime12Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime2), requireTimeText, 1)
-            moveTime12Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime2)
+                , includeDay1.findViewById(R.id.sc2requireTime2), requireTimeText, 1)
+            moveTime12Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay1.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 1)
             requireTime13Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime3), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime3), requireTimeText, 1)
             moveTime13Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime3), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime3), moveTimeText, 1)
             requireTime14Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime4), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime4), requireTimeText, 1)
             moveTime14Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime4), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime4), moveTimeText, 1)
             requireTime15Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime5), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime5), requireTimeText, 1)
             moveTime15Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime5), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime5), moveTimeText, 1)
             requireTime16Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2requireTime6), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime6), requireTimeText, 1)
             moveTime16Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day1).findViewById(R.id.sc2moveTime6), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime6), moveTimeText, 1)
             //2日目
-            departureTime20Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2departureTime)
+            departureTime20Tag -> setDepartureTime(includeDay2.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 2)
             departureMoveTime20Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2departureMoveTime), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2departureMoveTime), moveTimeText, 2)
             requireTime21Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime1), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime1), requireTimeText, 2)
             moveTime21Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime1), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime1), moveTimeText, 2)
             requireTime22Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime2), requireTimeText, 2)
-            moveTime22Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime2)
+                , includeDay2.findViewById(R.id.sc2requireTime2), requireTimeText, 2)
+            moveTime22Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay2.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 2)
             requireTime23Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime3), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime3), requireTimeText, 2)
             moveTime23Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime3), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime3), moveTimeText, 2)
             requireTime24Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime4), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime4), requireTimeText, 2)
             moveTime24Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime4), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime4), moveTimeText, 2)
             requireTime25Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime5), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime5), requireTimeText, 2)
             moveTime25Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime5), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime5), moveTimeText, 2)
             requireTime26Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2requireTime6), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime6), requireTimeText, 2)
             moveTime26Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day2).findViewById(R.id.sc2moveTime6), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime6), moveTimeText, 2)
             //3日目
-            departureTime30Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2departureTime)
+            departureTime30Tag -> setDepartureTime(includeDay3.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 3)
             departureMoveTime30Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2departureMoveTime), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2departureMoveTime), moveTimeText, 3)
             requireTime31Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime1), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime1), requireTimeText, 3)
             moveTime31Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime1), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime1), moveTimeText, 3)
             requireTime32Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime2), requireTimeText, 3)
-            moveTime32Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime2)
+                , includeDay3.findViewById(R.id.sc2requireTime2), requireTimeText, 3)
+            moveTime32Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay3.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 3)
             requireTime33Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime3), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime3), requireTimeText, 3)
             moveTime33Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime3), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime3), moveTimeText, 3)
             requireTime34Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime4), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime4), requireTimeText, 3)
             moveTime34Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime4), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime4), moveTimeText, 3)
             requireTime35Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime5), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime5), requireTimeText, 3)
             moveTime35Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime5), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime5), moveTimeText, 3)
             requireTime36Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2requireTime6), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime6), requireTimeText, 3)
             moveTime36Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day3).findViewById(R.id.sc2moveTime6), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime6), moveTimeText, 3)
             //4日目
-            departureTime40Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2departureTime)
+            departureTime40Tag -> setDepartureTime(includeDay4.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 4)
             departureMoveTime40Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2departureMoveTime), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2departureMoveTime), moveTimeText, 4)
             requireTime41Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime1), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime1), requireTimeText, 4)
             moveTime41Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime1), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime1), moveTimeText, 4)
             requireTime42Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime2), requireTimeText, 4)
-            moveTime42Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime2)
+                , includeDay4.findViewById(R.id.sc2requireTime2), requireTimeText, 4)
+            moveTime42Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay4.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 4)
             requireTime43Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime3), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime3), requireTimeText, 4)
             moveTime43Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime3), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime3), moveTimeText, 4)
             requireTime44Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime4), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime4), requireTimeText, 4)
             moveTime44Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime4), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime4), moveTimeText, 4)
             requireTime45Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime5), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime5), requireTimeText, 4)
             moveTime45Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime5), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime5), moveTimeText, 4)
             requireTime46Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2requireTime6), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime6), requireTimeText, 4)
             moveTime46Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day4).findViewById(R.id.sc2moveTime6), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime6), moveTimeText, 4)
             //5日目
-            departureTime50Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2departureTime)
+            departureTime50Tag -> setDepartureTime(includeDay5.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 5)
             departureMoveTime50Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2departureMoveTime), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2departureMoveTime), moveTimeText, 5)
             requireTime51Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime1), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime1), requireTimeText, 5)
             moveTime51Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime1), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime1), moveTimeText, 5)
             requireTime52Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime2), requireTimeText, 5)
-            moveTime52Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime2)
+                , includeDay5.findViewById(R.id.sc2requireTime2), requireTimeText, 5)
+            moveTime52Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay5.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 5)
             requireTime53Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime3), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime3), requireTimeText, 5)
             moveTime53Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime3), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime3), moveTimeText, 5)
             requireTime54Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime4), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime4), requireTimeText, 5)
             moveTime54Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime4), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime4), moveTimeText, 5)
             requireTime55Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime5), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime5), requireTimeText, 5)
             moveTime55Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime5), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime5), moveTimeText, 5)
             requireTime56Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2requireTime6), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime6), requireTimeText, 5)
             moveTime56Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day5).findViewById(R.id.sc2moveTime6), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime6), moveTimeText, 5)
             //6日目
-            departureTime60Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2departureTime)
+            departureTime60Tag -> setDepartureTime(includeDay6.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 6)
             departureMoveTime60Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2departureMoveTime), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2departureMoveTime), moveTimeText, 6)
             requireTime61Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime1), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime1), requireTimeText, 6)
             moveTime61Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime1), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime1), moveTimeText, 6)
             requireTime62Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime2), requireTimeText, 6)
-            moveTime62Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime2)
+                , includeDay6.findViewById(R.id.sc2requireTime2), requireTimeText, 6)
+            moveTime62Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay6.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 6)
             requireTime63Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime3), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime3), requireTimeText, 6)
             moveTime63Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime3), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime3), moveTimeText, 6)
             requireTime64Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime4), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime4), requireTimeText, 6)
             moveTime64Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime4), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime4), moveTimeText, 6)
             requireTime65Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime5), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime5), requireTimeText, 6)
             moveTime65Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime5), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime5), moveTimeText, 6)
             requireTime66Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2requireTime6), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime6), requireTimeText, 6)
             moveTime66Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day6).findViewById(R.id.sc2moveTime6), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime6), moveTimeText, 6)
             //7日目
-            departureTime70Tag -> setDepartureTime(findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2departureTime)
+            departureTime70Tag -> setDepartureTime(includeDay7.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 7)
             departureMoveTime70Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2departureMoveTime), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2departureMoveTime), moveTimeText, 7)
             requireTime71Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime1), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime1), requireTimeText, 7)
             moveTime71Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime1), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime1), moveTimeText, 7)
             requireTime72Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime2), requireTimeText, 7)
-            moveTime72Tag -> setRequireOrMoveTime(hourOfDay, minute, findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime2)
+                , includeDay7.findViewById(R.id.sc2requireTime2), requireTimeText, 7)
+            moveTime72Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay7.findViewById(R.id.sc2moveTime2)
                 , moveTimeText, 7)
             requireTime73Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime3), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime3), requireTimeText, 7)
             moveTime73Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime3), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime3), moveTimeText, 7)
             requireTime74Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime4), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime4), requireTimeText, 7)
             moveTime74Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime4), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime4), moveTimeText, 7)
             requireTime75Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime5), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime5), requireTimeText, 7)
             moveTime75Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime5), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime5), moveTimeText, 7)
             requireTime76Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2requireTime6), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime6), requireTimeText, 7)
             moveTime76Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , findViewById<View>(R.id.includeSC2Day7).findViewById(R.id.sc2moveTime6), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime6), moveTimeText, 7)
         }
         when(temporalyDayFlag){
-            1 -> if(findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day1)
-            2 -> if(findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day2)
-            3 -> if(findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day3)
-            4 -> if(findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day4)
-            5 -> if(findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day5)
-            6 -> if(findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day6)
-            7 -> if(findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(R.id.includeSC2Day7)
+            1 -> if(includeDay1.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay1)
+            2 -> if(includeDay2.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay2)
+            3 -> if(includeDay3.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay3)
+            4 -> if(includeDay4.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay4)
+            5 -> if(includeDay5.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay5)
+            6 -> if(includeDay6.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay6)
+            7 -> if(includeDay7.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay7)
         }
     }
 
     private fun setViewLink(travelDays: Long) {
         //(1日目)タップ処理
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2departureTime)
+        includeDay1.findViewById<TextView>(R.id.sc2departureTime)
             .setOnClickListener { callDepartureTimePicker(departureTime10Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2departureMoveTime)
+        includeDay1.findViewById<TextView>(R.id.sc2departureMoveTime)
             .setOnClickListener { callRequireTimePicker(departureMoveTime10Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime1)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime1)
             .setOnClickListener { callRequireTimePicker(requireTime11Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime1)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime1)
             .setOnClickListener { callRequireTimePicker(moveTime11Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime2)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime2)
             .setOnClickListener { callRequireTimePicker(requireTime12Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime2)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime2)
             .setOnClickListener { callRequireTimePicker(moveTime12Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime3)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime3)
             .setOnClickListener { callRequireTimePicker(requireTime13Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime3)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime3)
             .setOnClickListener { callRequireTimePicker(moveTime13Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime4)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime4)
             .setOnClickListener { callRequireTimePicker(requireTime14Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime4)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime4)
             .setOnClickListener { callRequireTimePicker(moveTime14Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime5)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime5)
             .setOnClickListener { callRequireTimePicker(requireTime15Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime5)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime5)
             .setOnClickListener { callRequireTimePicker(moveTime15Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2requireTime6)
+        includeDay1.findViewById<TextView>(R.id.sc2requireTime6)
             .setOnClickListener { callRequireTimePicker(requireTime16Tag) }
-        findViewById<View>(R.id.includeSC2Day1).findViewById<TextView>(R.id.sc2moveTime6)
+        includeDay1.findViewById<TextView>(R.id.sc2moveTime6)
             .setOnClickListener { callRequireTimePicker(moveTime16Tag) }
         //(2日目)タップ処理
         if(travelDays > 1){
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay2.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime20Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay2.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime20Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime21Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime21Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime22Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime22Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime23Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime23Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime24Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime24Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime25Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime25Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay2.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime26Tag) }
-            findViewById<View>(R.id.includeSC2Day2).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay2.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime26Tag) }
         }
         //(3日目)タップ処理
         if(travelDays > 2){
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay3.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime30Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay3.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime30Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime31Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime31Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime32Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime32Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime33Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime33Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime34Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime34Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime35Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime35Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay3.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime36Tag) }
-            findViewById<View>(R.id.includeSC2Day3).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay3.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime36Tag) }
         }
         //(4日目)タップ処理
         if(travelDays > 3){
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay4.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime40Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay4.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime40Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime41Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime41Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime42Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime42Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime43Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime43Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime44Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime44Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime45Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime45Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay4.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime46Tag) }
-            findViewById<View>(R.id.includeSC2Day4).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay4.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime46Tag) }
         }
         //(5日目)タップ処理
         if(travelDays > 4){
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay5.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime50Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay5.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime50Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime51Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime51Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime52Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime52Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime53Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime53Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime54Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime54Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime55Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime55Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay5.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime56Tag) }
-            findViewById<View>(R.id.includeSC2Day5).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay5.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime56Tag) }
         }
         //(6日目)タップ処理
         if(travelDays > 5){
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay6.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime60Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay6.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime60Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime61Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime61Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime62Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime62Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime63Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime63Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime64Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime64Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime65Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime65Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay6.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime66Tag) }
-            findViewById<View>(R.id.includeSC2Day6).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay6.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime66Tag) }
         }
         //(7日目)タップ処理
         if(travelDays > 6) {
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2departureTime)
+            includeDay7.findViewById<TextView>(R.id.sc2departureTime)
                 .setOnClickListener { callDepartureTimePicker(departureTime70Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2departureMoveTime)
+            includeDay7.findViewById<TextView>(R.id.sc2departureMoveTime)
                 .setOnClickListener { callRequireTimePicker(departureMoveTime70Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime1)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime1)
                 .setOnClickListener { callRequireTimePicker(requireTime71Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime1)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime1)
                 .setOnClickListener { callRequireTimePicker(moveTime71Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime2)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime2)
                 .setOnClickListener { callRequireTimePicker(requireTime72Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime2)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime2)
                 .setOnClickListener { callRequireTimePicker(moveTime72Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime3)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime3)
                 .setOnClickListener { callRequireTimePicker(requireTime73Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime3)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime3)
                 .setOnClickListener { callRequireTimePicker(moveTime73Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime4)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime4)
                 .setOnClickListener { callRequireTimePicker(requireTime74Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime4)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime4)
                 .setOnClickListener { callRequireTimePicker(moveTime74Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime5)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime5)
                 .setOnClickListener { callRequireTimePicker(requireTime75Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime5)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime5)
                 .setOnClickListener { callRequireTimePicker(moveTime75Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2requireTime6)
+            includeDay7.findViewById<TextView>(R.id.sc2requireTime6)
                 .setOnClickListener { callRequireTimePicker(requireTime76Tag) }
-            findViewById<View>(R.id.includeSC2Day7).findViewById<TextView>(R.id.sc2moveTime6)
+            includeDay7.findViewById<TextView>(R.id.sc2moveTime6)
                 .setOnClickListener { callRequireTimePicker(moveTime76Tag) }
         }
     }

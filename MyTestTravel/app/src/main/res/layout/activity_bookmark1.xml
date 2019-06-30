@@ -8,29 +8,30 @@
         tools:context=".Bookmark1Activity">
     <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/mainGuideText"
+            android:layout_height="wrap_content" android:id="@+id/bm1GuideText"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/bm1BackToMain" android:layout_marginRight="8dp"
-            android:text="Select Day" android:textSize="30sp" android:background="@color/light_blue"/>
+            android:text="Title" android:textSize="30sp" android:background="@color/light_blue"/>
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
             android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainGuideText" android:id="@+id/bm1RecyclerView"
+            android:id="@+id/bm1RecyclerView"
             tools:listitem="@layout/bm1_recycler_list_item"
-            app:layout_constraintBottom_toTopOf="@+id/bm1ad" app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="1.0" android:layout_marginTop="8dp"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/bm1ad"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <Button
             android:text="Back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bm1BackToMain" app:layout_constraintEnd_toEndOf="parent"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toTopOf="@+id/mainGuideText"
-            app:layout_constraintBottom_toBottomOf="@+id/mainGuideText"/>
+            app:layout_constraintTop_toTopOf="@+id/bm1GuideText"
+            app:layout_constraintBottom_toBottomOf="@+id/bm1GuideText"/>
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,5 +40,5 @@
             android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:gravity="center_horizontal"
             android:background="@color/colorAccent"
-            android:text="広告" android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:text="広告" app:layout_constraintTop_toBottomOf="@+id/bm1GuideText" android:layout_marginTop="8dp"/>
 </android.support.constraint.ConstraintLayout>

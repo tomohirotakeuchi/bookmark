@@ -39,9 +39,9 @@ class EditPlaceActivity : AppCompatActivity() {
             .equalTo("order", order)
             .findFirst()
 
-        if (travelDetail is TravelDetail) {
-            setPlaceEditText(travelDetail)
-            setGuideText(travelDetail)
+        travelDetail?.let{
+            setPlaceEditText(it)
+            setGuideText(it)
         }
         editCostClicked()
 
@@ -52,7 +52,7 @@ class EditPlaceActivity : AppCompatActivity() {
 
         placeEditUpdate.setOnClickListener {
             it.notPressTwice()
-            if (travelDetail is TravelDetail) {
+            travelDetail?.let {
                 realm.executeTransaction {
                     updateTravelDetail(travelDetail)
                     updateTravel(manageId)

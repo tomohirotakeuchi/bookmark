@@ -32,10 +32,10 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_map_fragment, container, false)
         val argument = arguments
-        if (argument != null){
-            manageId = argument["manageId"] as Int
-            day = argument["day"] as Int
-            order = argument["order"] as Int
+        argument?.apply{
+            manageId = this["manageId"] as Int
+            day = this["day"] as Int
+            order = this["order"] as Int
             Log.i("【Bm2MapFragment】", "[onCreateView] !!arguments!! manageId=$manageId day=$day order=$order")
         }
         realm = Realm.getDefaultInstance()

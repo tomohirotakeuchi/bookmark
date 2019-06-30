@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import io.realm.Realm
 import io.realm.Sort
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         mainListView.adapter = adapter
 
         //ListViewをタップ
-        mainListView.setOnItemClickListener { parent, _, position, _ ->
+        mainListView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             mainListView.notPressTwice()
             val tappedTravel = parent.getItemAtPosition(position) as Travel
             startActivity<Bookmark1Activity>("manageId" to tappedTravel.manageId)
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainCreate.setOnClickListener {
+            it.notPressTwice()
             startActivity<SimpleCreate1Activity>()
         }
     }

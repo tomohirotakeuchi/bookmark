@@ -40,11 +40,8 @@ class SimpleCreate1Activity : AppCompatActivity(),
     private var temporalTravelDays: Long = 0L
     private lateinit var temporalyTag: String
 
-    private val noAnyMoreAddTag = "noAnyMoreAddTag"
-    private val noAnyMoreRemoveTag = "noAnyMoreRemoveTag"
     private val departureDateTag = "departureDateTag"
     private val arrivalDateTag = "arrivalDateTag"
-    private val dateDiffTag = "dateDiffTag"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +53,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
         //departureDayをタップ
         sc1departureDay.setOnClickListener {
+            it.notPressTwice()
             val dialog = DatePickerFragment()
             dialog.show(supportFragmentManager, departureDateTag)
             temporalyTag = dialog.tag.toString()
@@ -63,6 +61,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
         //arrivalDayをタップ
         sc1ArrivalDay.setOnClickListener {
+            it.notPressTwice()
             val dialog = DatePickerFragment()
             dialog.show(supportFragmentManager, arrivalDateTag)
             temporalyTag = dialog.tag.toString()
@@ -77,10 +76,14 @@ class SimpleCreate1Activity : AppCompatActivity(),
         setAddDeleteClickListener(R.id.includeSC1Day7)
 
         //「戻る」をタップ
-        sc1backToMain.setOnClickListener { finish() }
+        sc1backToMain.setOnClickListener {
+            it.notPressTwice()
+            finish()
+        }
 
         //「決定」をタップ
         sc1nextToSC2.setOnClickListener {
+            it.notPressTwice()
             if (checkInput()) checkSuccess()
         }
     }
@@ -212,8 +215,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
             when (val dateDiff = dateDiff(sc1departureDay.text.toString(), sc1ArrivalDay.text.toString())){
                 in 0..6 -> setTravelDay(dateDiff)
                 else -> {
-                    val dialog = DateDiffAlertDialogs()
-                    dialog.show(supportFragmentManager, dateDiffTag)
+                    alert("1～7日間で設定してください。") { yesButton {  } }.show()
                     sc1ArrivalDay.text = null
                     sc1ArrivalDay.background = falseColorChange()
                     sc1arrivalText.text ="・到着地点は？"
@@ -262,9 +264,8 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
     //何泊何日の出力メソッド + 表示非表示
     private fun setTravelDay(dateDiff: Int) {
-        val dateDiffMap:MutableMap<Int, String> = mutableMapOf()
-        for (i in 0..6) dateDiffMap[i] = (i.toString() + "泊" + (i+1) + "日")
-        sc1travelDays.text = dateDiffMap[dateDiff]
+        val dayStayBuilder = StringBuilder(dateDiff.toString())
+        sc1travelDays.text = dayStayBuilder.append("泊").append(dateDiff + 1).append( "日").toString()
 
         if(dateDiff > 5)  {
             changeInclude(R.id.includeSC1Day7, View.VISIBLE)
@@ -305,8 +306,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //目的地追加メソッド
     private fun addDestination(second:EditText,third:EditText,forth:EditText,fifth:EditText,six:EditText){
         if (six.visibility == View.VISIBLE){
-            val dialog = AddAlertDialogs()
-            dialog.show(supportFragmentManager, noAnyMoreAddTag)
+            alert("7ケ所以上にはできません") { yesButton {  } }.show()
         }
         if (six.visibility != View.VISIBLE && fifth.visibility == View.VISIBLE) six.visibility = View.VISIBLE
         if (fifth.visibility != View.VISIBLE && forth.visibility == View.VISIBLE) fifth.visibility = View.VISIBLE
@@ -318,8 +318,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //目的地削除メソッド
     private fun removeDestination(second:EditText,third:EditText,forth:EditText,fifth:EditText,six:EditText){
         if (second.visibility != View.VISIBLE){
-            val dialog = RemoveAlertDialogs()
-            dialog.show(supportFragmentManager, noAnyMoreRemoveTag)
+            alert("0ケ所にはできません") { yesButton { } }.show()
         }
         if (second.visibility == View.VISIBLE && third.visibility != View.VISIBLE) setProperty(second)
         if (third.visibility == View.VISIBLE && forth.visibility != View.VISIBLE) setProperty(third)
@@ -443,6 +442,16 @@ class SimpleCreate1Activity : AppCompatActivity(),
                 , findViewById<View>(include).findViewById(R.id.sc1destination5)
                 , findViewById<View>(include).findViewById(R.id.sc1destination6))
         }
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //アクティビティを離れるとき、fusedLocationClientを閉じる。

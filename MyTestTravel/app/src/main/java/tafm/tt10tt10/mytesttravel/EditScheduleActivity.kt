@@ -145,9 +145,9 @@ class EditScheduleActivity : AppCompatActivity()
             val travel = realm.where<Travel>()
                 .equalTo("manageId", manageId)
                 .findFirst() as Travel
-            if (travelDetail is TravelDetail) {
-                travelDetail.startTime = view.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
-                travel.arrivalTime = travelDetail.startTime
+            travelDetail?.let{
+                it.startTime = view.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+                travel.arrivalTime = it.startTime
             }
         }
     }
@@ -161,8 +161,8 @@ class EditScheduleActivity : AppCompatActivity()
                 .equalTo("day", day)
                 .equalTo("order", nextOrder)
                 .findFirst()
-            if (lastTravelDetail is TravelDetail){
-                lastTravelDetail.startTime = view.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
+            lastTravelDetail?.let{
+                it.startTime = view.findViewById<TextView>(R.id.sc2ArrivalTime).text.toString()
             }
         }
     }
@@ -356,16 +356,17 @@ class EditScheduleActivity : AppCompatActivity()
     //それぞれの目的地にデータベースの値を入れる。その日の最終目的地なら到着地に入れる。
     private fun setDestinationTextView(travelDetail: TravelDetail, layoutId: Int, startTimeId: Int
                                        , destinationId: Int, requireTimeId: Int, moveTimeId: Int) {
-        if (lastDestinationFlag) {
-            setArrivalTextView(travelDetail, R.id.sc2ArrivalTime, R.id.sc2ArrivalPlace)
-        }else {
-            view.findViewById<View>(layoutId).visibility = View.VISIBLE
-            view.findViewById<TextView>(startTimeId).text = travelDetail.startTime
-            view.findViewById<TextView>(destinationId).text = travelDetail.destination
-            view.findViewById<TextView>(requireTimeId).text = travelDetail.requiredTime
-            view.findViewById<TextView>(moveTimeId).text = travelDetail.moveTime
-            view.findViewById<TextView>(moveTimeId).background = doneColorChange()
-            view.findViewById<TextView>(requireTimeId).background = doneColorChange()
+        when(lastDestinationFlag) {
+            true -> setArrivalTextView(travelDetail, R.id.sc2ArrivalTime, R.id.sc2ArrivalPlace)
+            else -> {
+                view.findViewById<View>(layoutId).visibility = View.VISIBLE
+                view.findViewById<TextView>(startTimeId).text = travelDetail.startTime
+                view.findViewById<TextView>(destinationId).text = travelDetail.destination
+                view.findViewById<TextView>(requireTimeId).text = travelDetail.requiredTime
+                view.findViewById<TextView>(moveTimeId).text = travelDetail.moveTime
+                view.findViewById<TextView>(moveTimeId).background = doneColorChange()
+                view.findViewById<TextView>(requireTimeId).background = doneColorChange()
+            }
         }
     }
 

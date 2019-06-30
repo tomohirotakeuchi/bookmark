@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_bookmark2.*
+import org.jetbrains.anko.browse
 import org.jetbrains.anko.startActivity
 import tafm.tt10tt10.mytesttravel.adapter.Bm2PagerAdapter
 import tafm.tt10tt10.mytesttravel.fragment.Bm2ImageFragment
@@ -21,6 +22,7 @@ import tafm.tt10tt10.mytesttravel.model.TravelPart
 
 class Bookmark2Activity : AppCompatActivity()
     , Bm2PlaceFragment.Bm2PlaceEditOnClickListener
+    , Bm2PlaceFragment.Bm2PlaceUrlLink
     , Bm2ScheduleFragment.Bm2ScheduleEditOnClickListener
     , Bm2ImageFragment.Bm2ImageEditOnClickListener{
 
@@ -80,6 +82,7 @@ class Bookmark2Activity : AppCompatActivity()
 
         //戻るボタン押下。
         bm2BackToBm1Btn.setOnClickListener {
+            it.notPressTwice()
             finish()
         }
     }
@@ -164,6 +167,10 @@ class Bookmark2Activity : AppCompatActivity()
             , "order" to order)
     }
 
+    override fun onPlaceUrlClick(url: String) {
+        browse(url)
+    }
+
     //ScheduleFragmentでEditをクリック。
     override fun onScheduleEditClick() {
         startActivity<EditScheduleActivity>("manageId" to manageId, "day" to day
@@ -173,5 +180,15 @@ class Bookmark2Activity : AppCompatActivity()
     //ImageFragmentでEditをクリック。
     override fun onImageEditClick() {
         startActivity<EditImageActivity>("manageId" to manageId, "day" to day, "order" to order)
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 }

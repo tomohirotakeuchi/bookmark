@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import io.realm.Realm
 import io.realm.Sort
@@ -42,7 +43,10 @@ class Bookmark1Activity : AppCompatActivity() {
         val travel = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()
-        if (travel is Travel) travelDays = travel.travelDays
+        travel?.let {
+            travelDays = it.travelDays
+            findViewById<TextView>(R.id.bm1GuideText).text = it.title
+        }
 
         adapter = Bookmark1Adapter(this, travelParts, true)
         bm1RecyclerView.adapter = adapter

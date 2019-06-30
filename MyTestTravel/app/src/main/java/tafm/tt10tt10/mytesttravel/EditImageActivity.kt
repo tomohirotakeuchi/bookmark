@@ -190,7 +190,7 @@ class EditImageActivity : AppCompatActivity() {
                         output.flush()
                     }
                 }catch (e: IOException){
-                    e.printStackTrace()
+                    finish()
                 }finally {
                     try {
                         output?.close()

@@ -1,6 +1,5 @@
 package tafm.tt10tt10.mytesttravel.fragment
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
@@ -9,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.DatePicker
 import android.widget.TimePicker
-import org.jetbrains.anko.toast
 import java.util.*
 
 class DatePickerFragment :DialogFragment(), DatePickerDialog.OnDateSetListener{
@@ -68,47 +66,5 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener{
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         listener.onSelected(hourOfDay, minute)
-    }
-}
-
-class AddAlertDialogs :DialogFragment(){
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = context ?: return super.onCreateDialog(savedInstanceState)
-        val builder = AlertDialog.Builder(context).apply {
-            setMessage("7ケ所以上にはできません。")
-            setPositiveButton("OK"){
-                _, _ -> context.toast("OKをクリックしました。")
-            }
-        }
-        return builder.create()
-    }
-}
-
-class RemoveAlertDialogs :DialogFragment(){
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = context ?: return super.onCreateDialog(savedInstanceState)
-        val builder = AlertDialog.Builder(context).apply {
-            setMessage("0ケ所にはできません。")
-            setPositiveButton("OK"){
-                    _, _ -> context.toast("OKをクリックしました。")
-            }
-        }
-        return builder.create()
-    }
-}
-
-class DateDiffAlertDialogs :DialogFragment(){
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = context ?: return super.onCreateDialog(savedInstanceState)
-        val builder = AlertDialog.Builder(context).apply {
-            setMessage("1～7日間で設定してください。")
-            setPositiveButton("OK"){
-                    _, _ -> context.toast("OKをクリックしました。")
-            }
-        }
-        return builder.create()
     }
 }

@@ -3,6 +3,8 @@ package tafm.tt10tt10.mytesttravel.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +18,13 @@ import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.pow
 
 class Bm2PlaceFragment : Fragment() {
 
     private lateinit var realm: Realm
-    private var listener: Bm2PlaceEditOnClickListener? = null
+    private lateinit var editListener: Bm2PlaceEditOnClickListener
+    private lateinit var urlListener: Bm2PlaceUrlLink
 
     private var manageId = 1
     private var day = 1
@@ -36,11 +40,11 @@ class Bm2PlaceFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_place_fragment, container, false)
         val argument = arguments
-        if (argument != null){
+        argument?.apply{
             Log.i("【Bm2PlaceFragment】", "[onCreateView] $argument")
-            manageId = argument["manageId"] as Int
-            day = argument["day"] as Int
-            order = argument["order"] as Int
+            manageId = this["manageId"] as Int
+            day = this["day"] as Int
+            order = this["order"] as Int
         }
         return view
     }
@@ -55,11 +59,32 @@ class Bm2PlaceFragment : Fragment() {
             .equalTo("day", day)
             .equalTo("order", order)
             .findFirst()
-        if(travelDetail is TravelDetail) setTextViewValues(travelDetail, order == 0, order == 9)
-        //クリックリスナー実装
+        travelDetail?.let {
+            setTextViewValues(it, order == 0, order == 9)
+            //クリックリスナー実装
+            view.findViewById<TextView>(R.id.bm2_place_url1).setOnClickListener { view ->
+                view.notPressTwice()
+                urlListener = context as Bm2PlaceUrlLink
+                urlListener.onPlaceUrlClick(it.urlLink1)
+            }
+
+            view.findViewById<TextView>(R.id.bm2_place_url2).setOnClickListener { view ->
+                view.notPressTwice()
+                urlListener = context as Bm2PlaceUrlLink
+                urlListener.onPlaceUrlClick(it.urlLink2)
+            }
+
+            view.findViewById<TextView>(R.id.bm2_place_url3).setOnClickListener { view ->
+                view.notPressTwice()
+                urlListener = context as Bm2PlaceUrlLink
+                urlListener.onPlaceUrlClick(it.urlLink3)
+            }
+        }
+
         view.findViewById<ImageView>(R.id.bm2_place_edit).setOnClickListener {
-            listener = context as? Bm2PlaceEditOnClickListener
-            listener?.onPlaceEditClick()
+            it.notPressTwice()
+            editListener = context as Bm2PlaceEditOnClickListener
+            editListener.onPlaceEditClick()
         }
     }
 
@@ -77,12 +102,12 @@ class Bm2PlaceFragment : Fragment() {
         }else{
             travelDetail.moveTime.split(": ")[1]
         }
-        setStringText(travelDetail.memo1, bm2_place_memo1)
-        setStringText(travelDetail.memo2, bm2_place_memo2)
-        setStringText(travelDetail.memo3, bm2_place_memo3)
-        setStringText(travelDetail.urlLink1, bm2_place_url1)
-        setStringText(travelDetail.urlLink2, bm2_place_url2)
-        setStringText(travelDetail.urlLink3, bm2_place_url3)
+        setMemoText(travelDetail.memo1, bm2_place_memo1)
+        setMemoText(travelDetail.memo2, bm2_place_memo2)
+        setMemoText(travelDetail.memo3, bm2_place_memo3)
+        setUrlText(travelDetail.urlLink1, bm2_place_url1)
+        setUrlText(travelDetail.urlLink2, bm2_place_url2)
+        setUrlText(travelDetail.urlLink3, bm2_place_url3)
         bm2_place_totalCost.text = getCostText(travelDetail.totalCost)
         bm2_place_tableCost1.text = getCostText(travelDetail.costItem1)
         bm2_place_tableCost2.text = getCostText(travelDetail.costItem2)
@@ -91,13 +116,27 @@ class Bm2PlaceFragment : Fragment() {
         bm2_place_tableCost5.text = getCostText(travelDetail.costItem5)
     }
 
-    //OnePointMemoとURLLinkに値をセットする。
-    private fun setStringText(text: String?, textView: TextView?) {
-        if (text is String && text.isNotEmpty()) {
-            textView?.visibility = View.VISIBLE
-            textView?.text = text
-        }else {
-            textView?.visibility = View.GONE
+    //OnePointMemoに値をセットする。
+    private fun setMemoText(memo: String, textView: TextView?) {
+        when (memo != "" && memo.isNotEmpty()) {
+            true -> {
+                textView?.visibility = View.VISIBLE
+                textView?.text = memo
+            }
+            false -> textView?.visibility = View.GONE
+        }
+    }
+
+    //URLLinkに値をセットする。
+    private fun setUrlText(url: String, textView: TextView?) {
+        when (url != "" && url.isNotEmpty()) {
+            true -> {
+                textView?.visibility = View.VISIBLE
+                val content = SpannableString(url)
+                content.setSpan(UnderlineSpan(), 0, content.length, 0)
+                textView?.text = content
+            }
+            false -> textView?.visibility = View.GONE
         }
     }
 
@@ -105,13 +144,28 @@ class Bm2PlaceFragment : Fragment() {
     private fun getCostText(cost: Int): String {
         val nf = NumberFormat.getCurrencyInstance()
         val currency = Currency.getInstance(Locale.getDefault())
-        val value = cost / Math.pow(10.0, currency.defaultFractionDigits.toDouble() )
+        val value = cost / 10.0.pow(currency.defaultFractionDigits.toDouble())
         return nf.format(value)
     }
 
     //Bm2PlaceEditのinterface。
     interface Bm2PlaceEditOnClickListener {
         fun onPlaceEditClick()
+    }
+
+    //Bm2PlaceUrlLinkのinterface
+    interface Bm2PlaceUrlLink {
+        fun onPlaceUrlClick(url: String)
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //フラグメント削除時にRealmを閉じる。

@@ -59,9 +59,9 @@ class EditBookmark1Activity : AppCompatActivity() {
 
     //何日目に行くかのテキスト
     private fun setGuideText(travelPart: TravelPart?) {
-        if(travelPart is TravelPart){
+        travelPart?.let {
             val guideBuilder = StringBuilder("Where to Go on Day ")
-            view.findViewById<TextView>(R.id.sc1whereToGoText).text = guideBuilder.append(travelPart.day).toString()
+            view.findViewById<TextView>(R.id.sc1whereToGoText).text = guideBuilder.append(it.day).toString()
         }
     }
 
@@ -215,9 +215,9 @@ class EditBookmark1Activity : AppCompatActivity() {
         val travel = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()
-        if (preTravelDetail is TravelDetail){
-            val arrivalTime = getArrivalTime(preTravelDetail.startTime
-                , preTravelDetail.requiredTime, preTravelDetail.moveTime)
+        preTravelDetail?.let {
+            val arrivalTime = getArrivalTime(it.startTime
+                , it.requiredTime, it.moveTime)
             endTravelDetail?.startTime = arrivalTime
             travel?.arrivalTime = arrivalTime
         }
@@ -321,7 +321,7 @@ class EditBookmark1Activity : AppCompatActivity() {
     }
 
     /**
-     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
      */
     private fun View.notPressTwice() {
         this.isEnabled = false

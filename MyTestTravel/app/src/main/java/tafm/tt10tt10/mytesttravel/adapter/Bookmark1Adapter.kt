@@ -31,19 +31,37 @@ class Bookmark1Adapter(context: Context
     override fun onBindViewHolder(viewHolder: ViewHolderForBm1, position: Int) {
         val travelPart = collection?.get(position)
         val dayBuilder = StringBuilder()
-        viewHolder.day.text = dayBuilder.append("Day ").append(travelPart?.day.toString()).toString()
-        viewHolder.destination.text = travelPart?.destination1.toString()
-        viewHolder.layout.setOnClickListener {
-            viewHolder.layout.notPressTwice()
-            bm1ItemListener.onBm1ItemClick(it, travelPart?.manageId, travelPart?.day)
+        travelPart?.let {
+            viewHolder.day.text = dayBuilder.append("Day ").append(it.day.toString()).toString()
+            viewHolder.destination1.text = getDestination(it.destination1)
+            viewHolder.destination2.text = getDestination(it.destination2)
+            viewHolder.destination3.text = getDestination(it.destination3)
+            viewHolder.etcImage.visibility = when (it.destination4.isNotEmpty() && it.destination4 != ""){
+                true -> View.VISIBLE
+                false -> View.INVISIBLE
+            }
+            viewHolder.layout.setOnClickListener { layout ->
+                viewHolder.layout.notPressTwice()
+                bm1ItemListener.onBm1ItemClick(layout, it.manageId, it.day)
+            }
+            viewHolder.editBtn.setOnClickListener { edit ->
+                viewHolder.editBtn.notPressTwice()
+                bm1EditListener.onBm1EditClick(edit, it.manageId, it.day, 1)
+            }
+            viewHolder.deleteBtn.setOnClickListener { delete ->
+                viewHolder.deleteBtn.notPressTwice()
+                bm1EditListener.onBm1EditClick(delete, it.manageId, it.day, 2)
+            }
         }
-        viewHolder.editBtn.setOnClickListener {
-            viewHolder.editBtn.notPressTwice()
-            bm1EditListener.onBm1EditClick(it, travelPart?.manageId, travelPart?.day, 1)
-        }
-        viewHolder.deleteBtn.setOnClickListener {
-            viewHolder.deleteBtn.notPressTwice()
-            bm1EditListener.onBm1EditClick(it, travelPart?.manageId, travelPart?.day, 2)
+    }
+
+    private fun getDestination(destination: String): String {
+        return when(destination.isNotEmpty() && destination != ""){
+            true -> {
+                val builder = StringBuilder("@")
+                builder.append(destination).toString()
+            }
+            false -> ""
         }
     }
 
@@ -78,7 +96,10 @@ class Bookmark1Adapter(context: Context
     class ViewHolderForBm1(view: View): RecyclerView.ViewHolder(view){
         val layout: View = view.findViewById(R.id.bm1ItemCellLayout)
         val day: TextView = view.findViewById(R.id.bm1DayText)
-        val destination: TextView = view.findViewById(R.id.bm1Destination1)
+        val destination1: TextView = view.findViewById(R.id.bm1Destination1)
+        val destination2: TextView = view.findViewById(R.id.bm1Destination2)
+        val destination3: TextView = view.findViewById(R.id.bm1Destination3)
+        val etcImage: ImageView = view.findViewById(R.id.bm1Etc)
         val editBtn: ImageView = view.findViewById(R.id.bm1Edit)
         val deleteBtn: ImageView = view.findViewById(R.id.bm1Delete)
     }

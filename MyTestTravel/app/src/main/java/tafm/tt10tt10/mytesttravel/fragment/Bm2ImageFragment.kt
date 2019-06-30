@@ -36,10 +36,10 @@ class Bm2ImageFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bm2_image_fragment, container, false)
         val argument = arguments
-        if (argument != null){
-            manageId = argument["manageId"] as Int
-            day = argument["day"] as Int
-            order = argument["order"] as Int
+        argument?.apply{
+            manageId = this["manageId"] as Int
+            day = this["day"] as Int
+            order = this["order"] as Int
             Log.i("【Bm2ImageFragment】", "[onCreateView] !!arguments!! manageId=$manageId day=$day order=$order")
         }
         return view
@@ -54,6 +54,7 @@ class Bm2ImageFragment : Fragment() {
 
         //編集のクリックリスナー実装
         view.findViewById<ImageView>(R.id.bm2_image_edit).setOnClickListener {
+            it.notPressTwice()
             listener = context as? Bm2ImageEditOnClickListener
             listener?.onImageEditClick()
         }
@@ -81,15 +82,19 @@ class Bm2ImageFragment : Fragment() {
     //ImageViewをクリックしたときの処理。
     private fun setImageViewsLinks() {
         bm2_image_Image1.setOnClickListener {
+            it.notPressTwice()
             setImageViewExpand(1)
         }
         bm2_image_Image2.setOnClickListener {
+            it.notPressTwice()
             setImageViewExpand(2)
         }
         bm2_image_Image3.setOnClickListener {
+            it.notPressTwice()
             setImageViewExpand(3)
         }
         bm2_image_Image4.setOnClickListener {
+            it.notPressTwice()
             setImageViewExpand(4)
         }
     }
@@ -184,6 +189,16 @@ class Bm2ImageFragment : Fragment() {
     //Bm2ImageEditのinterface。
     interface Bm2ImageEditOnClickListener{
         fun onImageEditClick()
+    }
+
+    /**
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
+     */
+    private fun View.notPressTwice() {
+        this.isEnabled = false
+        this.postDelayed({
+            this.isEnabled = true
+        }, 1500L)
     }
 
     //フラグメント削除時にRealmを閉じる。

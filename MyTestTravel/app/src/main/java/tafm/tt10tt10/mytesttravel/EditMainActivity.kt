@@ -19,8 +19,9 @@ import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_edit1_travel.*
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.noButton
 import org.jetbrains.anko.yesButton
-import tafm.tt10tt10.mytesttravel.fragment.DateDiffAlertDialogs
+//import tafm.tt10tt10.mytesttravel.fragment.DateDiffAlertDialogs
 import tafm.tt10tt10.mytesttravel.fragment.DatePickerFragment
 import tafm.tt10tt10.mytesttravel.model.Authority
 import tafm.tt10tt10.mytesttravel.model.Travel
@@ -37,10 +38,10 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
     private lateinit var realm: Realm
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private var preTravelDays: Long = 0L
     private var temporalTravelDays: Long = 0L
     private val departureDateTag = "departureDateTag"
     private val arrivalDateTag = "arrivalDateTag"
-    private val dateDiffTag = "dateDiffTag"
 
     private val requireTimeText = "所要: ";   private val moveTimeText = "移動: "
 
@@ -68,10 +69,21 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
             dialog.show(supportFragmentManager, arrivalDateTag)
             temporalyTag = dialog.tag.toString()
         }
+
         //更新ボタンタップ
         edit1ApplyButton.setOnClickListener {
             it.notPressTwice()
-            if (checkInput()) checkSuccess(manageId)
+            if (checkInput()) {
+                when(preTravelDays > temporalTravelDays){
+                    true -> {
+                        alert("Day ${temporalTravelDays + 2} 以降のデータが消えますがよいですか？") {
+                            yesButton { checkSuccess(manageId) }
+                            noButton {  }
+                        }.show()
+                    }
+                    false -> checkSuccess(manageId)
+                }
+            }
         }
         //戻るボタンタップ
         edit1BackToMain.setOnClickListener {
@@ -247,14 +259,14 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
                     .equalTo("day", day)
                     .findFirst()
 
-                if(existPartForDelete is TravelPart){
+                existPartForDelete?.let{
                     Log.i("【EditMainActivity】", "[setTravelPartAndDetailModel] existPartForDeleteが存在 day:$day")
-                    existPartForDelete.deleteFromRealm()
-                    realm.where<TravelDetail>()
-                        .equalTo("manageId", manageId)
-                        .equalTo("day", day)
-                        .findAll().deleteAllFromRealm()
+                    it.deleteFromRealm()
                 }
+                realm.where<TravelDetail>()
+                    .equalTo("manageId", manageId)
+                    .equalTo("day", day)
+                    .findAll().deleteAllFromRealm()
             }
         }
     }
@@ -343,8 +355,9 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
             when (val dateDiff = dateDiff(edit1DepartureDay.text.toString(), edit1ArrivalDay.text.toString())){
                 in 0..6 -> setTravelDay(dateDiff)
                 else -> {
-                    val dialog = DateDiffAlertDialogs()
-                    dialog.show(supportFragmentManager, dateDiffTag)
+//                    val dialog = DateDiffAlertDialogs()
+//                    dialog.show(supportFragmentManager, dateDiffTag)
+                    alert("1～7日間で設定してください。") { yesButton {  } }.show()
                     edit1ArrivalDay.text = null
                     edit1ArrivalDay.background = falseColorChange()
                     edit1ArrivalText.text ="・到着地点は？"
@@ -393,25 +406,25 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
 
     //何泊何日の出力メソッド
     private fun setTravelDay(dateDiff: Int) {
-        val dateDiffMap: MutableMap<Int, String> = mutableMapOf()
-        for (i in 0..6) dateDiffMap[i] = (i.toString() + "泊" + (i + 1) + "日")
-        edit1TravelDays.text = dateDiffMap[dateDiff]
+        val dayStayBuilder = StringBuilder(dateDiff.toString())
+        edit1TravelDays.text = dayStayBuilder.append("泊").append(dateDiff + 1).append( "日").toString()
     }
 
     //データベースからデータをとってきてビューに表示する。
     private fun setData(manageId: Int) {
         val travel = realm.where<Travel>()
             .equalTo("manageId", manageId).findFirst()
-        if (travel is Travel){
-            edit1TravelTitle.setText(travel.title)
-            edit1DepartureDay.text = travel.departureDay
-            edit1ArrivalDay.text = travel.arrivalDay
-            val daysBuilder = StringBuilder()
-                .append(travel.travelDays.minus(1)).append("泊").append(travel.travelDays).append("日")
-            edit1TravelDays.text = daysBuilder.toString()
-            edit1DeparturePlace.setText(travel.departurePlace)
-            edit1ArrivalPlace.setText(travel.arrivalPlace)
-            temporalTravelDays = travel.travelDays.minus(1).toLong()
+       travel?.let{
+           edit1TravelTitle.setText(it.title)
+           edit1DepartureDay.text = it.departureDay
+           edit1ArrivalDay.text = it.arrivalDay
+           val daysBuilder = StringBuilder()
+               .append(it.travelDays.minus(1)).append("泊").append(it.travelDays).append("日")
+           edit1TravelDays.text = daysBuilder.toString()
+           edit1DeparturePlace.setText(it.departurePlace)
+           edit1ArrivalPlace.setText(it.arrivalPlace)
+           temporalTravelDays = it.travelDays.minus(1).toLong()
+           preTravelDays = temporalTravelDays
         }
     }
 
