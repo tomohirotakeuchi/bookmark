@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,14 +8,15 @@
         tools:context=".MainActivity">
 
     <TextView
-            android:layout_height="wrap_content" android:id="@+id/mainGuideText"
+            android:layout_height="wrap_content" android:id="@+id/mainAppNameText"
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_marginTop="8dp" android:gravity="center_horizontal"
-            android:text="Smart Travel" android:layout_marginLeft="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" app:layout_constraintEnd_toStartOf="@+id/mainLocationFragment"/>
+            android:layout_marginRight="8dp" app:layout_constraintEnd_toStartOf="@+id/mainLocationFragment"
+            android:text="@string/mainAppNameText"/>
     <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:name="tafm.tt10tt10.mytesttravel.fragment.MainSwitchFragment"
@@ -30,7 +31,7 @@
             android:id="@+id/mainListView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainGuideText"
+            app:layout_constraintTop_toBottomOf="@+id/mainAppNameText"
             app:layout_constraintBottom_toTopOf="@+id/mainAd"
             tools:listitem="@layout/main_list_item" android:layout_marginTop="8dp"
             android:background="@drawable/border">
@@ -41,19 +42,18 @@
             android:id="@+id/mainAd" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="広告" android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="30sp"
+            android:text="@string/ad" android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="30sp"
             android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout4" android:background="@color/colorAccent"/>
-    <LinearLayout
-            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/mainCreate" android:background="@color/colorAccent"
+    />
+    <Button
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/linearLayout4" android:weightSum="2">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/mainCreate" tools:text="new Creat"
-                android:text="new Creat" android:layout_weight="2"/>
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+            android:layout_height="wrap_content" android:id="@+id/mainCreate"
+            android:layout_weight="2" android:text="@string/mainCreate"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

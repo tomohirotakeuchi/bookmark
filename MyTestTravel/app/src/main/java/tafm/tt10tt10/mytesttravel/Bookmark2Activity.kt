@@ -1,8 +1,8 @@
 package tafm.tt10tt10.mytesttravel
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.TabLayout
+import com.google.android.material.tabs.TabLayout
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -107,12 +107,25 @@ class Bookmark2Activity : AppCompatActivity()
         val dayText = "Day$day : "
 
         destinationArray.add(dayText + destinationPlace)
-        if (travelPart?.destination1 is String && travelPart.destination1.isNotEmpty()) destinationArray.add(dayText + travelPart.destination1)
-        if (travelPart?.destination2 is String && travelPart.destination2.isNotEmpty()) destinationArray.add(dayText + travelPart.destination2)
-        if (travelPart?.destination3 is String && travelPart.destination3.isNotEmpty()) destinationArray.add(dayText + travelPart.destination3)
-        if (travelPart?.destination4 is String && travelPart.destination4.isNotEmpty()) destinationArray.add(dayText + travelPart.destination4)
-        if (travelPart?.destination5 is String && travelPart.destination5.isNotEmpty()) destinationArray.add(dayText + travelPart.destination5)
-        if (travelPart?.destination6 is String && travelPart.destination6.isNotEmpty()) destinationArray.add(dayText + travelPart.destination6)
+        if (travelPart?.destination1 is String && travelPart.destination1.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination1)
+        }
+        if (travelPart?.destination2 is String && travelPart.destination2.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination2)
+        }
+        if (travelPart?.destination3 is String && travelPart.destination3.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination3)
+        }
+        if (travelPart?.destination4 is String && travelPart.destination4.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination4)
+        }
+        if (travelPart?.destination5 is String && travelPart.destination5.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination5)
+        }
+        if (travelPart?.destination6 is String && travelPart.destination6.isNotEmpty()) {
+            destinationArray.add(dayText + travelPart.destination6)
+        }
+
         if (travelDays == day) {
             destinationArray.add(dayText + getArrivalPlace(manageId, day, 9))
             arrivalPlaceNum = destinationArray.size -1
@@ -146,10 +159,14 @@ class Bookmark2Activity : AppCompatActivity()
         for (i: Int in 0..bm2TabLayout.tabCount) {
             bm2TabLayout.getTabAt(i)?.also {
                 when (i) {
-                    0 -> setTabAndIconValues(it, "place", R.drawable.ic_flag_black_24dp)
-                    1 -> setTabAndIconValues(it, "time", R.drawable.ic_schedule_black_24dp)
-                    2 -> setTabAndIconValues(it, "image", R.drawable.ic_image_black_24dp)
-                    3 -> setTabAndIconValues(it, "map", R.drawable.ic_map_black_24dp)
+                    0 -> setTabAndIconValues(it
+                        , resources.getString(R.string.bm2TabPlace), R.drawable.img_detail)
+                    1 -> setTabAndIconValues(it
+                        , resources.getString(R.string.bm2TabSchedule), R.drawable.img_schedule)
+                    2 -> setTabAndIconValues(it
+                        , resources.getString(R.string.bm2TabImage), R.drawable.img_image)
+                    3 -> setTabAndIconValues(it
+                        , resources.getString(R.string.bm2TabMap), R.drawable.img_map)
                 }
             }
         }

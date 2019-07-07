@@ -2,7 +2,7 @@ package tafm.tt10tt10.mytesttravel.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
@@ -16,6 +16,7 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.bm2_place_fragment.*
 import tafm.tt10tt10.mytesttravel.R
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
+import java.lang.StringBuilder
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.pow
@@ -93,12 +94,17 @@ class Bm2PlaceFragment : Fragment() {
         bm2_place_destination.text = travelDetail.destination
         bm2_place_startTime.text = travelDetail.startTime
         bm2_place_requireTime.text = if(isOrder0 || isOrder9){
-            "---------"
+            "-------"
         }else{
             travelDetail.requiredTime.split(": ")[1]
         }
+        bm2_place_departureTime.text = when {
+            isOrder9 -> "-------"
+            isOrder0 -> travelDetail.startTime
+            else -> returnDepartureTime(travelDetail.startTime, travelDetail.requiredTime.split(": ")[1])
+        }
         bm2_place_moveTime.text = if (isOrder9){
-            "---------"
+            "-------"
         }else{
             travelDetail.moveTime.split(": ")[1]
         }
@@ -114,6 +120,27 @@ class Bm2PlaceFragment : Fragment() {
         bm2_place_tableCost3.text = getCostText(travelDetail.costItem3)
         bm2_place_tableCost4.text = getCostText(travelDetail.costItem4)
         bm2_place_tableCost5.text = getCostText(travelDetail.costItem5)
+    }
+
+    //出発時刻を計算。
+    private fun returnDepartureTime(startTime: String, requireTime: String): String {
+        val sArr = startTime.split(":")
+        val rArr = requireTime.split("h")
+        val totalMinutes = when(rArr.size){
+            1 -> {
+                val builder = StringBuilder(rArr[0])
+                builder.delete(rArr[0].length-5, rArr[0].length-1)
+                sArr[0].trim().toInt()*60 + sArr[1].trim().toInt() + builder.toString().trim().toInt()
+            }
+            else -> {
+                val builder = StringBuilder(rArr[1])
+                builder.delete(rArr[1].length-5, rArr[1].length-1)
+                sArr[0].trim().toInt()*60 + sArr[1].trim().toInt() +
+                        rArr[0].trim().toInt()*60 + builder.toString().trim().toInt()
+            }
+        }
+        val timeFormat = "%1$02d:%2$02d"
+        return timeFormat.format(totalMinutes / 60, totalMinutes % 60)
     }
 
     //OnePointMemoに値をセットする。

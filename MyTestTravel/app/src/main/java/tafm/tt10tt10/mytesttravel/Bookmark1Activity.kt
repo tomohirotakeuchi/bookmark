@@ -1,12 +1,11 @@
 package tafm.tt10tt10.mytesttravel
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
@@ -45,7 +44,8 @@ class Bookmark1Activity : AppCompatActivity() {
             .findFirst()
         travel?.let {
             travelDays = it.travelDays
-            findViewById<TextView>(R.id.bm1GuideText).text = it.title
+            val builder = StringBuilder("- ")
+            findViewById<TextView>(R.id.bm1GuideText).text = builder.append(it.title).append(" -").toString()
         }
 
         adapter = Bookmark1Adapter(this, travelParts, true)
@@ -69,7 +69,7 @@ class Bookmark1Activity : AppCompatActivity() {
                         .equalTo("manageId", manageId)
                         .findFirst()?.travelDays
                     if(currentTravelDays is Int && currentTravelDays > 1){
-                        alert ("削除しますか？"){
+                        alert (resources.getString(R.string.deleteConform)){
                             yesButton {
                                 if (manageId is Int && day is Int){
                                     delete(manageId, day, travelDays)
@@ -78,7 +78,7 @@ class Bookmark1Activity : AppCompatActivity() {
                             noButton {  }
                         }.show()
                     }else {
-                        alert ("旅行日数を0日にはできません。"){ yesButton { } }.show()
+                        alert (resources.getString(R.string.cannotZeroDay)){ yesButton { } }.show()
                     }
                 }
             }
@@ -98,7 +98,6 @@ class Bookmark1Activity : AppCompatActivity() {
             arrangeArrivalTravelDetail(manageId, day, travelDays)
             arrangeTravel(manageId, travelDays)
         }
-        Toast.makeText(applicationContext, "削除しました！", Toast.LENGTH_LONG).show()
     }
 
     //Travel更新。travelDays、到着日付、到着日時、コストを変更する。

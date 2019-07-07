@@ -2,8 +2,9 @@ package tafm.tt10tt10.mytesttravel
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import io.realm.Realm
@@ -29,7 +30,6 @@ class EditScheduleActivity : AppCompatActivity()
     private var travelDays = 1
     private var lastDestinationFlag = true
 
-    private val requireTimeText = "所要: ";   private val moveTimeText = "移動: "
     private val departureTime10Tag = "departureTime10Tag";    private val departureMoveTime10Tag = "departureMoveTime10Tag"
     private val requireTime11Tag = "requireTime11Tag";   private val moveTime11Tag = "moveTime11Tag"
     private val requireTime12Tag = "requireTime12Tag";   private val moveTime12Tag = "moveTime12Tag"
@@ -211,8 +211,10 @@ class EditScheduleActivity : AppCompatActivity()
     //時間を自動入力。合計時間（分）の返却とstartTimeセット。出発時はrequireTime == null
     private fun timeRefresh(sum: Long, requireTime: TextView?, moveTime: TextView, startTime: TextView): Long {
         var total = sum
-        if (requireTime is TextView && requireTime.text.isNotEmpty()) total += extractData(requireTime, requireTimeText.length)
-        if (moveTime.text.isNotEmpty()) total += extractData(moveTime, moveTimeText.length)
+        if (requireTime is TextView && requireTime.text.isNotEmpty()) total +=
+            extractData(requireTime, resources.getString(R.string.requireTimeText).length)
+        if (moveTime.text.isNotEmpty()) total +=
+            extractData(moveTime, resources.getString(R.string.moveTimeText).length)
         val timeFormat = "%1$02d:%2$02d"
         startTime.text = timeFormat.format(total / 60, total % 60)
         return total
@@ -220,11 +222,16 @@ class EditScheduleActivity : AppCompatActivity()
 
     //移動時間と所要時間データを抽出して加算したものを返却（1時間以上未満で場合分け）
     private fun extractData(textView: TextView, deleteNum: Int): Long {
-        val extractData = StringBuilder(textView.text).delete(textView.text.length-5, textView.text.length-1).delete(0, deleteNum-1)
+        val extractData =
+            StringBuilder(textView.text).delete(textView.text.length-5, textView.text.length-1).delete(0, deleteNum -1)
         val rArr = extractData.split("h")
         return if(rArr.size == 2) {
+            Log.i("【Edit1ScheduleActivity】"
+                , "[extractData] rArr.size == 2 rArr[0]=${rArr[0]} rArr[1]=${rArr[1]}")
             rArr[0].trim().toLong() * 60 + rArr[1].trim().toLong()
         }else {
+            Log.i("【Edit1ScheduleActivity】"
+                , "[extractData] rArr.size == 1 rArr[0]=${rArr[0]}")
             rArr[0].trim().toLong()
         }
     }
@@ -237,43 +244,56 @@ class EditScheduleActivity : AppCompatActivity()
                 view.findViewById(R.id.sc2departureTime), hourOfDay, minute
             )
             departureMoveTime10Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2departureMoveTime), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2departureMoveTime)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime11Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime1), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime1)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime11Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime1), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime1)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime12Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime2), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime2)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime12Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime2), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime2)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime13Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime3), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime3)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime13Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime3), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime3)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime14Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime4), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime4)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime14Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime4), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime4)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime15Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime5), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime5)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime15Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime5), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime5)
+                , resources.getString(R.string.moveTimeText)
             )
             requireTime16Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2requireTime6), requireTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2requireTime6)
+                , resources.getString(R.string.requireTimeText)
             )
             moveTime16Tag -> setRequireOrMoveTime(
-                hourOfDay, minute, view.findViewById(R.id.sc2moveTime6), moveTimeText
+                hourOfDay, minute, view.findViewById(R.id.sc2moveTime6)
+                , resources.getString(R.string.moveTimeText)
             )
         }
         refresh()

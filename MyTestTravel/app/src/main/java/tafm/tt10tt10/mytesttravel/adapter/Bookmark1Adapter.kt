@@ -1,7 +1,7 @@
 package tafm.tt10tt10.mytesttravel.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,7 +93,7 @@ class Bookmark1Adapter(context: Context
     }
 
     //viewHolder
-    class ViewHolderForBm1(view: View): RecyclerView.ViewHolder(view){
+    class ViewHolderForBm1(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         val layout: View = view.findViewById(R.id.bm1ItemCellLayout)
         val day: TextView = view.findViewById(R.id.bm1DayText)
         val destination1: TextView = view.findViewById(R.id.bm1Destination1)
@@ -106,7 +106,7 @@ class Bookmark1Adapter(context: Context
 
 
     /**
-     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
      */
     private fun View.notPressTwice() {
         this.isEnabled = false

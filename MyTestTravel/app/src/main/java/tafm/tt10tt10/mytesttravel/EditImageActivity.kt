@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.util.DisplayMetrics
@@ -17,12 +17,13 @@ import kotlinx.android.synthetic.main.activity_edit_image.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
 import tafm.tt10tt10.mytesttravel.model.TravelDetail
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.widget.ImageView
+import org.jetbrains.anko.noButton
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,7 +64,7 @@ class EditImageActivity : AppCompatActivity() {
             if (isExternalStorageReadable()){
                 setViews()
             }else {
-                alert("外部ストレージが使用不可能です。") {
+                alert(resources.getString(R.string.storageInvalid)) {
                     yesButton { finish() }
                 }.show()
             }
@@ -88,19 +89,31 @@ class EditImageActivity : AppCompatActivity() {
 
             if (travelDetail.imageUrl1.isNotEmpty() && travelDetail.imageUrl1 != ""){
                 val bitmap1 = loadPictureFromLocal("$filePath/${travelDetail.imageUrl1}")
-                if (bitmap1 != null) setBitmap(bitmap1, imageEditImage1)
+                if (bitmap1 != null) {
+                    imageButtonDelete1.visibility = View.VISIBLE
+                    setBitmap(bitmap1, imageEditImage1)
+                }
             }
             if (travelDetail.imageUrl2.isNotEmpty() && travelDetail.imageUrl2 != ""){
                 val bitmap2 = loadPictureFromLocal("$filePath/${travelDetail.imageUrl2}")
-                if (bitmap2 != null) setBitmap(bitmap2, imageEditImage2)
+                if (bitmap2 != null) {
+                    imageButtonDelete2.visibility = View.VISIBLE
+                    setBitmap(bitmap2, imageEditImage2)
+                }
             }
             if (travelDetail.imageUrl3.isNotEmpty() && travelDetail.imageUrl3 != ""){
                 val bitmap3 = loadPictureFromLocal("$filePath/${travelDetail.imageUrl3}")
-                if (bitmap3 != null) setBitmap(bitmap3, imageEditImage3)
+                if (bitmap3 != null) {
+                    imageButtonDelete3.visibility = View.VISIBLE
+                    setBitmap(bitmap3, imageEditImage3)
+                }
             }
             if (travelDetail.imageUrl4.isNotEmpty() && travelDetail.imageUrl4 != ""){
                 val bitmap4 = loadPictureFromLocal("$filePath/${travelDetail.imageUrl3}")
-                if (bitmap4 != null) setBitmap(bitmap4, imageEditImage4)
+                if (bitmap4 != null) {
+                    imageButtonDelete4.visibility = View.VISIBLE
+                    setBitmap(bitmap4, imageEditImage4)
+                }
             }
         }
         setImageViewLink()
@@ -135,6 +148,67 @@ class EditImageActivity : AppCompatActivity() {
             it.notPressTwice()
             finish()
         }
+        imageButtonDelete1.setOnClickListener {
+            it.notPressTwice()
+            conformDelete(1)
+        }
+        imageButtonDelete2.setOnClickListener {
+            it.notPressTwice()
+            conformDelete(2)
+        }
+        imageButtonDelete3.setOnClickListener {
+            it.notPressTwice()
+            conformDelete(3)
+        }
+        imageButtonDelete4.setOnClickListener {
+            it.notPressTwice()
+            conformDelete(4)
+        }
+    }
+
+    //削除してよいか確認。
+    private fun conformDelete(imageNum: Int) {
+        alert (resources.getString(R.string.deleteConform)) {
+            yesButton { imageDelete(imageNum) }
+            noButton {  }
+        }.show()
+    }
+
+    //削除（Realmを空にする、かつ、imageViewをデフォルトに）
+    private fun imageDelete(imageNum: Int) {
+        when(imageNum){
+            1 -> {
+                imageEditImage1.setImageResource(R.drawable.ic_image_black_24dp)
+                imageButtonDelete1.visibility = View.INVISIBLE
+            }
+            2 -> {
+                imageEditImage2.setImageResource(R.drawable.ic_image_black_24dp)
+                imageButtonDelete2.visibility = View.INVISIBLE
+            }
+            3 -> {
+                imageEditImage3.setImageResource(R.drawable.ic_image_black_24dp)
+                imageButtonDelete3.visibility = View.INVISIBLE
+            }
+            else -> {
+                imageEditImage4.setImageResource(R.drawable.ic_image_black_24dp)
+                imageButtonDelete4.visibility = View.INVISIBLE
+            }
+        }
+        realm.executeTransaction {
+            realm.where<TravelDetail>()
+                .equalTo("manageId", manageId)
+                .equalTo("day", day)
+                .equalTo("order", order)
+                .findFirst()
+                ?.let {
+                   when(imageNum){
+                       1 -> it.imageUrl1 = ""
+                       2 -> it.imageUrl2 = ""
+                       3 -> it.imageUrl3 = ""
+                       else -> it.imageUrl4 = ""
+                   }
+                }
+        }
     }
 
     //画像をクリックしたときの動作
@@ -151,11 +225,22 @@ class EditImageActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         val imageView = when (imageFlag){
-            1 -> imageEditImage1
-            2 -> imageEditImage2
-            3 -> imageEditImage3
-            4 -> imageEditImage4
-            else -> imageEditImage1
+            1 -> {
+                imageButtonDelete1.visibility = View.VISIBLE
+                imageEditImage1
+            }
+            2 -> {
+                imageButtonDelete2.visibility = View.VISIBLE
+                imageEditImage2
+            }
+            3 -> {
+                imageButtonDelete3.visibility = View.VISIBLE
+                imageEditImage3
+            }
+            else -> {
+                imageButtonDelete4.visibility = View.VISIBLE
+                imageEditImage4
+            }
         }
 
         //requestCode, resultCodeが正しい場合、
@@ -172,7 +257,7 @@ class EditImageActivity : AppCompatActivity() {
                     1 -> travelDetail?.imageUrl1 = "$timeStamp.png"
                     2 -> travelDetail?.imageUrl2 = "$timeStamp.png"
                     3 -> travelDetail?.imageUrl3 = "$timeStamp.png"
-                    else -> travelDetail?.imageUrl1 = "$timeStamp.png"
+                    else -> travelDetail?.imageUrl4 = "$timeStamp.png"
                 }
             }
             Thread{
@@ -218,7 +303,7 @@ class EditImageActivity : AppCompatActivity() {
             parcelFileDescriptor.close()
             return image
         }
-        throw IOException("ファイル読み込みに失敗しました。")
+        throw IOException(resources.getString(R.string.failToReadFile))
     }
 
     //画像をパスから引っ張ってくる。
@@ -264,7 +349,7 @@ class EditImageActivity : AppCompatActivity() {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             setViews()
         }else{
-            alert("外部ストレージ保存を許可してください。") {
+            alert(resources.getString(R.string.pleaseAllowStorage)) {
                 yesButton { finish() }
             }.show()
         }

@@ -1,7 +1,7 @@
 package tafm.tt10tt10.mytesttravel
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -31,7 +31,9 @@ class MainActivity : AppCompatActivity() {
 
         deleteFirst()
         val deleteFlag = 0
-        var travels = realm.where<Travel>().equalTo("deleteFlag", deleteFlag).findAll()
+        var travels = realm.where<Travel>()
+            .equalTo("deleteFlag", deleteFlag)
+            .findAll()
         travels = travels.sort("manageId", Sort.DESCENDING)
         val adapter = MainAdapter(travels)
         mainListView.adapter = adapter
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 if(mainEditDeleteFlag == 1){
                     startActivity<EditMainActivity>("manageId" to manageId)
                 }else{
-                    alert ("削除しますか？"){
+                    alert (resources.getString(R.string.deleteConform)){
                         yesButton {
                             delete(manageId ?: 0)
                         }
@@ -81,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             realm.where<TravelPart>().equalTo("manageId", manageId).findAll()?.deleteAllFromRealm()
             realm.where<TravelDetail>().equalTo("manageId", manageId).findAll()?.deleteAllFromRealm()
         }
-        Toast.makeText(applicationContext, "削除しました！", Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, resources.getString(R.string.deleteSuccess), Toast.LENGTH_LONG).show()
     }
 
     //スイッチフラグメントに値を引き渡す。

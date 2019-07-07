@@ -5,9 +5,9 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_simple_create1.*
@@ -93,15 +93,15 @@ class SimpleCreate1Activity : AppCompatActivity(),
         var check = true
         if (sc1Title.text.isEmpty()) {
             check = false
-            alert("タイトルを設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setTitleMsg)) { yesButton { } }.show()
         }
         if (check && (sc1departureDay.text.isEmpty() || sc1ArrivalDay.text.isEmpty())) {
             check = false
-            alert("出発・到着日時を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setDayMsg)) { yesButton { } }.show()
         }
         if (check && (sc1departurePlace.text.isEmpty() || sc1ArrivalPlace.text.isEmpty())) {
             check = false
-            alert("出発・到着地を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setPlaceMsg)) { yesButton { } }.show()
         }
         if (check) check = checkDestination(temporalTravelDays)
         return check
@@ -134,23 +134,23 @@ class SimpleCreate1Activity : AppCompatActivity(),
         val isExist5 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination5).text.isNotEmpty()
         val isExist6 = findViewById<View>(include).findViewById<TextView>(R.id.sc1destination6).text.isNotEmpty()
         if (!isExist1) {
-            alert("Day $day :目的地1を設定してください") { yesButton { } }.show()
+            alert("Day $day : " + resources.getString(R.string.destination1required)) { yesButton { } }.show()
             return false
         }
         if (!isExist2 && isExist3) {
-            alert("Day $day :目的地2を設定してください") { yesButton { } }.show()
+            alert("Day $day : " + resources.getString(R.string.destination2required)) { yesButton { } }.show()
             return false
         }
         if (!isExist3 && isExist4) {
-            alert("Day $day :目的地3を設定してください") { yesButton { } }.show()
+            alert("Day $day : " + resources.getString(R.string.destination3required)) { yesButton { } }.show()
             return false
         }
         if (!isExist4 && isExist5) {
-            alert("Day $day :目的地4を設定してください") { yesButton { } }.show()
+            alert("Day $day : " + resources.getString(R.string.destination4required)) { yesButton { } }.show()
             return false
         }
         if (!isExist5 && isExist6) {
-            alert("Day $day :目的地5を設定してください") { yesButton { } }.show()
+            alert("Day $day : " + resources.getString(R.string.destination5required)) { yesButton { } }.show()
             return false
         }
         return true
@@ -196,18 +196,15 @@ class SimpleCreate1Activity : AppCompatActivity(),
     override fun onSelected(year: Int, month: Int, date: Int) {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, date)
-        val builder = StringBuilder()
 
         when(temporalyTag){
             departureDateTag -> {
                 sc1departureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 sc1departureDay.background = doneColorChange()
-                sc1departureText.text = builder.append("・").append(sc1departureDay.text).append("出発地点は？")
             }
             arrivalDateTag -> {
                 sc1ArrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 sc1ArrivalDay.background = doneColorChange()
-                sc1arrivalText.text = builder.append("・").append(sc1ArrivalDay.text).append("到着地点は？")
             }
         }
 
@@ -215,11 +212,10 @@ class SimpleCreate1Activity : AppCompatActivity(),
             when (val dateDiff = dateDiff(sc1departureDay.text.toString(), sc1ArrivalDay.text.toString())){
                 in 0..6 -> setTravelDay(dateDiff)
                 else -> {
-                    alert("1～7日間で設定してください。") { yesButton {  } }.show()
+                    alert(resources.getString(R.string.edit1TravelDays)) { yesButton {  } }.show()
                     sc1ArrivalDay.text = null
                     sc1ArrivalDay.background = falseColorChange()
-                    sc1arrivalText.text ="・到着地点は？"
-                    sc1travelDays.text = "日付を選択してください。"
+                    sc1travelDays.text = resources.getString(R.string.edit1TravelDays)
                 }
             }
         }
@@ -264,8 +260,26 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
     //何泊何日の出力メソッド + 表示非表示
     private fun setTravelDay(dateDiff: Int) {
-        val dayStayBuilder = StringBuilder(dateDiff.toString())
-        sc1travelDays.text = dayStayBuilder.append("泊").append(dateDiff + 1).append( "日").toString()
+        val dayStayBuilder = StringBuilder()
+        sc1travelDays.text = when(Locale.getDefault()){
+            Locale.JAPAN ->{
+                dayStayBuilder.append(dateDiff)
+                    .append("泊").append(dateDiff + 1)
+                    .append("日").toString()
+            }
+            else -> {
+                dayStayBuilder.append(dateDiff + 1)
+                when(dateDiff + 1 > 1){
+                    true -> dayStayBuilder.append(" days ").append(dateDiff)
+                    false -> dayStayBuilder.append(" day ").append(dateDiff)
+                }
+                when(dateDiff > 1){
+                    true -> dayStayBuilder.append(" nights")
+                    false -> dayStayBuilder.append(" night")
+                }
+            }
+        }
+
 
         if(dateDiff > 5)  {
             changeInclude(R.id.includeSC1Day7, View.VISIBLE)
@@ -306,7 +320,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //目的地追加メソッド
     private fun addDestination(second:EditText,third:EditText,forth:EditText,fifth:EditText,six:EditText){
         if (six.visibility == View.VISIBLE){
-            alert("7ケ所以上にはできません") { yesButton {  } }.show()
+            alert(resources.getString(R.string.noAnyMoreAdd)) { yesButton {  } }.show()
         }
         if (six.visibility != View.VISIBLE && fifth.visibility == View.VISIBLE) six.visibility = View.VISIBLE
         if (fifth.visibility != View.VISIBLE && forth.visibility == View.VISIBLE) fifth.visibility = View.VISIBLE
@@ -318,7 +332,7 @@ class SimpleCreate1Activity : AppCompatActivity(),
     //目的地削除メソッド
     private fun removeDestination(second:EditText,third:EditText,forth:EditText,fifth:EditText,six:EditText){
         if (second.visibility != View.VISIBLE){
-            alert("0ケ所にはできません") { yesButton { } }.show()
+            alert(resources.getString(R.string.atLeastFirstPlace)) { yesButton { } }.show()
         }
         if (second.visibility == View.VISIBLE && third.visibility != View.VISIBLE) setProperty(second)
         if (third.visibility == View.VISIBLE && forth.visibility != View.VISIBLE) setProperty(third)
@@ -417,13 +431,13 @@ class SimpleCreate1Activity : AppCompatActivity(),
 
     //何日にどこに行くテキストをつくる。
     private fun setWhereToGoText() {
-        findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1whereToGoText).text = "・1日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1whereToGoText).text = "・2日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.sc1whereToGoText).text = "・3日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.sc1whereToGoText).text = "・4日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.sc1whereToGoText).text = "・5日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.sc1whereToGoText).text = "・6日目どこに行く？"
-        findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.sc1whereToGoText).text = "・7日目どこに行く？"
+        findViewById<View>(R.id.includeSC1Day1).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day1)
+        findViewById<View>(R.id.includeSC1Day2).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day2)
+        findViewById<View>(R.id.includeSC1Day3).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day3)
+        findViewById<View>(R.id.includeSC1Day4).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day4)
+        findViewById<View>(R.id.includeSC1Day5).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day5)
+        findViewById<View>(R.id.includeSC1Day6).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day6)
+        findViewById<View>(R.id.includeSC1Day7).findViewById<TextView>(R.id.sc1whereToGoText).text = resources.getString(R.string.day7)
     }
 
     //「追加」ボタンタップ「削除」ボタンタップ

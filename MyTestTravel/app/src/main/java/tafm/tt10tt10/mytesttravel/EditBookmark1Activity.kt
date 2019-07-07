@@ -1,6 +1,6 @@
 package tafm.tt10tt10.mytesttravel
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,7 +22,6 @@ class EditBookmark1Activity : AppCompatActivity() {
     private lateinit var realm: Realm
     private lateinit var view: View
     private var diffCostForTravel = 0
-    private val requireTimeText = "所要: ";   private val moveTimeText = "移動: "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +59,9 @@ class EditBookmark1Activity : AppCompatActivity() {
     //何日目に行くかのテキスト
     private fun setGuideText(travelPart: TravelPart?) {
         travelPart?.let {
-            val guideBuilder = StringBuilder("Where to Go on Day ")
-            view.findViewById<TextView>(R.id.sc1whereToGoText).text = guideBuilder.append(it.day).toString()
+            val guideBuilder = StringBuilder("- Day ")
+            view.findViewById<TextView>(R.id.sc1whereToGoText).text =
+                guideBuilder.append(it.day).append(" -").toString()
         }
     }
 
@@ -74,23 +74,23 @@ class EditBookmark1Activity : AppCompatActivity() {
         val isExist5 = view.findViewById<TextView>(R.id.sc1destination5).text.isNotEmpty()
         val isExist6 = view.findViewById<TextView>(R.id.sc1destination6).text.isNotEmpty()
         if (!isExist1) {
-            alert("目的地1を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.destination1required)) { yesButton { } }.show()
             return false
         }
         if (!isExist2 && isExist3) {
-            alert("目的地2を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.destination2required)) { yesButton { } }.show()
             return false
         }
         if (!isExist3 && isExist4) {
-            alert("目的地3を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.destination3required)) { yesButton { } }.show()
             return false
         }
         if (!isExist4 && isExist5) {
-            alert("目的地4を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.destination4required)) { yesButton { } }.show()
             return false
         }
         if (!isExist5 && isExist6) {
-            alert("目的地5を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.destination5required)) { yesButton { } }.show()
             return false
         }
         return true
@@ -189,8 +189,8 @@ class EditBookmark1Activity : AppCompatActivity() {
             .sort("order", Sort.DESCENDING)
             .findFirst()
         if (nextTravelDetail is TravelDetail && preTravelDetail is TravelDetail){
-            preTravelDetail.requiredTime = requireTimeText + "0 min "
-            preTravelDetail.moveTime = moveTimeText + "0 min "
+            preTravelDetail.requiredTime = resources.getString(R.string.requireTimeText) + " 0 min "
+            preTravelDetail.moveTime = resources.getString(R.string.moveTimeText) + " 0 min "
             nextTravelDetail.destination = preTravelDetail.destination
             nextTravelDetail.latitude = 0.0
             nextTravelDetail.longitude = 0.0
@@ -229,8 +229,10 @@ class EditBookmark1Activity : AppCompatActivity() {
         val startTimeMinute = startTimeArr[0].toLong() * 60 + startTimeArr[1].toLong()
         var requiredTimeMinute = 0L
         var moveTimeMinute = 0L
-        if (requiredTime.isNotEmpty()) requiredTimeMinute = extractData(requiredTime, requireTimeText.length)
-        if (moveTime.isNotEmpty()) moveTimeMinute = extractData(moveTime, moveTimeText.length)
+        if (requiredTime.isNotEmpty()) requiredTimeMinute =
+            extractData(requiredTime, resources.getString(R.string.requireTimeText).length)
+        if (moveTime.isNotEmpty()) moveTimeMinute =
+            extractData(moveTime, resources.getString(R.string.moveTimeText).length)
         val total = startTimeMinute + requiredTimeMinute + moveTimeMinute
         val timeFormat = "%1$02d:%2$02d"
         return timeFormat.format(total / 60, total % 60)
@@ -259,8 +261,8 @@ class EditBookmark1Activity : AppCompatActivity() {
         newTravelDetail.order = order
         newTravelDetail.destination = getDestinationByOrder(order)
         newTravelDetail.startTime = lastStartTime.toString()
-        newTravelDetail.requiredTime = requireTimeText + "0 min "
-        newTravelDetail.moveTime = moveTimeText + "0 min "
+        newTravelDetail.requiredTime = resources.getString(R.string.requireTimeText) + " 0 min "
+        newTravelDetail.moveTime = resources.getString(R.string.moveTimeText) + " 0 min "
         newTravelDetail.deleteFlag = 0
     }
 
@@ -273,7 +275,7 @@ class EditBookmark1Activity : AppCompatActivity() {
             4 -> view.findViewById<TextView>(R.id.sc1destination4).text.toString()
             5 -> view.findViewById<TextView>(R.id.sc1destination5).text.toString()
             6 -> view.findViewById<TextView>(R.id.sc1destination6).text.toString()
-            else -> "Please Edit"
+            else -> resources.getString(R.string.pleaseEdit)
         }
     }
 

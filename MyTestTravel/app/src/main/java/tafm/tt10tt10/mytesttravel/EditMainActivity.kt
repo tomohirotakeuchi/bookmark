@@ -5,9 +5,9 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
@@ -43,8 +43,6 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
     private val departureDateTag = "departureDateTag"
     private val arrivalDateTag = "arrivalDateTag"
 
-    private val requireTimeText = "所要: ";   private val moveTimeText = "移動: "
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit1_travel)
@@ -76,7 +74,7 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
             if (checkInput()) {
                 when(preTravelDays > temporalTravelDays){
                     true -> {
-                        alert("Day ${temporalTravelDays + 2} 以降のデータが消えますがよいですか？") {
+                        alert("Day ${temporalTravelDays + 2} " + resources.getString(R.string.willBeDelete)) {
                             yesButton { checkSuccess(manageId) }
                             noButton {  }
                         }.show()
@@ -97,15 +95,15 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
         var check = true
         if (edit1TravelTitle.text.isEmpty()) {
             check = false
-            alert("タイトルを設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setTitleMsg)) { yesButton { } }.show()
         }
         if (check && (edit1DepartureDay.text.isEmpty() || edit1ArrivalDay.text.isEmpty())) {
             check = false
-            alert("出発・到着日時を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setDayMsg)) { yesButton { } }.show()
         }
         if (check && (edit1DeparturePlace.text.isEmpty() || edit1ArrivalPlace.text.isEmpty())) {
             check = false
-            alert("出発・到着地を設定してください") { yesButton { } }.show()
+            alert(resources.getString(R.string.setPlaceMsg)) { yesButton { } }.show()
         }
         return check
     }
@@ -278,7 +276,7 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
         val updatePart = realm.createObject<TravelPart>(nextPartId)
         updatePart.manageId = manageId
         updatePart.day = day
-        updatePart.destination1 = "Please Edit"
+        updatePart.destination1 = resources.getString(R.string.pleaseEdit)
         updatePart.deleteFlag = 0
     }
 
@@ -299,7 +297,7 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
         newTravelDetailForDeparture.startTime = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()?.arrivalTime.toString()
-        newTravelDetailForDeparture.moveTime = moveTimeText + "0 min "
+        newTravelDetailForDeparture.moveTime = resources.getString(R.string.moveTimeText) + "0 min "
         newTravelDetailForDeparture.deleteFlag = 0
 
         //destination1用TravelDetail作成
@@ -309,12 +307,12 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
         newTravelDetailForDestination.manageId = manageId
         newTravelDetailForDestination.day = day
         newTravelDetailForDestination.order = 1
-        newTravelDetailForDestination.destination = "Please Edit"
+        newTravelDetailForDestination.destination = resources.getString(R.string.pleaseEdit)
         newTravelDetailForDestination.startTime = realm.where<Travel>()
             .equalTo("manageId", manageId)
             .findFirst()?.arrivalTime.toString()
-        newTravelDetailForDestination.requiredTime = requireTimeText + "0 min "
-        newTravelDetailForDestination.moveTime = moveTimeText + "0 min "
+        newTravelDetailForDestination.requiredTime = resources.getString(R.string.requireTimeText) + "0 min "
+        newTravelDetailForDestination.moveTime = resources.getString(R.string.moveTimeText) + "0 min "
         newTravelDetailForDestination.deleteFlag = 0
     }
 
@@ -336,18 +334,15 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
     override fun onSelected(year: Int, month: Int, date: Int) {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, date)
-        val builder = StringBuilder()
 
         when(temporalyTag){
             departureDateTag -> {
                 edit1DepartureDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 edit1DepartureDay.background = doneColorChange()
-                edit1DepartureText.text = builder.append("・").append(edit1DepartureDay.text).append("出発地点は？")
             }
             arrivalDateTag -> {
                 edit1ArrivalDay.text = DateFormat.format("yyyy/MM/dd", calendar)
                 edit1ArrivalDay.background = doneColorChange()
-                edit1ArrivalText.text = builder.append("・").append(edit1ArrivalDay.text).append("到着地点は？")
             }
         }
 
@@ -355,13 +350,10 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
             when (val dateDiff = dateDiff(edit1DepartureDay.text.toString(), edit1ArrivalDay.text.toString())){
                 in 0..6 -> setTravelDay(dateDiff)
                 else -> {
-//                    val dialog = DateDiffAlertDialogs()
-//                    dialog.show(supportFragmentManager, dateDiffTag)
-                    alert("1～7日間で設定してください。") { yesButton {  } }.show()
+                    alert(resources.getString(R.string.edit1TravelDays)) { yesButton {  } }.show()
                     edit1ArrivalDay.text = null
                     edit1ArrivalDay.background = falseColorChange()
-                    edit1ArrivalText.text ="・到着地点は？"
-                    edit1TravelDays.text = "日付を選択してください。"
+                    edit1TravelDays.text = resources.getString(R.string.edit1TravelDays)
                 }
             }
         }
@@ -406,8 +398,25 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
 
     //何泊何日の出力メソッド
     private fun setTravelDay(dateDiff: Int) {
-        val dayStayBuilder = StringBuilder(dateDiff.toString())
-        edit1TravelDays.text = dayStayBuilder.append("泊").append(dateDiff + 1).append( "日").toString()
+        val dayStayBuilder = StringBuilder()
+        edit1TravelDays.text = when(Locale.getDefault()){
+            Locale.JAPAN ->{
+                dayStayBuilder.append(dateDiff)
+                    .append("泊").append(dateDiff + 1)
+                    .append("日").toString()
+            }
+            else -> {
+                dayStayBuilder.append(dateDiff + 1)
+                when(dateDiff + 1 > 1){
+                    true -> dayStayBuilder.append(" days ").append(dateDiff)
+                    false -> dayStayBuilder.append(" day ").append(dateDiff)
+                }
+                when(dateDiff > 1){
+                    true -> dayStayBuilder.append(" nights")
+                    false -> dayStayBuilder.append(" night")
+                }
+            }
+        }
     }
 
     //データベースからデータをとってきてビューに表示する。
@@ -418,9 +427,7 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
            edit1TravelTitle.setText(it.title)
            edit1DepartureDay.text = it.departureDay
            edit1ArrivalDay.text = it.arrivalDay
-           val daysBuilder = StringBuilder()
-               .append(it.travelDays.minus(1)).append("泊").append(it.travelDays).append("日")
-           edit1TravelDays.text = daysBuilder.toString()
+           setTravelDay(it.travelDays.minus(1))
            edit1DeparturePlace.setText(it.departurePlace)
            edit1ArrivalPlace.setText(it.arrivalPlace)
            temporalTravelDays = it.travelDays.minus(1).toLong()
@@ -429,7 +436,7 @@ class EditMainActivity : AppCompatActivity(), DatePickerFragment.OnDateSelectedL
     }
 
     /**
-     * 二度押し防止施策として 0.5 秒間タップを禁止する
+     * 二度押し防止施策として 1.5 秒間タップを禁止する
      */
     private fun View.notPressTwice() {
         this.isEnabled = false

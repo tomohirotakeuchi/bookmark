@@ -3,7 +3,7 @@ package tafm.tt10tt10.mytesttravel.fragment
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +19,7 @@ import tafm.tt10tt10.mytesttravel.model.TravelDetail
 class Bm2ScheduleFragment : Fragment() {
 
     private lateinit var realm: Realm
+    private lateinit var include: View
     private var listener: Bm2ScheduleEditOnClickListener? = null
     private var lastOrder = 1
     private var manageId = 1
@@ -49,6 +50,7 @@ class Bm2ScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        include = bm2_schedule_include
         goneGuideText()
         realm = Realm.getDefaultInstance()
         val travelDetails = realm.where<TravelDetail>()
@@ -71,24 +73,24 @@ class Bm2ScheduleFragment : Fragment() {
     //現在表示している部分をハイライトする。
     private fun targetLayoutHighLight() {
         if(day != travelDays && order == lastOrder){
-            bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+            include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
         }else {
             when (order) {
-                0 -> bm2_schedule_include.findViewById<View>(R.id.sc2departureLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                1 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination1Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                2 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination2Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                3 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination3Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                4 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination4Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                5 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination5Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                6 -> bm2_schedule_include.findViewById<View>(R.id.sc2destination6Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
-                9 -> bm2_schedule_include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                0 -> include.findViewById<View>(R.id.sc2departureLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                1 -> include.findViewById<View>(R.id.sc2destination1Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                2 -> include.findViewById<View>(R.id.sc2destination2Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                3 -> include.findViewById<View>(R.id.sc2destination3Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                4 -> include.findViewById<View>(R.id.sc2destination4Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                5 -> include.findViewById<View>(R.id.sc2destination5Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                6 -> include.findViewById<View>(R.id.sc2destination6Layout).setBackgroundColor(Color.argb(30, 2, 252, 41))
+                9 -> include.findViewById<View>(R.id.sc2arrivalLayout).setBackgroundColor(Color.argb(30, 2, 252, 41))
             }
         }
     }
 
     //何日目かのTextを非表示にする。
     private fun goneGuideText() {
-        bm2_schedule_include.findViewById<TextView>(R.id.sc2DayText).visibility = View.GONE
+        include.findViewById<TextView>(R.id.sc2DayText).visibility = View.GONE
     }
 
     //それぞれのLayoutの表示非表示。
@@ -134,20 +136,20 @@ class Bm2ScheduleFragment : Fragment() {
     private fun setTextViewsProperty(travelDetail: TravelDetail, layoutId: Int, startTimeId: Int
                                      , destinationId: Int, requireTimeId: Int, moveTimeId: Int
                                      , isOrder0: Boolean, isOrder9: Boolean) {
-        bm2_schedule_include.findViewById<View>(layoutId).visibility = View.VISIBLE
+        include.findViewById<View>(layoutId).visibility = View.VISIBLE
 
-        bm2_schedule_include.findViewById<TextView>(startTimeId).text = travelDetail.startTime
-        bm2_schedule_include.findViewById<TextView>(startTimeId).setBackgroundResource(R.drawable.border)
-        bm2_schedule_include.findViewById<TextView>(destinationId).text = travelDetail.destination
+        include.findViewById<TextView>(startTimeId).text = travelDetail.startTime
+        include.findViewById<TextView>(startTimeId).setBackgroundResource(R.drawable.border)
+        include.findViewById<TextView>(destinationId).text = travelDetail.destination
         if (!isOrder9){
             if (!isOrder0){
-                bm2_schedule_include.findViewById<TextView>(requireTimeId).text = travelDetail.requiredTime
-                bm2_schedule_include.findViewById<TextView>(requireTimeId).setBackgroundColor(Color.alpha(0))
+                include.findViewById<TextView>(requireTimeId).text = travelDetail.requiredTime
+                include.findViewById<TextView>(requireTimeId).setBackgroundColor(Color.alpha(0))
             }
-            bm2_schedule_include.findViewById<TextView>(moveTimeId).text = travelDetail.moveTime
-            bm2_schedule_include.findViewById<TextView>(moveTimeId).setBackgroundColor(Color.alpha(0))
-            bm2_schedule_include.findViewById<TextView>(R.id.sc2ArrivalTime).text = travelDetail.startTime
-            bm2_schedule_include.findViewById<TextView>(R.id.sc2ArrivalPlace).text = travelDetail.destination
+            include.findViewById<TextView>(moveTimeId).text = travelDetail.moveTime
+            include.findViewById<TextView>(moveTimeId).setBackgroundColor(Color.alpha(0))
+            include.findViewById<TextView>(R.id.sc2ArrivalTime).text = travelDetail.startTime
+            include.findViewById<TextView>(R.id.sc2ArrivalPlace).text = travelDetail.destination
             lastOrder = travelDetail.order
         }
     }
@@ -168,7 +170,7 @@ class Bm2ScheduleFragment : Fragment() {
 
     //最終日以外の場合、最終目的地のレイアウトを非表示にする。
     private fun lastDestinationLayoutDone(layoutId: Int) {
-        bm2_schedule_include.findViewById<View>(layoutId).visibility = View.GONE
+        include.findViewById<View>(layoutId).visibility = View.GONE
     }
 
     //Bm2ScheduleEditのinterface。

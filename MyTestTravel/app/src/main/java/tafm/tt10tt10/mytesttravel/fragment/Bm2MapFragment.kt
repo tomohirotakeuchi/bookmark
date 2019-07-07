@@ -3,7 +3,7 @@ package tafm.tt10tt10.mytesttravel.fragment
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -60,12 +60,14 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
         if (travelDetail?.latitude != 0.0 && travelDetail?.longitude != 0.0){
             if (travelDetail?.destination == "現在地" || travelDetail?.destination == "Current Place"){
                 when(travelDetail.order){
-                    0 -> createMap("出発地", travelDetail.latitude, travelDetail.longitude, 15f)
-                    else -> createMap("最終目的地", travelDetail.latitude, travelDetail.longitude, 15f)
+                    0 -> createMap(resources.getString(R.string.departurePlaceText)
+                        , travelDetail.latitude, travelDetail.longitude, 15f)
+                    else -> createMap(resources.getString(R.string.arrivalPlaceText)
+                        , travelDetail.latitude, travelDetail.longitude, 15f)
                 }
             }else {
-                if (travelDetail is TravelDetail){
-                    createMap(travelDetail.destination, travelDetail.latitude, travelDetail.longitude, 15f)
+                travelDetail?.let {
+                    createMap(it.destination, it.latitude, it.longitude, 15f)
                 }
             }
         }else{
@@ -81,7 +83,7 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
                 }
                 Log.i("【Bm2MapFragment】","[onMapReady] GeoCoding成功!!$address")
             }else {
-                createMap("${travelDetail.destination} の検索に失敗しました。"
+                createMap(travelDetail.destination + resources.getString(R.string.mapIsNotFound)
                     , -34.0, 151.0, 1f)
                 Log.i("【Bm2MapFragment】","[onMapReady] GeoCoding失敗")
             }
@@ -100,13 +102,9 @@ class Bm2MapFragment : Fragment(), OnMapReadyCallback {
 
     //マップを生成する。
     private fun createMap(searchKey: String, latitude: Double, longitude: Double, zoomDegree: Float) {
-        // 緯度、経度設定
         val latLng = LatLng(latitude, longitude)
-        //インドアの情報を非表示。東京駅などは複雑でプログラムがクラッシュする。
         mMap.isIndoorEnabled = false
-        //マーカーを追加。positionで位置を指定、titleでタップ時のメソッド。searchKeyを表示。
         mMap.addMarker(MarkerOptions().position(latLng).title(searchKey))
-        //地図上に表示する位置とズーム指定。
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomDegree))
     }
 

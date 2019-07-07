@@ -5,12 +5,12 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.widget.DatePicker
 import android.widget.TimePicker
 import java.util.*
 
-class DatePickerFragment :DialogFragment(), DatePickerDialog.OnDateSetListener{
+class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener{
 
     interface OnDateSelectedListener{
         fun onSelected(year: Int, month: Int, date: Int)

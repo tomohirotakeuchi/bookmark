@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,10 +35,6 @@ class MainSwitchFragment: Fragment() {
         val view = inflater.inflate(R.layout.main_switch, container, false)
         val switch = view.findViewById<Switch>(R.id.mainLocationSwitch)
 
-        //モデル変更したら以下の2行で初期化する必要あり。
-        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
-        Realm.setDefaultConfiguration(config)
-        ///////////////////////////////////////////////////////////////////////////////////
         realm = Realm.getDefaultInstance()
 
         //保存されている位置情報のフラグに応じて、スイッチのON/OFF初期表示を変える。
@@ -123,7 +119,7 @@ class MainSwitchFragment: Fragment() {
 
     //エラーを表示する
     private fun showErrorMessage(){
-        Toast.makeText(context, "位置情報を取得することができません。", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, resources.getString(R.string.cannotGetPosition), Toast.LENGTH_SHORT).show()
     }
 
     //位置情報のリクエスト設定を返すメソッド。今回はテスト用。リクエストはActivityから。

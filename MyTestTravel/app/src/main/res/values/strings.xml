@@ -1,4 +1,119 @@
 <resources>
     <string name="app_name">MyTestTravel</string>
-    <string name="title_activity_bookmark2">Map</string>
+    <string name="mainAppNameText" translatable="false">Smart Travel</string>
+    <string name="mainCreate">New Create</string>
+    <string name="mainDepartureText">"Departure : "</string>
+    <string name="mainArrivalTimeText">"Arrival : "</string>
+    <string name="mainTotalCostText">"Total Cost : "</string>
+    <string name="edit" translatable="false">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="mainLocationSwitch">Location</string>
+    <string name="Back">Back</string>
+    <string name="none">" "</string>
+    <string name="etc">etc</string>
+    <string name="bm2TabPlace" translatable="false">Detail</string>
+    <string name="bm2TabSchedule" translatable="false">Times</string>
+    <string name="bm2TabImage" translatable="false">Images</string>
+    <string name="bm2TabMap" translatable="false">Map</string>
+    <string name="completeText1">Congratulations!</string>
+    <string name="completeText2">Creation Complete!</string>
+    <string name="completeText4">Click \"Go to Top\"</string>
+    <string name="completeText5">to see your Travel Itinerary!</string>
+    <string name="cmpBookmarkBtn">Go to Top</string>
+    <string name="edit1GuideText">Edit Title</string>
+    <string name="edit1TravelTitleText">- Title -</string>
+    <string name="edit1TravelTitle">The \"Title\" is?</string>
+    <string name="edit1DepartureDayText">- Departure Day and Arrival Day -</string>
+    <string name="edit1TravelDays">Please enter within \"1 WEEK\".</string>
+    <string name="edit1DepartureDay">Select Day</string>
+    <string name="edit1ArrivalDay">Select Day</string>
+    <string name="edit1DepartureText">- Departure Place -</string>
+    <string name="enterDeparturePlace">Departure Place is?</string>
+    <string name="currentPlace">Current Place</string>
+    <string name="enterArrivalPlace">Arrival Place is?</string>
+    <string name="edit1ArrivalText">- Arrival Place -</string>
+    <string name="update">Update</string>
+    <string name="edit2GuideText">Edit Destinations</string>
+    <string name="imageEditGuideText">Edit Images</string>
+    <string name="image">image</string>
+    <string name="placeExitGuideTitle">Edit Details</string>
+    <string name="placeEditMemosText">Memos</string>
+    <string name="placeEditMemo1">memo1</string>
+    <string name="placeEditMemo2">memo2</string>
+    <string name="placeEditMemo3">memo3</string>
+    <string name="placeEditURLText">URL Links</string>
+    <string name="placeEditURL1" translatable="false">URL1</string>
+    <string name="placeEditURL2" translatable="false">URL2</string>
+    <string name="placeEditURL3" translatable="false">URL3</string>
+    <string name="placeEditBudgetText">Budget</string>
+    <string name="placeEditTotalText">total :</string>
+    <string name="placeEditTransportationText">" Transportation : "</string>
+    <string name="placeEditFoodText">" Foods : "</string>
+    <string name="placeEditAdmissionText">" Admission fee : "</string>
+    <string name="placeEditSouvenirText">" Souvenirs : "</string>
+    <string name="placeEditEtcText">" Etc : "</string>
+    <string name="costHint">cost</string>
+    <string name="scheduleEditText">Edit Schedule</string>
+    <string name="sc1GuideText">New Create [1\/2]</string>
+    <string name="next">Next</string>
+    <string name="sc2GuideText">New Create [2\/2]</string>
+    <string name="sc2nextToComplete">Complete</string>
+    <string name="bm2_image_Guide">Select Images</string>
+    <string name="ad">Advertise</string>
+    <string name="bm2_place_startTimeText">Start Time :</string>
+    <string name="bm2_place_requireTimeText">Required Time :</string>
+    <string name="nextDestination">Next Destination :</string>
+    <string name="bm2_place_tableItemsText">- Items -</string>
+    <string name="bm2_place_tableCostsText">- Cost -</string>
+    <string name="bm2_place_tableItem1">"Transportation expense"</string>
+    <string name="bm2_place_tableItem2">"Foods expense"</string>
+    <string name="bm2_place_tableItem3">"Admission fee"</string>
+    <string name="bm2_place_tableItem4">"Souvenir expense"</string>
+    <string name="bm2_place_tableItem5">"Etc"</string>
+    <string name="bm2_schedule_guideText">Schedule</string>
+    <string name="departureTime">Departure Time</string>
+    <string name="travelTime">Travel Time</string>
+    <string name="requireTime">Required Time</string>
+    <string name="firstDestination">First destination is?</string>
+    <string name="secondDestination">Second destination is?</string>
+    <string name="thirdDestination">Third destination is?</string>
+    <string name="forthDestination">Forth destination is?</string>
+    <string name="fifthDestination">Fifth destination is?</string>
+    <string name="sixthDestination">Sixth destination is?</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="deleteConform">Are you sure you want to delete the selected item?</string>
+    <string name="cannotZeroDay">At least one day is required.</string>
+    <string name="deleteSuccess">Delete Success!</string>
+    <string name="requireTimeText">"Required: "</string>
+    <string name="moveTimeText">"Travel: "</string>
+    <string name="destination1required">Please enter the \"destination1\".</string>
+    <string name="destination2required">Please enter the \"destination2\".</string>
+    <string name="destination3required">Please enter the \"destination3\".</string>
+    <string name="destination4required">Please enter the \"destination4\".</string>
+    <string name="destination5required">Please enter the \"destination5\".</string>
+    <string name="pleaseEdit">Please Edit</string>
+    <string name="storageInvalid">External Storage is invalid.</string>
+    <string name="failToReadFile">Failed to read file.</string>
+    <string name="pleaseAllowStorage">Please allow external storage access.</string>
+    <string name="setTitleMsg">Please set the title.</string>
+    <string name="setDayMsg">Please set the Departure and Arrival Days.</string>
+    <string name="setPlaceMsg">Please set the Departure and Arrival Places.</string>
+    <string name="noAnyMoreAdd">Please enter within 6 places.</string>
+    <string name="atLeastFirstPlace">At least first destination is required.</string>
+    <string name="day1" translatable="false">- Day 1 -</string>
+    <string name="day2" translatable="false">- Day 2 -</string>
+    <string name="day3" translatable="false">- Day 3 -</string>
+    <string name="day4" translatable="false">- Day 4 -</string>
+    <string name="day5" translatable="false">- Day 5 -</string>
+    <string name="day6" translatable="false">- Day 6 -</string>
+    <string name="day7" translatable="false">- Day 7 -</string>
+    <string name="willBeDelete">(and more) will be deleted. OK?</string>
+    <string name="enterAllTimes">Please enter the all times.</string>
+    <string name="mapIsNotFound">" is not found."</string>
+    <string name="cannotGetPosition">Unable to get location information.</string>
+    <string name="zerozero">00:00</string>
+    <string name="departurePlaceText">Departure place</string>
+    <string name="arrivalPlaceText">Arrival place</string>
+    <string name="bm2PlaceDepartureTime">Departure Time :</string>
 </resources>

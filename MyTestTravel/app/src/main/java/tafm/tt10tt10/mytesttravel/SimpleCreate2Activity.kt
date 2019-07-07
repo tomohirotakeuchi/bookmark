@@ -2,8 +2,9 @@ package tafm.tt10tt10.mytesttravel
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import io.realm.Realm
@@ -37,7 +38,6 @@ class SimpleCreate2Activity : AppCompatActivity()
     private var temporalyDayFlag = 0
     private var travelDays = 1L
 
-    private val requireTimeText = "所要: ";   private val moveTimeText = "移動: "
     //(1日目)タグ
     private val departureTime10Tag = "departureTime10Tag";    private val departureMoveTime10Tag = "departureMoveTime10Tag"
     private val requireTime11Tag = "requireTime11Tag";   private val moveTime11Tag = "moveTime11Tag"
@@ -159,7 +159,7 @@ class SimpleCreate2Activity : AppCompatActivity()
                 }
                 startActivity<CreateCompleteActivity>()
             }else{
-                alert ("時間・時刻をすべて入力してください"){ yesButton {  } }.show()
+                alert (resources.getString(R.string.enterAllTimes)){ yesButton {  } }.show()
             }
         }
     }
@@ -294,9 +294,9 @@ class SimpleCreate2Activity : AppCompatActivity()
         travelDetail.destination = include.findViewById<TextView>(destinationId).text.toString()
         travelDetail.startTime = include.findViewById<TextView>(startId).text.toString()
         travelDetail.requiredTime = include.findViewById<TextView>(requireId).text.toString()
-        if(travelDetail.requiredTime.isEmpty()) travelDetail.requiredTime = requireTimeText + "0 min "
+        if(travelDetail.requiredTime.isEmpty()) travelDetail.requiredTime = resources.getString(R.string.requireTimeText) + "0 min "
         travelDetail.moveTime = include.findViewById<TextView>(moveId).text.toString()
-        if(travelDetail.moveTime.isEmpty()) travelDetail.moveTime = moveTimeText + "0 min "
+        if(travelDetail.moveTime.isEmpty()) travelDetail.moveTime = resources.getString(R.string.moveTimeText) + "0 min "
     }
 
     //目的地が空でなければ値をViewにセットする。
@@ -427,8 +427,8 @@ class SimpleCreate2Activity : AppCompatActivity()
     //時間を自動入力。合計時間（分）の返却とstartTimeセット。出発時はrequireTime == null
     private fun timeRefresh(sum: Long, requireTime: TextView?, moveTime: TextView, startTime: TextView): Long {
         var total = sum
-        if (requireTime is TextView && requireTime.text.isNotEmpty()) total += extractData(requireTime, requireTimeText.length)
-        if (moveTime.text.isNotEmpty()) total += extractData(moveTime, moveTimeText.length)
+        if (requireTime is TextView && requireTime.text.isNotEmpty()) total += extractData(requireTime, resources.getString(R.string.requireTimeText).length)
+        if (moveTime.text.isNotEmpty()) total += extractData(moveTime, resources.getString(R.string.moveTimeText).length)
         val timeFormat = "%1$02d:%2$02d"
         startTime.text = timeFormat.format(total / 60, total % 60)
         return total
@@ -439,8 +439,12 @@ class SimpleCreate2Activity : AppCompatActivity()
         val extractData = StringBuilder(textView.text).delete(textView.text.length-5, textView.text.length-1).delete(0, deleteNum-1)
         val rArr = extractData.split("h")
         return if(rArr.size == 2) {
+            Log.i("【SimpleCreate2Activity】"
+                , "[extractData] rArr.size == 2 rArr[0]=${rArr[0]} rArr[1]=${rArr[1]}")
             rArr[0].trim().toLong() * 60 + rArr[1].trim().toLong()
         }else {
+            Log.i("【SimpleCreate2Activity】"
+                , "[extractData] rArr.size == 1 rArr[0]=${rArr[0]}")
             rArr[0].trim().toLong()
         }
     }
@@ -482,13 +486,13 @@ class SimpleCreate2Activity : AppCompatActivity()
 
     //最初に呼ぶ。何日目かを表示させる。
     private fun setDayText() {
-        includeDay1.findViewById<TextView>(R.id.sc2DayText).text = "・1日目"
-        includeDay2.findViewById<TextView>(R.id.sc2DayText).text = "・2日目"
-        includeDay3.findViewById<TextView>(R.id.sc2DayText).text = "・3日目"
-        includeDay4.findViewById<TextView>(R.id.sc2DayText).text = "・4日目"
-        includeDay5.findViewById<TextView>(R.id.sc2DayText).text = "・5日目"
-        includeDay6.findViewById<TextView>(R.id.sc2DayText).text = "・6日目"
-        includeDay7.findViewById<TextView>(R.id.sc2DayText).text = "・7日目"
+        includeDay1.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day1)
+        includeDay2.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day2)
+        includeDay3.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day3)
+        includeDay4.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day4)
+        includeDay5.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day5)
+        includeDay6.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day6)
+        includeDay7.findViewById<TextView>(R.id.sc2DayText).text = resources.getString(R.string.day7)
     }
 
     //時刻ダイアログ選択後に呼ばれるメソッド
@@ -498,205 +502,205 @@ class SimpleCreate2Activity : AppCompatActivity()
             departureTime10Tag -> setDepartureTime(includeDay1.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 1)
             departureMoveTime10Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2departureMoveTime), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 1)
             requireTime11Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime1), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 1)
             moveTime11Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2moveTime1), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 1)
             requireTime12Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime2), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 1)
             moveTime12Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay1.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 1)
+                , resources.getString(R.string.moveTimeText), 1)
             requireTime13Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime3), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 1)
             moveTime13Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2moveTime3), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 1)
             requireTime14Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime4), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 1)
             moveTime14Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2moveTime4), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 1)
             requireTime15Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime5), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 1)
             moveTime15Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2moveTime5), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 1)
             requireTime16Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2requireTime6), requireTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 1)
             moveTime16Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay1.findViewById(R.id.sc2moveTime6), moveTimeText, 1)
+                , includeDay1.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 1)
             //2日目
             departureTime20Tag -> setDepartureTime(includeDay2.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 2)
             departureMoveTime20Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2departureMoveTime), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 2)
             requireTime21Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime1), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 2)
             moveTime21Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2moveTime1), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 2)
             requireTime22Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime2), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 2)
             moveTime22Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay2.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 2)
+                , resources.getString(R.string.moveTimeText), 2)
             requireTime23Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime3), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 2)
             moveTime23Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2moveTime3), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 2)
             requireTime24Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime4), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 2)
             moveTime24Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2moveTime4), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 2)
             requireTime25Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime5), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 2)
             moveTime25Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2moveTime5), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 2)
             requireTime26Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2requireTime6), requireTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 2)
             moveTime26Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay2.findViewById(R.id.sc2moveTime6), moveTimeText, 2)
+                , includeDay2.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 2)
             //3日目
             departureTime30Tag -> setDepartureTime(includeDay3.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 3)
             departureMoveTime30Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2departureMoveTime), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 3)
             requireTime31Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime1), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 3)
             moveTime31Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2moveTime1), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 3)
             requireTime32Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime2), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 3)
             moveTime32Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay3.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 3)
+                , resources.getString(R.string.moveTimeText), 3)
             requireTime33Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime3), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 3)
             moveTime33Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2moveTime3), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 3)
             requireTime34Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime4), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 3)
             moveTime34Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2moveTime4), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 3)
             requireTime35Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime5), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 3)
             moveTime35Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2moveTime5), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 3)
             requireTime36Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2requireTime6), requireTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 3)
             moveTime36Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay3.findViewById(R.id.sc2moveTime6), moveTimeText, 3)
+                , includeDay3.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 3)
             //4日目
             departureTime40Tag -> setDepartureTime(includeDay4.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 4)
             departureMoveTime40Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2departureMoveTime), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 4)
             requireTime41Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime1), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 4)
             moveTime41Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2moveTime1), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 4)
             requireTime42Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime2), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 4)
             moveTime42Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay4.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 4)
+                , resources.getString(R.string.moveTimeText), 4)
             requireTime43Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime3), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 4)
             moveTime43Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2moveTime3), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 4)
             requireTime44Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime4), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 4)
             moveTime44Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2moveTime4), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 4)
             requireTime45Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime5), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 4)
             moveTime45Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2moveTime5), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 4)
             requireTime46Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2requireTime6), requireTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 4)
             moveTime46Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay4.findViewById(R.id.sc2moveTime6), moveTimeText, 4)
+                , includeDay4.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 4)
             //5日目
             departureTime50Tag -> setDepartureTime(includeDay5.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 5)
             departureMoveTime50Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2departureMoveTime), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 5)
             requireTime51Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime1), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 5)
             moveTime51Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2moveTime1), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 5)
             requireTime52Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime2), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 5)
             moveTime52Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay5.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 5)
+                , resources.getString(R.string.moveTimeText), 5)
             requireTime53Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime3), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 5)
             moveTime53Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2moveTime3), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 5)
             requireTime54Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime4), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 5)
             moveTime54Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2moveTime4), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 5)
             requireTime55Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime5), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 5)
             moveTime55Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2moveTime5), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 5)
             requireTime56Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2requireTime6), requireTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 5)
             moveTime56Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay5.findViewById(R.id.sc2moveTime6), moveTimeText, 5)
+                , includeDay5.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 5)
             //6日目
             departureTime60Tag -> setDepartureTime(includeDay6.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 6)
             departureMoveTime60Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2departureMoveTime), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 6)
             requireTime61Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime1), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 6)
             moveTime61Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2moveTime1), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 6)
             requireTime62Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime2), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 6)
             moveTime62Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay6.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 6)
+                , resources.getString(R.string.moveTimeText), 6)
             requireTime63Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime3), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 6)
             moveTime63Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2moveTime3), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 6)
             requireTime64Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime4), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 6)
             moveTime64Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2moveTime4), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 6)
             requireTime65Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime5), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 6)
             moveTime65Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2moveTime5), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 6)
             requireTime66Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2requireTime6), requireTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 6)
             moveTime66Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay6.findViewById(R.id.sc2moveTime6), moveTimeText, 6)
+                , includeDay6.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 6)
             //7日目
             departureTime70Tag -> setDepartureTime(includeDay7.findViewById(R.id.sc2departureTime)
                 , hourOfDay, minute, 7)
             departureMoveTime70Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2departureMoveTime), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2departureMoveTime), resources.getString(R.string.moveTimeText), 7)
             requireTime71Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime1), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime1), resources.getString(R.string.requireTimeText), 7)
             moveTime71Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2moveTime1), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime1), resources.getString(R.string.moveTimeText), 7)
             requireTime72Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime2), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime2), resources.getString(R.string.requireTimeText), 7)
             moveTime72Tag -> setRequireOrMoveTime(hourOfDay, minute, includeDay7.findViewById(R.id.sc2moveTime2)
-                , moveTimeText, 7)
+                , resources.getString(R.string.moveTimeText), 7)
             requireTime73Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime3), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime3), resources.getString(R.string.requireTimeText), 7)
             moveTime73Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2moveTime3), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime3), resources.getString(R.string.moveTimeText), 7)
             requireTime74Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime4), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime4), resources.getString(R.string.requireTimeText), 7)
             moveTime74Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2moveTime4), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime4), resources.getString(R.string.moveTimeText), 7)
             requireTime75Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime5), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime5), resources.getString(R.string.requireTimeText), 7)
             moveTime75Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2moveTime5), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime5), resources.getString(R.string.moveTimeText), 7)
             requireTime76Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2requireTime6), requireTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2requireTime6), resources.getString(R.string.requireTimeText), 7)
             moveTime76Tag -> setRequireOrMoveTime(hourOfDay, minute
-                , includeDay7.findViewById(R.id.sc2moveTime6), moveTimeText, 7)
+                , includeDay7.findViewById(R.id.sc2moveTime6), resources.getString(R.string.moveTimeText), 7)
         }
         when(temporalyDayFlag){
             1 -> if(includeDay1.findViewById<TextView>(R.id.sc2departureTime).text != "") refresh(includeDay1)

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
 
     <ScrollView
             android:layout_width="match_parent"
@@ -10,20 +10,27 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="0.0">
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginTop="8dp" android:layout_marginRight="8dp" android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-                    android:background="@color/timeBackGround" android:id="@+id/constraintLayout">
+                    android:id="@+id/constraintLayout" android:background="@drawable/border">
 
+                <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp" app:srcCompat="@drawable/img_place"
+                        android:id="@+id/bm2_place_image" app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" android:scaleType="centerCrop"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@string/none"/>
                 <TextView
-                        android:text="Destination"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" android:id="@+id/bm2_place_destination"
                         android:layout_marginTop="8dp"
@@ -32,40 +39,9 @@
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="30sp"
-                        android:gravity="center"/>
+                        android:gravity="center" tools:text="Destination" android:textStyle="bold"/>
                 <TextView
-                        android:text="1 h 20 min "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/bm2_place_requireTime"
-                        app:layout_constraintStart_toStartOf="@+id/bm2_place_startTime"
-                        app:layout_constraintTop_toBottomOf="@+id/bm2_place_startTime"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
-                <TextView
-                        android:text="12:00"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/bm2_place_startTime"
-                        app:layout_constraintEnd_toEndOf="@+id/bm2_place_destination" android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        app:layout_constraintStart_toStartOf="@+id/bm2_place_destination"
-                        app:layout_constraintHorizontal_bias="0.7"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        app:layout_constraintTop_toTopOf="@+id/bm2_place_startTimeText"
-                        app:layout_constraintBottom_toBottomOf="@+id/bm2_place_startTimeText"/>
-                <TextView
-                        android:text="Enjoy Time："
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/bm2_place_requireTimeText"
-                        app:layout_constraintTop_toBottomOf="@+id/bm2_place_startTimeText"
-                        app:layout_constraintStart_toStartOf="@+id/bm2_place_startTimeText"
-                        app:layout_constraintEnd_toEndOf="@+id/bm2_place_startTimeText"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:layout_marginBottom="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
-                <TextView
-                        android:text="Arrival Time："
+                        android:text="@string/bm2_place_startTimeText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/bm2_place_startTimeText"
@@ -75,39 +51,69 @@
                         app:layout_constraintHorizontal_bias="0.2"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         app:layout_constraintTop_toBottomOf="@+id/bm2_place_destination"
-                        android:layout_marginTop="8dp"/>
-            </android.support.constraint.ConstraintLayout>
+                        android:layout_marginTop="8dp" android:textStyle="bold"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bm2_place_startTime"
+                        app:layout_constraintEnd_toEndOf="@+id/bm2_place_destination" android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        app:layout_constraintStart_toStartOf="@+id/bm2_place_destination"
+                        app:layout_constraintHorizontal_bias="0.7"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        app:layout_constraintTop_toTopOf="@+id/bm2_place_startTimeText"
+                        app:layout_constraintBottom_toBottomOf="@+id/bm2_place_startTimeText" tools:text="12:00"
+                        android:textStyle="bold"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bm2_place_requireTime"
+                        app:layout_constraintStart_toStartOf="@+id/bm2_place_startTime"
+                        app:layout_constraintTop_toBottomOf="@+id/bm2_place_startTime"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" tools:text="1 h 20 min "
+                        android:textStyle="bold"/>
+                <TextView
+                        android:text="@string/bm2_place_requireTimeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bm2_place_requireTimeText"
+                        app:layout_constraintTop_toBottomOf="@+id/bm2_place_startTimeText"
+                        app:layout_constraintStart_toStartOf="@+id/bm2_place_startTimeText"
+                        app:layout_constraintEnd_toEndOf="@+id/bm2_place_startTimeText"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent" android:textStyle="bold"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <TextView
-                    android:text="Next Destination："
+                    android:text="@string/nextDestination"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/bm2_place_moveTimeText"
-                    app:layout_constraintStart_toStartOf="@+id/bm2_place_memosText"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_departureTimeText"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="@+id/bm2_place_memosBack"
+                    android:layout_marginLeft="8dp" android:layout_marginTop="8dp"/>
             <TextView
-                    android:text="1 h 20 min"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:id="@+id/bm2_place_moveTime"
                     app:layout_constraintTop_toTopOf="@+id/bm2_place_moveTimeText"
                     app:layout_constraintBottom_toBottomOf="@+id/bm2_place_moveTimeText"
                     app:layout_constraintStart_toEndOf="@+id/bm2_place_moveTimeText"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp" tools:text="10 h 20 min"/>
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/ic_edit_black_40dp"
                     android:id="@+id/bm2_place_edit" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                    app:layout_constraintBottom_toTopOf="@+id/bm2_place_memosText"/>
+                    app:layout_constraintBottom_toTopOf="@+id/bm2_place_memosBack"
+                    android:contentDescription="@string/edit"
+                    android:background="?android:attr/selectableItemBackground"/>
             <TextView
-                    android:text="・One Point Memos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bm2_place_memosText" app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/bm2_place_memosBack" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/bm2_place_moveTimeText" android:layout_marginTop="16dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" android:layout_marginEnd="16dp"
@@ -119,36 +125,32 @@
                     android:id="@+id/bm2_place_memo1"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:hint="one point memo1"
-                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_memosText"
+                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_memosBack"
                     android:layout_marginTop="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:layout_marginEnd="32dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginRight="32dp"/>
+                    android:layout_marginRight="32dp" tools:text="memo1"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/bm2_place_memo2"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:hint="one point memo2"
                     app:layout_constraintTop_toBottomOf="@+id/bm2_place_memo1" android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:layout_marginEnd="32dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp"/>
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp" tools:text="memo2"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/bm2_place_memo3"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:hint="one point memo3"
                     android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/bm2_place_memo2"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:layout_marginEnd="32dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp"/>
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp" tools:text="memo3"/>
             <TextView
-                    android:text="・URL Links"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bm2_place_urlText" app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/bm2_place_urlBack" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintTop_toBottomOf="@+id/bm2_place_memo3" android:layout_marginTop="8dp"
@@ -161,9 +163,9 @@
                     android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
-                    android:hint="URL1" app:layout_constraintTop_toBottomOf="@+id/bm2_place_urlText"
+                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_urlBack"
                     android:layout_marginTop="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/design_default_color_primary_dark"/>
+                    android:textColor="@color/design_default_color_primary_dark" tools:text="URL1"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -171,9 +173,9 @@
                     android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/bm2_place_url1"
-                    android:layout_marginTop="8dp" android:hint="URL2"
+                    android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/design_default_color_primary"/>
+                    android:textColor="@color/design_default_color_primary" tools:text="URL2"/>
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -181,21 +183,20 @@
                     android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/bm2_place_url2"
-                    android:layout_marginTop="8dp" android:hint="URL3"
+                    android:layout_marginTop="8dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/design_default_color_primary"/>
+                    android:textColor="@color/design_default_color_primary" tools:text="URL3"/>
             <TextView
-                    android:text="・Budget"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bm2_place_budgetText" app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/bm2_place_budgetBack" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp" app:layout_constraintTop_toBottomOf="@+id/bm2_place_url3"
                     android:layout_marginTop="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:background="@color/light_blue"/>
+                    android:background="@color/light_blue" app:layout_constraintHorizontal_bias="0.0"/>
             <TextView
-                    android:text="total："
+                    android:text="@string/placeEditTotalText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/bm2_place_totalCostText"
@@ -206,142 +207,203 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:layout_gravity="center"/>
             <TextView
-                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/bm2_place_totalCost"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:layout_gravity="center"
-                    app:layout_constraintEnd_toEndOf="@+id/bm2_place_budgetText"
-                    app:layout_constraintTop_toTopOf="@+id/bm2_place_budgetText"
-                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_budgetText" android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"/>
+                    app:layout_constraintEnd_toEndOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_budgetBack" android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp" tools:text="0"/>
             <TableLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_budgetText"
+                    app:layout_constraintTop_toBottomOf="@+id/bm2_place_budgetBack"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+                    android:layout_marginStart="32dp"
                     android:id="@+id/tableLayout" android:weightSum="2"
-            >
+                    android:gravity="center" app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="16dp">
 
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text="   Items   "
-                            android:layout_width="match_parent"
+                            android:text="@string/bm2_place_tableItemsText"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableItemsText"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            android:layout_gravity="center" android:layout_weight="1"/>
+                            android:layout_weight="1" android:gravity="center"
+                    />
                     <TextView
-                            android:text="   Costs   "
+                            android:text="@string/bm2_place_tableCostsText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableCostsText"
                             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                            android:layout_gravity="center" android:layout_weight="1"/>
+                            android:layout_weight="1" android:gravity="center"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text=" Transportation expenses "
+                            android:text="@string/bm2_place_tableItem1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableItem1"
-                            android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:gravity="center"/>
                     <TextView
-                            android:text="0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableCost1"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="0" android:gravity="center"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text=" Food expenses "
+                            android:text="@string/bm2_place_tableItem2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableItem2"
                             android:layout_gravity="center" android:layout_weight="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:gravity="center"/>
                     <TextView
-                            android:text="0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/bm2_place_tableCost2" android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:id="@+id/bm2_place_tableCost2"
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="0" android:layout_gravity="center" android:gravity="center"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text=" Admission fee "
+                            android:text="@string/bm2_place_tableItem3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableItem3"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:gravity="center"/>
                     <TextView
-                            android:text="0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableCost3"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="0" android:gravity="center"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text=" Souvenir expenses "
+                            android:text="@string/bm2_place_tableItem4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/bm2_place_tableItem4"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:gravity="center"/>
                     <TextView
-                            android:text="0"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:id="@+id/bm2_place_tableCost4"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="0" android:gravity="center"/>
                 </TableRow>
                 <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:weightSum="2">
+                          android:weightSum="2" android:gravity="center">
                     <TextView
-                            android:text=" Etc "
+                            android:text="@string/bm2_place_tableItem5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableItem5"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:gravity="center"/>
                     <TextView
-                            android:text="0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/bm2_place_tableCost5"
                             android:layout_gravity="center"
-                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                            android:layout_weight="1" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            tools:text="0" android:gravity="center"/>
                 </TableRow>
             </TableLayout>
             <TextView
-                    android:text="広告"
-                    android:layout_width="0dp"
+                    android:text="@string/placeEditMemosText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView"
-                    app:layout_constraintTop_toBottomOf="@+id/tableLayout" android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" android:gravity="center"
-                    android:background="@color/colorAccent"/>
-        </android.support.constraint.ConstraintLayout>
+                    android:id="@+id/bm2_place_memosText"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_memosBack"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_memosBack"
+                    app:layout_constraintVertical_bias="0.0" app:layout_constraintStart_toEndOf="@+id/bm2_place_memoImg"
+                    android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/img_memo"
+                    android:id="@+id/bm2_place_memoImg" app:layout_constraintStart_toStartOf="@+id/bm2_place_memosBack"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_memosBack"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_memosBack" android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp" android:contentDescription="@string/none"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/img_search_url"
+                    android:id="@+id/bm2_place_searchImg" app:layout_constraintStart_toStartOf="@+id/bm2_place_memoImg"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_urlBack"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_urlBack"
+                    android:contentDescription="@string/none"
+                    app:layout_constraintEnd_toEndOf="@+id/bm2_place_memoImg"/>
+            <TextView
+                    android:text="@string/placeEditURLText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bm2_place_urlsText"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_urlBack"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_urlBack"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintStart_toStartOf="@+id/bm2_place_memosText"/>
+            <TextView
+                    android:text="@string/placeEditBudgetText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bm2_place_budgetText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintStart_toEndOf="@+id/bm2_place_budgetImg" android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/img_money"
+                    android:id="@+id/bm2_place_budgetImg"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_budgetBack"
+                    app:layout_constraintStart_toStartOf="@+id/bm2_place_budgetBack"
+                    android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                    android:contentDescription="@string/none"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bm2_place_departureTimeText"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                    app:layout_constraintStart_toStartOf="@+id/bm2_place_moveTimeText"
+                    android:layout_marginTop="16dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="@string/bm2PlaceDepartureTime"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bm2_place_departureTime" app:layout_constraintStart_toStartOf="@+id/bm2_place_moveTime"
+                    app:layout_constraintBottom_toBottomOf="@+id/bm2_place_departureTimeText"
+                    app:layout_constraintTop_toTopOf="@+id/bm2_place_departureTimeText"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" tools:text="00:00"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
