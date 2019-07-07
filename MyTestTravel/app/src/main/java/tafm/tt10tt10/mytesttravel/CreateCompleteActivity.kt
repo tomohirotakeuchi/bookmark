@@ -3,6 +3,8 @@ package tafm.tt10tt10.mytesttravel
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_create_complete.*
 import org.jetbrains.anko.startActivity
 
@@ -16,6 +18,9 @@ class CreateCompleteActivity : AppCompatActivity() {
             it.notPressTwice()
             startActivity<MainActivity>("fromId" to 1)
         }
+        // AdMob広告をロードする
+        val adRequest = AdRequest.Builder().build()
+        cmpAdView.loadAd(adRequest)
     }
 
     /**

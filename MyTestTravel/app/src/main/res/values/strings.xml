@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">MyTestTravel</string>
-    <string name="mainAppNameText" translatable="false">Smart Travel</string>
+    <string name="app_name">SmartTravel</string>
     <string name="mainCreate">New Create</string>
     <string name="mainDepartureText">"Departure : "</string>
     <string name="mainArrivalTimeText">"Arrival : "</string>
@@ -116,4 +115,9 @@
     <string name="departurePlaceText">Departure place</string>
     <string name="arrivalPlaceText">Arrival place</string>
     <string name="bm2PlaceDepartureTime">Departure Time :</string>
+    <string name="adAppId" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="adUnitMainId" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adUnitBm1Id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adUnitBm2Id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adUnitCmpId" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

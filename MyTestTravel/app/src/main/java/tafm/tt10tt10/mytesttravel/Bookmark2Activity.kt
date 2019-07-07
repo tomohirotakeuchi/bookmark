@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_bookmark2.*
@@ -85,6 +87,10 @@ class Bookmark2Activity : AppCompatActivity()
             it.notPressTwice()
             finish()
         }
+
+        // AdMob広告をロードする
+        val adRequest = AdRequest.Builder().build()
+        bm2AdView.loadAd(adRequest)
     }
 
     //その日の出発地を返却。travelDetailのorder = 0をとってくる。

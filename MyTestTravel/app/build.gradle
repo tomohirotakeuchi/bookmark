@@ -12,7 +12,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "tafm.tt10tt10.mytesttravel"
+        applicationId "tomohiro.takeuchi.android.smarttravel"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-ads:18.0.0'
     implementation "io.realm:android-adapters:3.1.0"
     implementation "org.jetbrains.anko:anko-common:$anko_version"
     implementation fileTree(dir: 'libs', include: ['*.jar'])

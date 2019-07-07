@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">スマ旅</string>
+    <string name="app_name">スマートトラベル</string>
     <string name="mainArrivalTimeText">到着時間：</string>
     <string name="mainCreate">新規作成</string>
     <string name="mainDepartureText">出発時間：</string>
     <string name="mainTotalCostText">総費用：</string>
     <string name="mainLocationSwitch">位置情報</string>
     <string name="Back">戻る</string>
-    <string name="none">　</string>
+    <string name="none">"　"</string>
     <string name="etc">etc</string>
     <string name="completeText1">おつかれさまです！</string>
     <string name="completeText2">しおり作成が完了しました！</string>

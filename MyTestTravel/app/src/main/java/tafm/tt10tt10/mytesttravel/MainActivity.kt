@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
@@ -64,6 +66,12 @@ class MainActivity : AppCompatActivity() {
             it.notPressTwice()
             startActivity<SimpleCreate1Activity>()
         }
+
+        // AdMob広告の初期化. アプリIDはあとで変更する。
+        MobileAds.initialize(this, resources.getString(R.string.adAppId))
+        // AdMob広告をロードする
+        val adRequest = AdRequest.Builder().build()
+        mainAdView.loadAd(adRequest)
     }
 
     //deleteFlagが0なら削除する。

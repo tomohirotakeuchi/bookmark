@@ -23,8 +23,8 @@
             android:id="@+id/bm1RecyclerView"
             tools:listitem="@layout/bm1_recycler_list_item"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toBottomOf="@+id/bm1ad"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bm1AdView"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,14 +32,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toTopOf="@+id/bm1GuideText"
             app:layout_constraintBottom_toBottomOf="@+id/bm1GuideText" android:text="@string/Back"/>
-    <TextView
-            android:layout_width="0dp"
+    <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bm1ad" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" android:gravity="center_horizontal"
-            android:background="@color/colorAccent"
-            android:text="@string/ad" app:layout_constraintTop_toBottomOf="@+id/bm1GuideText"
-            android:layout_marginTop="8dp"/>
+            android:id="@+id/bm1AdView" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bm1GuideText"
+            ads:adSize="BANNER"
+            app:adUnitId="@string/adUnitBm1Id"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

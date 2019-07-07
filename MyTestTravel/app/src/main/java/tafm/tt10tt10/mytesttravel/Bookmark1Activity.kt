@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
@@ -86,6 +88,10 @@ class Bookmark1Activity : AppCompatActivity() {
 
         //戻るをタップ
         bm1BackToMain.setOnClickListener { finish() }
+
+        // AdMob広告をロードする
+        val adRequest = AdRequest.Builder().build()
+        bm1AdView.loadAd(adRequest)
     }
 
     //削除タップ時の処理。

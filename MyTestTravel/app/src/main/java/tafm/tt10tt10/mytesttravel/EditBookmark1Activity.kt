@@ -233,6 +233,7 @@ class EditBookmark1Activity : AppCompatActivity() {
             extractData(requiredTime, resources.getString(R.string.requireTimeText).length)
         if (moveTime.isNotEmpty()) moveTimeMinute =
             extractData(moveTime, resources.getString(R.string.moveTimeText).length)
+        Log.i("【】", "[getArrivalTime] s=$startTimeMinute r=$requiredTimeMinute m=$moveTimeMinute")
         val total = startTimeMinute + requiredTimeMinute + moveTimeMinute
         val timeFormat = "%1$02d:%2$02d"
         return timeFormat.format(total / 60, total % 60)

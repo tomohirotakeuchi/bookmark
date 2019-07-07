@@ -16,7 +16,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" app:layout_constraintEnd_toStartOf="@+id/mainLocationFragment"
-            android:text="@string/mainAppNameText"/>
+            android:text="@string/app_name"/>
     <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:name="tafm.tt10tt10.mytesttravel.fragment.MainSwitchFragment"
@@ -32,21 +32,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainAppNameText"
-            app:layout_constraintBottom_toTopOf="@+id/mainAd"
             tools:listitem="@layout/main_list_item" android:layout_marginTop="8dp"
-            android:background="@drawable/border">
+            android:background="@drawable/border"
+            app:layout_constraintBottom_toTopOf="@+id/mainAdView">
     </ListView>
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/mainAd" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/ad" android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="30sp"
-            android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintBottom_toTopOf="@+id/mainCreate" android:background="@color/colorAccent"
-    />
     <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/mainCreate"
@@ -56,4 +45,13 @@
             android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="16dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/mainAdView"
+            app:layout_constraintBottom_toTopOf="@+id/mainCreate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/adUnitMainId"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
